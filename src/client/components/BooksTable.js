@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './BooksTable.css';
 
 const BookRow = props => {
   return (
     <tr>
+      <td>
+        <Link to={'/books/' +  props.p.id}>{props.p.name}</Link>
+        {/* <a href="#">{props.p.name}</a> */}
+      </td>
       <td>{props.p.author}</td>
-      <td>{props.p.name}</td>
       <td>...</td>
       <td>
         <img
@@ -30,7 +34,7 @@ class BooksTable extends React.Component {
     }
 
     this.props.results.forEach(p => {
-      rows.push(<BookRow p={p} key={p.name} />);
+      rows.push(<BookRow p={p} key={p.id} />);
     });
 
     return (

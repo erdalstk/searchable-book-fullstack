@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var BOOKS = require('./books.json');
+var BOOKS = require('./data/books.json');
 var fs = require('fs');
 
 //Routes will go here

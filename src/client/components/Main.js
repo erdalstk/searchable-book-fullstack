@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom'
 import SearchableBook from './SearchableBook';
-import AllBooks from './AllBooks';
+import Books from './Books';
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
@@ -13,7 +13,7 @@ const Main = () => (
   <main>
     <Switch>
       <Route exact path='/' component={SearchableBook}/>
-      <Route exact path='/books' component={AllBooks}/>
+      <Route path='/books' component={Books}/>
     </Switch>
   </main>
 )

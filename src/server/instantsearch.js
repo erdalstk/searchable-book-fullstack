@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var BOOKS = require('./books.json');
-var vietnameseUtil = require('./vietnameseSlug.js');
+var BOOKS = require('./data/books.json');
+var vietnameseUtil = require('./utils/vietnameseSlug');
 
 //Routes will go here
 module.exports = router;
