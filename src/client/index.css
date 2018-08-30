@@ -1,0 +1,22 @@
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+ol, ul {
+  padding-left: 30px;
+}
+
+.left-panel {
+  height: 500px;
+  background-color: grey;
+  padding: 20px;
+  margin: 20px;
+}
+
+.right-panel {
+  height: 500px;
+  background-color: grey;
+  padding: 20px;
+  margin: 20px;
+}
