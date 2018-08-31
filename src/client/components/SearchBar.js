@@ -24,7 +24,7 @@ export default class SearchBar extends React.Component {
 
   render() {
     return (
-      <form className="search-bar" onSubmit={this.handleFilterTextSubmit}>
+      <form className="search-form" onSubmit={this.handleFilterTextSubmit}>
         <div className="autocomplete">
           <input
             type="text"
@@ -32,13 +32,15 @@ export default class SearchBar extends React.Component {
             value={this.props.filterText}
             onChange={this.handleFilterTextChange}
           />
+          <button type="submit">
+            <i className="fa fa-search" />
+          </button>
           <Suggestions
             suggestions={this.props.suggestions}
             filterText={this.props.filterText}
             handleSuggestionClick={this.handleSuggestionClick}
           />
         </div>
-        <input type="submit" />
       </form>
     );
   }

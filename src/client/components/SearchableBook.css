@@ -1,0 +1,14 @@
+.center {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+}
+
+.search-bar {
+  position: relative;
+  z-index: 1;
+}
+
+.result-view {
+  position: relative;
+}

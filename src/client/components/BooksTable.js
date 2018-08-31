@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import './BooksTable.css';
 
 const BookRow = props => {
@@ -38,8 +39,8 @@ class BooksTable extends React.Component {
     });
 
     return (
-      <table className="books-table table table-striped">
-        <thead className="thead-dark">
+      <table className="books-table table table-hover" id="dtBasicExample" >
+        <thead className="thead">
           <tr>
             <th scope="col">Author</th>
             <th scope="col">Name</th>

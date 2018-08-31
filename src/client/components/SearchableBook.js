@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import SearchBar from './SearchBar'
-import BooksTable from './BooksTable'
+import SearchBar from './SearchBar';
+import BooksTable from './BooksTable';
+import './SearchableBook.css';
 
 class SearchableBook extends React.Component {
   constructor(props) {
@@ -34,9 +35,9 @@ class SearchableBook extends React.Component {
   }
 
   handleSuggestionClick(rname) {
-    this.setState({ 
-      suggestions: [], 
-      filterText: rname,
+    this.setState({
+      suggestions: [],
+      filterText: rname
     });
   }
 
@@ -47,24 +48,21 @@ class SearchableBook extends React.Component {
     if (state.results.length) {
       resultView = <BooksTable results={state.results} />;
     } else {
-      if (state.filterText.length) {
-        resultView = 'No result!';
-      } else {
-        resultView = 'Start search by input book name';
-      }
+      resultView = '';
     }
 
     return (
-      <div>
-        <SearchBar
-          filterText={this.state.filterText}
-          onFilterTextChange={this.handleFilterTextChange}
-          onFilterTextSubmit={this.handleFilterTextSubmit}
-          onSuggestionClick={this.handleSuggestionClick}
-          suggestions={this.state.suggestions}
-        />
-
-        {resultView}
+      <div className="main-box">
+        <div className="search-bar center">
+          <SearchBar
+            filterText={this.state.filterText}
+            onFilterTextChange={this.handleFilterTextChange}
+            onFilterTextSubmit={this.handleFilterTextSubmit}
+            onSuggestionClick={this.handleSuggestionClick}
+            suggestions={this.state.suggestions}
+          />
+        </div>
+        <div className="result-view">{resultView}</div>
       </div>
     );
   }
