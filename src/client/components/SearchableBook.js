@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SearchBar from './SearchBar';
 import BooksTable from './BooksTable';
 import './SearchableBook.css';
+import IndexGridView from './IndexGridView';
 
 class SearchableBook extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class SearchableBook extends React.Component {
     if (state.results.length) {
       mainView = <BooksTable results={state.results} />;
     } else {
-      mainView = '';
+      mainView = <IndexGridView />;
     }
 
     return (
