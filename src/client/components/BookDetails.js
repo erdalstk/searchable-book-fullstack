@@ -13,7 +13,6 @@ export default class BookDetails extends React.Component {
   }
 
   render() {
-    console.log(this.state.book);
     var book = '';
     this.state.book.forEach(b => {
       book = b;

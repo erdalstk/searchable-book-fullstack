@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import SearchBar from './SearchBar'
 import BooksTable from './BooksTable'
 
-
-export default class SearchableBook extends React.Component {
+class SearchableBook extends React.Component {
   constructor(props) {
     super(props);
     this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
@@ -43,7 +42,6 @@ export default class SearchableBook extends React.Component {
 
   render() {
     const state = this.state;
-    // const results = [];
 
     let resultView;
     if (state.results.length) {
@@ -71,3 +69,5 @@ export default class SearchableBook extends React.Component {
     );
   }
 }
+
+export default SearchableBook;
