@@ -44,11 +44,11 @@ class SearchableBook extends React.Component {
   render() {
     const state = this.state;
 
-    let resultView;
+    let mainView;
     if (state.results.length) {
-      resultView = <BooksTable results={state.results} />;
+      mainView = <BooksTable results={state.results} />;
     } else {
-      resultView = '';
+      mainView = '';
     }
 
     return (
@@ -62,7 +62,7 @@ class SearchableBook extends React.Component {
             suggestions={this.state.suggestions}
           />
         </div>
-        <div className="result-view">{resultView}</div>
+        <div className="main-view">{mainView}</div>
       </div>
     );
   }
