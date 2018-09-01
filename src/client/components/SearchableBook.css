@@ -1,12 +1,10 @@
-.center {
-  margin: auto;
-  width: 60%;
-  padding: 10px;
-}
-
 .search-bar {
   position: relative;
   z-index: 1;
+  margin: auto;
+  width: 100%;
+  max-width: 500px;
+  padding-top: 10px;
 }
 
 .main-view {

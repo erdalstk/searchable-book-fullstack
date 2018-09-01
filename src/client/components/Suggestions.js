@@ -1,5 +1,6 @@
 import React from 'react';
-import './suggestions.css';
+import { Link } from 'react-router-dom';
+import './Suggestions.css';
 
 // TODO
 function boldString(str, find) {
@@ -15,13 +16,13 @@ export default class Suggestions extends React.Component {
 
   handleSuggestionClick = rname => event => {
     this.props.handleSuggestionClick(rname);
-  }
+  };
 
   render() {
     const options = this.props.suggestions.map(r => (
       <div key={r.id} onClick={this.handleSuggestionClick(r.name)}>
         {/* {boldString(r.name, this.props.filterText)} */}
-        {r.name}
+        <Link to={'/books/' + r.id}>{r.name}</Link>
       </div>
     ));
     return (
@@ -30,7 +31,4 @@ export default class Suggestions extends React.Component {
       </div>
     );
   }
-  
-  
-};
-
+}

@@ -54,7 +54,7 @@ class SearchableBook extends React.Component {
 
     return (
       <div className="main-box">
-        <div className="search-bar center">
+        <div className="search-bar">
           <SearchBar
             filterText={this.state.filterText}
             onFilterTextChange={this.handleFilterTextChange}

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import BooksTable from './BooksTable';
 
 class AllBooks extends React.Component {

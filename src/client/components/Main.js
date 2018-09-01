@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom';
 import SearchableBook from './SearchableBook';
 import Books from './Books';
 
@@ -12,11 +12,10 @@ import Books from './Books';
 const Main = () => (
   <main>
     <Switch>
-      <Route exact path='/' component={SearchableBook}/>
-      <Route path='/books' component={Books}/>
+      <Route exact path="/" component={SearchableBook} />
+      <Route path="/books" component={Books} />
     </Switch>
   </main>
-)
+);
 
-export default Main
-
+export default Main;

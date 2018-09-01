@@ -13,13 +13,7 @@ class BooksTable extends React.Component {
   }
 
   imageFormatter(cell, row) {
-    return (
-      "<img class='books-table-image' alt='" +
-      row.name +
-      "' src='" +
-      cell +
-      "'/>"
-    );
+    return "<img class='books-table-image' alt='" + row.name + "' src='" + cell + "'/>";
   }
 
   nameFormatter(cell, row) {
@@ -41,40 +35,21 @@ class BooksTable extends React.Component {
     }
 
     return (
-      <BootstrapTable
-        data={this.props.results}
-        options={this.options}
-        hover
-        pagination
-        className="books-table"
-      >
+      <BootstrapTable data={this.props.results} options={this.options} hover pagination className="books-table">
         {/* <TableHeaderColumn isKey dataField='id'>#</TableHeaderColumn> */}
-        <TableHeaderColumn
-          isKey
-          dataField="name"
-          dataFormat={this.nameFormatter}
-          dataSort
-          width='30%'
-        >
+        <TableHeaderColumn isKey dataField="name" dataFormat={this.nameFormatter} dataSort width="30%">
           Name
         </TableHeaderColumn>
-        <TableHeaderColumn dataField="author" width='20%'>Author</TableHeaderColumn>
-        <TableHeaderColumn
-          dataField="description"
-          dataFormat={this.categoryFormatter}
-          width='25%'
-        >
+        <TableHeaderColumn dataField="author" width="20%">
+          Author
+        </TableHeaderColumn>
+        <TableHeaderColumn dataField="description" dataFormat={this.categoryFormatter} width="25%">
           Description
         </TableHeaderColumn>
-        <TableHeaderColumn
-          dataField="category"
-          dataFormat={this.categoryFormatter}
-          dataSort
-          width='15%'
-        >
+        <TableHeaderColumn dataField="category" dataFormat={this.categoryFormatter} dataSort width="15%">
           Category
         </TableHeaderColumn>
-        <TableHeaderColumn dataField="image" dataFormat={this.imageFormatter} width='10%'>
+        <TableHeaderColumn dataField="image" dataFormat={this.imageFormatter} width="10%">
           Cover
         </TableHeaderColumn>
       </BootstrapTable>

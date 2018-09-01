@@ -1,9 +1,18 @@
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
+  font-family: 'Montserrat', sans-serif;
+  background: #f3f3f3;
+  color: #333 !important;
+  margin-top: 20px;
+  font-size: 13px!important;
 }
 
-ol, ul {
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+ol,
+ul {
   padding-left: 30px;
 }
 
@@ -19,4 +28,8 @@ ol, ul {
   background-color: grey;
   padding: 20px;
   margin: 20px;
+}
+
+i {
+  margin-right: 5px;
 }

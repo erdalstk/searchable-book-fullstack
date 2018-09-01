@@ -30,12 +30,7 @@ class BookGridView extends React.Component {
     const books = [];
     if (this.props.data.length) {
       this.props.data.forEach(book => {
-        books.push(
-          <BookGridChildView
-            key={book.id}
-            book={book}
-          />
-        );
+        books.push(<BookGridChildView key={book.id} book={book} />);
       });
     }
 

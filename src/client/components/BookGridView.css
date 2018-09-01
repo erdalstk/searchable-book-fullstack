@@ -1,5 +1,7 @@
 .book-grid-view-content {
   width: 100%;
+  overflow: scroll;
+  height: 250px;
 }
 
 .book-grid-view-content-child {
