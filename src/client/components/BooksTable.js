@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import './BooksTable.css';
+import { STATIC_IMAGE_URL } from '../config/Constants';
 
 class BooksTable extends React.Component {
   constructor(props) {
@@ -13,15 +14,11 @@ class BooksTable extends React.Component {
   }
 
   imageFormatter(cell, row) {
-    return "<img class='books-table-image' alt='" + row.name + "' src='" + cell + "'/>";
+    return "<img class='books-table-image' alt='" + row.name + "' src='" + STATIC_IMAGE_URL + cell + "'/>";
   }
 
   nameFormatter(cell, row) {
     return <Link to={'/books/' + row.id}>{row.name}</Link>;
-  }
-
-  categoryFormatter(cell, row) {
-    return 'Văn học';
   }
 
   render() {
@@ -40,16 +37,13 @@ class BooksTable extends React.Component {
         <TableHeaderColumn isKey dataField="name" dataFormat={this.nameFormatter} dataSort width="30%">
           Name
         </TableHeaderColumn>
-        <TableHeaderColumn dataField="author" width="20%">
+        <TableHeaderColumn dataField="author" width="25%">
           Author
         </TableHeaderColumn>
-        <TableHeaderColumn dataField="description" dataFormat={this.categoryFormatter} width="25%">
-          Description
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="category" dataFormat={this.categoryFormatter} dataSort width="15%">
+        <TableHeaderColumn dataField="category" dataSort width="20%">
           Category
         </TableHeaderColumn>
-        <TableHeaderColumn dataField="image" dataFormat={this.imageFormatter} width="10%">
+        <TableHeaderColumn dataField="cover" dataFormat={this.imageFormatter} width="25%">
           Cover
         </TableHeaderColumn>
       </BootstrapTable>

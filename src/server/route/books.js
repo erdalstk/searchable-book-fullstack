@@ -1,17 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var BOOKS = require('./data/books.json');
 var fs = require('fs');
+var Books = require('../models/Books');
 
 //Routes will go here
 module.exports = router;
 
 router.get('/', function(req, res) {
-  res.json(BOOKS);
+  Books.find({}, function(err, books) {
+    res.send(books);
+  });
 });
 
 router.get('/:id', function(req, res) {
-  var id = req.params.id;
-  var result = BOOKS.books.filter(book => book.id.toString() === id);
-  res.json(result);
+  Books.findOne({ id: req.params.id }, function(err, book) {
+    res.send(book);
+  });
 });

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './BookGridView.css';
+import { STATIC_IMAGE_URL } from '../config/Constants';
 
 const maxNameLen = 35;
 
@@ -12,7 +13,7 @@ const BookGridChildView = props => {
   return (
     <div className="book-grid-view-content-child">
       <div className="cover">
-        <img src={props.book.image} />
+        <img src={STATIC_IMAGE_URL + props.book.cover} />
       </div>
       <div className="meta">
         <Link to={'/books/' + props.book.id}>{name}</Link>

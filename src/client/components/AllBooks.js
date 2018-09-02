@@ -10,7 +10,7 @@ class AllBooks extends React.Component {
   componentDidMount() {
     fetch('/api/books')
       .then(res => res.json())
-      .then(books => this.setState({ books: books.books }));
+      .then(books => this.setState({ books: books }));
   }
 
   render() {

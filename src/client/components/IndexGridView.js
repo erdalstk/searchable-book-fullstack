@@ -69,13 +69,13 @@ class IndexGridView extends React.Component {
       .then(res => res.json())
       .then(books => {
         this.setState({
-          recentlyAddedData: books.books.slice(0, 10)
+          recentlyAddedData: books.slice(0, 10)
         });
         this.setState({
-          mostDownloadData: books.books.slice(20, 25)
+          mostDownloadData: books.slice(20, 25)
         });
         this.setState({
-          userSuggestionData: books.books.slice(30, 60)
+          userSuggestionData: books.slice(30, 50)
         });
       });
   }
