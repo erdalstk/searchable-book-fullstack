@@ -11,11 +11,14 @@ export default class BookDetails extends React.Component {
   componentDidMount() {
     fetch('/api/books/' + this.props.match.params.id)
       .then(res => res.json())
-      .then(book => this.setState({ book: book }));
+      .then(book => this.setState({ book: book }))
+      .catch(function() {});
   }
 
   render() {
     const book = this.state.book;
+    if (!book) return '';
+    if (!book.cover) return '';
     const clean = sanitizeHtml(book.description);
     var download_epub_link = '';
     var download_mobi_link = '';
