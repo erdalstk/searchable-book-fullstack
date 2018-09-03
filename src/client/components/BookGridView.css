@@ -1,11 +1,12 @@
 .book-grid-view-content {
-  width: 100%;
-  overflow: scroll;
-  height: 250px;
+  /* width: 100%; */
+  overflow: auto;
+  white-space: nowrap;
+  height: 100%;
 }
 
 .book-grid-view-content-child {
-  height: 200px;
+  height: 260px;
   width: 170px;
   padding: 10px 10px 10px 10px;
   display: inline-block;
@@ -13,21 +14,33 @@
 }
 
 .book-grid-view-content-child .cover {
-  height: 80%;
+  height: 75%;
 }
 
 .book-grid-view-content-child .cover img {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  max-width:100%;
-max-height:100%;
+  max-width: 100%;
+  max-height: 100%;
   bottom: 0;
   border: 1px solid #fff;
   box-shadow: 0 5px 8px -6px #777;
 }
 
 .book-grid-view-content-child .meta {
-  height: 20%;
-  max-height: 50px;
+  padding-top: 5px;
+  height: 25%;
+  width: 150px;
+  overflow: hidden;
+}
+
+.book-grid-view-content-child .meta .title {
+  white-space: normal;
+  height: 75%;
+}
+
+.book-grid-view-content-child .meta .author {
+  font-size: 11px;
+  height: 25%;
 }

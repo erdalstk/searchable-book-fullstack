@@ -1,21 +1,25 @@
 import React from 'react';
 import BooksTable from './BooksTable';
-
+import { connect } from 'react-redux';
+import { fetchSearchBarResultsCompleted } from '../actions';
 class AllBooks extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { books: [] };
   }
 
   componentDidMount() {
     fetch('/api/books')
       .then(res => res.json())
-      .then(books => this.setState({ books: books }));
+      .then(books => this.props.dispatch(fetchSearchBarResultsCompleted(books)));
   }
 
   render() {
-    return <BooksTable results={this.state.books} />;
+    return <BooksTable books={this.props.searchBarResults} />;
   }
 }
 
-export default AllBooks;
+const mapStateToProps = state => ({
+  searchBarResults: state.searchBarResults
+});
+
+export default connect(mapStateToProps)(AllBooks);

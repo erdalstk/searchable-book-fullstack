@@ -1,12 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import App from './components/App';
 import './index.css';
+import rootReducer from './reducers';
+import devToolsEnhancer from 'remote-redux-devtools';
+
+const store = createStore(rootReducer, devToolsEnhancer({ realtime: true }));
 
 ReactDOM.render(
-  <HashRouter>
-    <App />
-  </HashRouter>,
+  <Provider store={store}>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </Provider>,
   document.getElementById('main-panel')
 );

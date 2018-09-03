@@ -28,29 +28,29 @@ class IndexGridView extends React.Component {
     // prettier-ignore
     layouts: {
       lg: [
-        { i: 'a', x: 0, y: 0, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'b', x: 0, y: 2, w: 5, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'c', x: 5, y: 2, w: 5, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4 }
+        { i: 'a', x: 0, y: 0, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'b', x: 0, y: 2, w: 5, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'c', x: 5, y: 2, w: 5, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4, static: true }
       ],
       md: [
-        { i: 'a', x: 0, y: 0, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'b', x: 0, y: 2, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'c', x: 5, y: 2, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4 }
+        { i: 'a', x: 0, y: 0, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'b', x: 0, y: 2, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'c', x: 5, y: 2, w: 10, h: 2, minW: 10, maxW: 10, minH: 2, maxH: 4, static: true }
       ],
       sm: [
-        { i: 'a', x: 0, y: 0, w: 6, h: 2, minW: 6, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'b', x: 0, y: 2, w: 6, h: 2, minW: 6, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'c', x: 5, y: 2, w: 6, h: 2, minW: 6, maxW: 10, minH: 2, maxH: 4 }
+        { i: 'a', x: 0, y: 0, w: 6, h: 2, minW: 6, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'b', x: 0, y: 2, w: 6, h: 2, minW: 6, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'c', x: 5, y: 2, w: 6, h: 2, minW: 6, maxW: 10, minH: 2, maxH: 4, static: true }
       ],
       xs: [
-        { i: 'a', x: 0, y: 0, w: 4, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 2 },
-        { i: 'b', x: 0, y: 2, w: 4, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'c', x: 5, y: 2, w: 4, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4 }
+        { i: 'a', x: 0, y: 0, w: 4, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 2, static: true },
+        { i: 'b', x: 0, y: 2, w: 4, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'c', x: 5, y: 2, w: 4, h: 2, minW: 4, maxW: 10, minH: 2, maxH: 4, static: true }
       ],
       xxs: [
-        { i: 'a', x: 0, y: 0, w: 2, h: 2, minW: 2, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'b', x: 0, y: 2, w: 2, h: 2, minW: 2, maxW: 10, minH: 2, maxH: 4 },
-        { i: 'c', x: 5, y: 2, w: 2, h: 2, minW: 2, maxW: 10, minH: 2, maxH: 4 }
+        { i: 'a', x: 0, y: 0, w: 2, h: 2, minW: 2, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'b', x: 0, y: 2, w: 2, h: 2, minW: 2, maxW: 10, minH: 2, maxH: 4, static: true },
+        { i: 'c', x: 5, y: 2, w: 2, h: 2, minW: 2, maxW: 10, minH: 2, maxH: 4, static: true }
       ]
     }
   };
@@ -89,13 +89,13 @@ class IndexGridView extends React.Component {
         // WidthProvider option
         measureBeforeMount={false}>
         <div key="a">
-          <BookGridView title="Recently Added" data={this.state.recentlyAddedData} />
+          <BookGridView title="Recently Added" books={this.state.recentlyAddedData} />
         </div>
         <div key="b">
-          <BookGridView title="Most Downloaded" data={this.state.mostDownloadData} />
+          <BookGridView title="Most Downloaded" books={this.state.mostDownloadData} />
         </div>
         <div key="c">
-          <BookGridView title="Only for you" data={this.state.userSuggestionData} />
+          <BookGridView title="Only for you" books={this.state.userSuggestionData} />
         </div>
       </ResponsiveReactGridLayout>
     );

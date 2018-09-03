@@ -27,7 +27,7 @@ module.exports = {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
         include: '/public/',
         loader: 'url-loader?limit=100000'
-      },
+      }
     ]
   },
   devServer: {
@@ -43,6 +43,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/mdsticon.png'
-    }),
+    })
   ]
 };

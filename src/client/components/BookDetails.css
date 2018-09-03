@@ -1,0 +1,18 @@
+.book-details-content {
+  top: 20px;
+  position: relative;
+}
+
+.book-details-content .btn {
+  border: 1px solid;
+  border-radius: 8px;
+}
+
+.book-details-content .btn-xs {
+  padding  : .25rem .4rem;
+  font-size  : .875rem;
+  line-height  : .8;
+  border-radius : .2rem;
+  border-color: gray;
+  color: gray;
+}

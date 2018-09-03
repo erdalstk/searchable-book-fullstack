@@ -16,32 +16,26 @@ const BookGridChildView = props => {
         <img src={STATIC_IMAGE_URL + props.book.cover} />
       </div>
       <div className="meta">
-        <Link to={'/books/' + props.book.id}>{name}</Link>
+        <div className="title"><Link to={'/books/' + props.book.id}>{name}</Link></div>
+        <div className="author">{props.book.author}</div>
       </div>
     </div>
   );
 };
 
-class BookGridView extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+const BookGridView = ({ title, books }) => {
+  if (!books || !books.length) return '';
+  const view = [];
+  books.forEach(book => {
+    view.push(<BookGridChildView key={book.id} book={book} />);
+  });
 
-  render() {
-    const books = [];
-    if (this.props.data.length) {
-      this.props.data.forEach(book => {
-        books.push(<BookGridChildView key={book.id} book={book} />);
-      });
-    }
-
-    return (
-      <div className="book-grid-view">
-        <h3>{this.props.title}</h3>
-        <div className="book-grid-view-content">{books}</div>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="book-grid-view">
+      <h3>{title}</h3>
+      <div className="book-grid-view-content">{view}</div>
+    </div>
+  );
+};
 
 export default BookGridView;

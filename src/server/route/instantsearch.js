@@ -6,7 +6,7 @@ var Books = require('../models/Books');
 module.exports = router;
 
 router.get('/', function(req, res) {
-  var q = req.params.q;
+  var q = req.param('q');
   const inputValue = vietnameseUtil.stringToSlug(q.trim().toLowerCase());
   Books.find({ normalized_name: new RegExp(inputValue, 'i') }, function(err, books) {
     res.send(books);
