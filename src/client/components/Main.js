@@ -6,6 +6,7 @@ import Login from './Login';
 import Logout from './Logout';
 import Signup from './Signup';
 import Categories from './Categories';
+import UploadBook from './UploadBook';
 
 const Main = () => (
   <main>
@@ -13,6 +14,7 @@ const Main = () => (
       <Route exact path="/" component={SearchableBook} />
       <Route path="/books" component={Books} />
       <Route path="/categories" component={Categories} />
+      <Route path="/uploadbook" component={UploadBook} />
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/signup" component={Signup} />

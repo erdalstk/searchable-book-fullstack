@@ -7,7 +7,9 @@ import sanitizeHtml from 'sanitize-html';
 
 function boldString(str, find) {
   var re = new RegExp(find, 'g');
-  return str.replace(re, '<b>' + find + '</b>');
+  str =  str.replace(re, '<b>' + find + '</b>');
+  console.log(str);
+  return str;
 }
 
 class Suggestions extends React.Component {
@@ -16,20 +18,18 @@ class Suggestions extends React.Component {
     this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
   }
 
-  handleSuggestionClick = id => event => {
+  handleSuggestionClick = _id => event => {
     this.props.dispatch(changeSearchBarFilterText(''));
-    this.props.history.push('/books/' + id);
+    this.props.history.push('/books/' + _id);
   };
 
   render() {
-    // const options = this.props.searchBarSuggestions;
     if (!this.props.searchBarSuggestions.length) return '';
-    // const clean = sanitizeHtml(book.description);
     const options = this.props.searchBarSuggestions.map(r => (
       <div
-        key={r.id}
-        onClick={this.handleSuggestionClick(r.id)}
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(boldString(r.name, 'a')) }}
+        key={r._id}
+        onClick={this.handleSuggestionClick(r._id)}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(boldString(r.name, this.props.searchBarFilterText)) }}
       />
     ));
     return (
@@ -41,7 +41,8 @@ class Suggestions extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  searchBarSuggestions: state.searchBarSuggestions
+  searchBarSuggestions: state.searchBarSuggestions,
+  searchBarFilterText: state.searchBarFilterText
 });
 
 export default connect(mapStateToProps)(withRouter(Suggestions));

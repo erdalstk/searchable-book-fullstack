@@ -3,6 +3,7 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import BookGridView from './BookGridView';
+import 'whatwg-fetch'; 
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 

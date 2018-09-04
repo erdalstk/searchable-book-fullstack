@@ -1,9 +1,11 @@
 import React from 'react';
-import sanitizeHtml from 'sanitize-html';
 import { STATIC_IMAGE_URL } from '../config/Constants';
+import { noPictureAddDefaultSrc } from '../utils/noPictureCheck';
 import { connect } from 'react-redux';
 import { fetchBookDetailsCompleted } from '../actions/index';
 import './BookDetails.css';
+import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
+import 'whatwg-fetch';
 
 class BookDetails extends React.Component {
   constructor(props) {
@@ -29,12 +31,13 @@ class BookDetails extends React.Component {
   render() {
     const book = this.props.book;
     if (!book) return '';
-    if (!book.cover) return '';
-    const clean = sanitizeHtml(book.description);
     var download_epub_link = '';
     var download_mobi_link = '';
     var download_pdf_link = '';
     if (book.epub_link) {
+      if (!book.epub_link.includes('http')) {
+        book.epub_link = STATIC_IMAGE_URL + book.epub_link;
+      }
       download_epub_link = (
         <a href={book.epub_link} className="btn btn-info btn-sm">
           <i className="fa fa-download fa-fw" />
@@ -44,6 +47,9 @@ class BookDetails extends React.Component {
       );
     }
     if (book.mobi_link) {
+      if (!book.mobi_link.includes('http')) {
+        book.mobi_link = STATIC_IMAGE_URL + book.mobi_link;
+      }
       download_mobi_link = (
         <a href={book.mobi_link} className="btn btn-info btn-sm">
           <i className="fa fa-download fa-fw" />
@@ -53,6 +59,9 @@ class BookDetails extends React.Component {
       );
     }
     if (book.pdf_link) {
+      if (!book.pdf_link.includes('http')) {
+        book.pdf_link = STATIC_IMAGE_URL + book.pdf_link;
+      }
       download_pdf_link = (
         <a href={book.pdf_link} className="btn btn-info btn-sm">
           <i className="fa fa-download fa-fw" />
@@ -64,13 +73,18 @@ class BookDetails extends React.Component {
     return (
       <div className="book-details-content">
         <div className="row">
-          <div className="col-sm-3 col-lg-3 col-xs-5 book-cover">
-            <img src={STATIC_IMAGE_URL + book.cover} alt={book.name} className="img-thumbnail" />
+          <div className="col-xs-6 col-sm-4 col-md-3 col-lg-3 book-cover">
+            <img
+              onError={noPictureAddDefaultSrc}
+              src={STATIC_IMAGE_URL + book.cover}
+              alt={book.name}
+              className="img-thumbnail"
+            />
           </div>
-          <div className="col-sm-9 col-lg-9 book-meta">
+          <div className="col-xs-6 col-sm-8 col-md-9 col-lg-9 book-meta">
             <h3>{book.name}</h3>
             <p>
-              Tác giả:{' '}
+              Tác giả:
               <button type="button" className="btn btn-light btn-xs">
                 {book.author}
               </button>
@@ -79,8 +93,7 @@ class BookDetails extends React.Component {
               #{book.category}
             </button>
             <hr />
-            {/* <p>{book.description}</p> */}
-            <div dangerouslySetInnerHTML={{ __html: clean }} />
+            <FroalaEditorView model={book.description} />
             <hr />
             <h5>Download: </h5>
             <div className="btn-group" role="group">

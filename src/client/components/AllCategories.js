@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { fetchCategoriesCompleted } from '../actions';
 import { Link, withRouter } from 'react-router-dom';
 import './AllCategories.css';
+import 'whatwg-fetch';
+import keyIndex from 'react-key-index';
 
 class AllCategories extends React.Component {
   constructor(props) {
@@ -16,18 +18,22 @@ class AllCategories extends React.Component {
   }
 
   render() {
-    const categories = this.props.categories.map(c => (
-      <Link className="dropdown-item category" to={'/categories/' + c} key={c}>
-        <i className="fa fa-tag fa-fw" />
-        {c}
-      </Link>
-    ));
+    const categories = [];
+    this.props.categories.map(c => {
+      if (c.value === '') return;
+      categories.push(
+        <Link className="dropdown-item category" to={'/categories/' + c.value} key={c.id}>
+          <i className="fa fa-tag fa-fw" />
+          {c.value}
+        </Link>
+      );
+    });
     return categories;
   }
 }
 
 const mapStateToProps = state => ({
-  categories: state.categories
+  categories: keyIndex(state.categories, 1)
 });
 
 export default connect(mapStateToProps)(withRouter(AllCategories));

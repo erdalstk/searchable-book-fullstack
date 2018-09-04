@@ -38,9 +38,11 @@
 .book-grid-view-content-child .meta .title {
   white-space: normal;
   height: 75%;
+  text-align: center;
 }
 
 .book-grid-view-content-child .meta .author {
   font-size: 11px;
   height: 25%;
+  text-align: center;
 }

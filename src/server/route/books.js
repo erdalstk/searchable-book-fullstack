@@ -1,19 +1,105 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
 var Books = require('../models/Books');
+var multer = require('multer');
+var mime = require('mime');
+var vietnameseUtil = require('../utils/vietnameseSlug');
 
 //Routes will go here
 module.exports = router;
 
+/**
+ * GET /api/books
+ **/
 router.get('/', function(req, res) {
   Books.find({}, function(err, books) {
     res.send(books);
   });
 });
 
+/**
+ * GET /api/books/_id
+ **/
 router.get('/:id', function(req, res) {
-  Books.findOne({ id: req.params.id }, function(err, book) {
+  Books.findOne({ _id: req.params.id }, function(err, book) {
     res.send(book);
+  });
+});
+
+/**
+ * POST /api/books
+ **/
+var storage = multer.diskStorage({
+  destination: './static/upload',
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + '-' + vietnameseUtil.starndardUploadName(file.originalname.trim().toLowerCase()));
+  }
+});
+const fileLimit = {
+  fileSize: 5242880 // 5MB
+};
+function fileFilter(req, file, cb) {
+  if (
+    file.mimetype !== 'image/png' &&
+    file.mimetype !== 'image/jpg' &&
+    file.mimetype !== 'image/jpeg' &&
+    file.mimetype !== 'image/gif' &&
+    file.mimetype !== 'application/epub+zip' &&
+    file.mimetype !== 'application/x-mobipocket-ebook' && // mobi?
+    file.mimetype !== 'pocketMobi*' && // mobi?
+    file.mimetype !== 'application/octet-stream' && // mobi?
+    file.mimetype !== 'application/pdf'
+  ) {
+    req.fileValidationError = 'goes wrong on the mimetype';
+    cb(new Error('goes wrong on the mimetype'));
+  }
+  cb(null, true);
+}
+var upload = multer({ storage: storage, fileFilter: fileFilter, limits: fileLimit }).fields([
+  { name: 'cover', maxCount: 1 },
+  { name: 'epub', maxCount: 1 },
+  { name: 'mobi', maxCount: 1 },
+  { name: 'pdf', maxCount: 1 }
+]);
+router.post('/', function(req, res) {
+  // req.file is the `cover` file
+  upload(req, res, function(err) {
+    if (err) {
+      res.send(JSON.stringify({ result: 'upload error' }));
+      return;
+    }
+    if (req.body.name === '' || req.body.author === '') {
+      res.send(JSON.stringify({ result: 'name and author must not empty' }));
+      return;
+    }
+
+    var cover = '';
+    var epub_link = '';
+    var mobi_link = '';
+    var pdf_link = '';
+    if (req.files['cover']) cover = req.files['cover'][0].filename;
+    if (req.files['epub']) epub_link = req.files['epub'][0].filename;
+    if (req.files['mobi']) mobi_link = req.files['mobi'][0].filename;
+    if (req.files['pdf']) pdf_link = req.files['pdf'][0].filename;
+    var book = new Books({
+      // id: nextId,
+      name: req.body.name,
+      author: req.body.author,
+      category: req.body.category,
+      description: req.body.description,
+      cover: cover,
+      normalized_name: vietnameseUtil.stringToSlug(req.body.name.trim().toLowerCase()),
+      epub_link: epub_link,
+      mobi_link: mobi_link,
+      pdf_link: pdf_link
+    });
+    book
+      .save()
+      .then(result => {
+        res.send(JSON.stringify({ result: 'success', book: book }));
+      })
+      .catch(function() {
+        res.send(JSON.stringify({ result: 'save to db failed' }));
+      });
   });
 });

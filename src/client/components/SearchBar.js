@@ -7,6 +7,7 @@ import {
   fetchSearchBarResultsCompleted
 } from '../actions';
 import { connect } from 'react-redux';
+import 'whatwg-fetch'; 
 
 class SearchBar extends React.Component {
   constructor(props) {

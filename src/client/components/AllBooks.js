@@ -2,6 +2,7 @@ import React from 'react';
 import BooksTable from './BooksTable';
 import { connect } from 'react-redux';
 import { fetchSearchBarResultsCompleted } from '../actions';
+import 'whatwg-fetch'; 
 class AllBooks extends React.Component {
   constructor(props) {
     super(props);

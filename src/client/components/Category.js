@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import BooksTable from './BooksTable';
 import { fetchSearchBarResultsCompleted } from '../actions/index';
+import 'whatwg-fetch';
+import { isStringEmptyOrSpaces } from '../utils/stringUtils';
 
 class Category extends React.Component {
   constructor(props) {
@@ -10,6 +12,9 @@ class Category extends React.Component {
   }
 
   componentDidMount() {
+    if (isStringEmptyOrSpaces(this.props.match.params.id)) {
+      return;
+    }
     fetch('/api/categories/' + this.props.match.params.id)
       .then(res => res.json())
       .then(books => this.props.dispatch(fetchSearchBarResultsCompleted(books)))
@@ -17,6 +22,9 @@ class Category extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (isStringEmptyOrSpaces(this.props.match.params.id)) {
+      return;
+    }
     if (this.props.match.params.id !== prevProps.match.params.id) {
       fetch('/api/categories/' + this.props.match.params.id)
         .then(res => res.json())

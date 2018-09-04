@@ -1,8 +1,6 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
-
 // configurations
 const config = require('./config/main');
 const {
@@ -11,7 +9,7 @@ const {
 
 // serve static files
 app.use(express.static('dist'));
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use("/static", express.static('static'));
 
 // connect to mongodb
 const dbConnectionString = `mongodb://${username}:${password}@${host}:${port}/${name}?authSource=admin`;

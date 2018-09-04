@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import './BooksTable.css';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { STATIC_IMAGE_URL } from '../config/Constants';
+import { noPictureAddDefaultSrc } from '../utils/noPictureCheck';
+import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
 const BooksTable = ({ books }) => {
   const options = {
@@ -10,12 +13,39 @@ const BooksTable = ({ books }) => {
     defaultSortOrder: 'asc' // default sort order
   };
 
-  const imageFormatter = (cell, row) => {
-    return "<img class='books-table-image' alt='" + row.name + "' src='" + STATIC_IMAGE_URL + cell + "'/>";
+  const descriptionFormatter = (cell, row) => {
+    if (row.description.length > 500) {
+      row.description = row.description.slice(0, 500) + '...';
+    }
+    return (
+      <div className="books-table-description">
+        <FroalaEditorView model={row.description} />
+      </div>
+    );
   };
 
-  const nameFormatter = (cell, row) => {
-    return <Link to={'/books/' + row.id}>{row.name}</Link>;
+  const basicInfoFormatter = (cell, row) => {
+    return (
+      <div>
+        <div className="row">
+          <div className="col-sm-5 col-md-3 col-lg-3 bookcover">
+            <img
+              className="books-table-image"
+              onError={noPictureAddDefaultSrc}
+              alt={row.name}
+              src={STATIC_IMAGE_URL + row.cover}
+            />
+          </div>
+          <div className="col-sm-7 col-md-9 col-lg-9 bookmeta">
+            <div className="bookmeta-title">
+              <Link to={'/books/' + row._id}>{row.name}</Link>
+            </div>
+            <p className="bookmeta-author">{row.author}</p>
+            <p className="bookmeta-category">{row.category}</p>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const rows = [];
@@ -29,17 +59,14 @@ const BooksTable = ({ books }) => {
 
   return (
     <BootstrapTable data={books} options={options} hover pagination className="books-table">
-      <TableHeaderColumn isKey dataField="name" dataFormat={nameFormatter} dataSort width="30%">
-        Name
+      <TableHeaderColumn dataField="_id" isKey width="50%" hidden>
+        Id
       </TableHeaderColumn>
-      <TableHeaderColumn dataField="author" width="25%">
-        Author
+      <TableHeaderColumn dataField="name" dataFormat={basicInfoFormatter} width="40%">
+        BasicInfo
       </TableHeaderColumn>
-      <TableHeaderColumn dataField="category" dataSort width="20%">
-        Category
-      </TableHeaderColumn>
-      <TableHeaderColumn dataField="cover" dataFormat={imageFormatter} width="25%">
-        Cover
+      <TableHeaderColumn dataField="description" dataFormat={descriptionFormatter} width="60%">
+        Description
       </TableHeaderColumn>
     </BootstrapTable>
   );

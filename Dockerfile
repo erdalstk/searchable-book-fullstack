@@ -1,8 +1,7 @@
 FROM node:8-alpine
-
-RUN apk add --update libc6-compat
 # Create app directory
 WORKDIR /usr/src/app
+VOLUME ["/usr/src/app/static"]
 COPY . .
 
 RUN yarn
