@@ -17,3 +17,8 @@ export const fetchBookDetailsCompleted = bookDetails => ({
   type: 'FETCH_BOOKDETAILS_COMPLETED',
   bookDetails
 });
+
+export const fetchCategoriesCompleted = categories => ({
+  type: 'FETCH_CATEGORIES_COMPLETED',
+  categories
+});

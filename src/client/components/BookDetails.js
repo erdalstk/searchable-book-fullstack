@@ -17,6 +17,15 @@ class BookDetails extends React.Component {
       .catch(function() {});
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      fetch('/api/books/' + this.props.match.params.id)
+        .then(res => res.json())
+        .then(book => this.props.dispatch(fetchBookDetailsCompleted(book)))
+        .catch(function() {});
+    }
+  }
+
   render() {
     const book = this.props.book;
     if (!book) return '';

@@ -1,56 +1,71 @@
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
+import AllCategories from './AllCategories';
+import './Header.css';
 
-const Header = () => {
-  return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <a className="navbar-brand" href="/">
-        <i className="fas fa-book fa-fw" />
-        Books
-      </a>
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon" />
-      </button>
+const Header = () => (
+  <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <a className="navbar-brand" href="/">
+      <i className="fas fa-book fa-fw" />
+      Books
+    </a>
+    <button
+      className="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span className="navbar-toggler-icon" />
+    </button>
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <NavLink className="nav-link" exact to="/" activeClassName="active">
-              <i className="fas fa-search fa-fw" />
-              Search
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" exact to="/books" activeClassName="active">
-              <i className="fas fa-list-ul fa-fw" />
-              All Books
-            </NavLink>
-          </li>
-        </ul>
-        <ul className="navbar-nav navbar-right">
-          <li>
-            <NavLink className="nav-link" exact to="/login" activeClassName="active">
-              <i className="fas fa-sign-in-alt fa-fw" />
-              Login
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="nav-link" exact to="/signup" activeClassName="active">
-              <i className="fas fa-user-plus fa-fw" />
-              Sign up
-            </NavLink>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  );
-};
+    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul className="navbar-nav mr-auto">
+        <li className="nav-item">
+          <NavLink className="nav-link" exact to="/" activeClassName="active">
+            <i className="fas fa-search fa-fw" />
+            Search
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" exact to="/books" activeClassName="active">
+            <i className="fas fa-list-ul fa-fw" />
+            All Books
+          </NavLink>
+        </li>
+        <li className="nav-item dropdown">
+          <a
+            className="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdownMenuLink"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">
+            <i className="fa fa-tag fa-fw" />
+            Categories
+          </a>
+          <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <AllCategories />
+          </div>
+        </li>
+      </ul>
+      <ul className="navbar-nav navbar-right">
+        <li>
+          <NavLink className="nav-link" exact to="/login" activeClassName="active">
+            <i className="fas fa-sign-in-alt fa-fw" />
+            Login
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="nav-link" exact to="/signup" activeClassName="active">
+            <i className="fas fa-user-plus fa-fw" />
+            Sign up
+          </NavLink>
+        </li>
+      </ul>
+    </div>
+  </nav>
+);
 
 export default withRouter(Header);
