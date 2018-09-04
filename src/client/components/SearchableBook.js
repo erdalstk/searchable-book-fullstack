@@ -4,10 +4,15 @@ import BooksTable from './BooksTable';
 import './SearchableBook.css';
 import IndexGridView from './IndexGridView';
 import { connect } from 'react-redux';
+import { fetchSearchBarResultsCompleted } from '../actions';
 
 class SearchableBook extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    this.props.dispatch(fetchSearchBarResultsCompleted([]));
   }
 
   render() {

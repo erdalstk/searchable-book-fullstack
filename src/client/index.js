@@ -8,7 +8,7 @@ import './index.css';
 import rootReducer from './reducers';
 import devToolsEnhancer from 'remote-redux-devtools';
 
-const store = createStore(rootReducer, devToolsEnhancer({ realtime: true }));
+const store = createStore(rootReducer, devToolsEnhancer());
 
 ReactDOM.render(
   <Provider store={store}>
