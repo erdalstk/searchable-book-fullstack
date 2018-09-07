@@ -9,7 +9,7 @@ const {
 
 // serve static files
 app.use(express.static('dist'));
-app.use("/static", express.static('static'));
+app.use('/static', express.static('static'));
 
 // connect to mongodb
 const dbConnectionString = `mongodb://${username}:${password}@${host}:${port}/${name}?authSource=admin`;
@@ -22,9 +22,13 @@ mongoose.connect(
 var books = require('./route/books.js');
 var instantsearch = require('./route/instantsearch.js');
 var categories = require('./route/categories.js');
+var recentlyadded = require('./route/recentlyadded');
+var mostview = require('./route/mostview');
 app.use('/api/books', books);
 app.use('/api/instantsearch', instantsearch);
 app.use('/api/categories', categories);
+app.use('/api/recentlyadded', recentlyadded);
+app.use('/api/mostview', mostview);
 
 app.get('*', (req, res) => {
   res.send('404 Not Found');

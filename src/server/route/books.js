@@ -22,6 +22,22 @@ router.get('/', function(req, res) {
  **/
 router.get('/:id', function(req, res) {
   Books.findOne({ _id: req.params.id }, function(err, book) {
+    console.log(book);
+    if (book) {
+      var viewCount = book.view_count;
+      if (!viewCount || viewCount === '') {
+        viewCount = '0';
+      }
+      viewCount = parseInt(viewCount);
+      viewCount = viewCount + 1;
+      book.view_count = viewCount.toString();
+      book
+        .save()
+        .then(result => {})
+        .catch(function() {
+          console.log('can not update view_count for ' + book);
+        });
+    }
     res.send(book);
   });
 });
@@ -82,7 +98,6 @@ router.post('/', function(req, res) {
     if (req.files['mobi']) mobi_link = req.files['mobi'][0].filename;
     if (req.files['pdf']) pdf_link = req.files['pdf'][0].filename;
     var book = new Books({
-      // id: nextId,
       name: req.body.name,
       author: req.body.author,
       category: req.body.category,
@@ -91,7 +106,9 @@ router.post('/', function(req, res) {
       normalized_name: vietnameseUtil.stringToSlug(req.body.name.trim().toLowerCase()),
       epub_link: epub_link,
       mobi_link: mobi_link,
-      pdf_link: pdf_link
+      pdf_link: pdf_link,
+      create_time: new Date(),
+      update_time: new Date()
     });
     book
       .save()

@@ -11,7 +11,11 @@ var BooksSchema = new Schema({
   cover: String,
   epub_link: String,
   mobi_link: String,
-  pdf_link: String
+  pdf_link: String,
+  view_count: String,
+  download_count: String,
+  create_time: Date,
+  update_time: Date
 });
 
 module.exports = mongoose.model('Books', BooksSchema);
