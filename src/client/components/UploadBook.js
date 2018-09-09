@@ -71,11 +71,11 @@ class UploadBook extends React.Component {
     })
       .then(res => res.json())
       .then(function(res) {
-        if (res.result === 'success') {
-          toast(res.result, infoToastOpt);
+        if (res.result === true) {
+          toast('Success!', infoToastOpt);
           historyProps.push('/books/' + res.book._id);
         } else {
-          toast(res.result, errorToastOpt);
+          toast(res.message, errorToastOpt);
         }
       })
       .catch(function(err) {

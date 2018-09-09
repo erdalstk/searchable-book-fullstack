@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var Books = require('../models/Books');
 var multer = require('multer');
-var mime = require('mime');
 var vietnameseUtil = require('../utils/vietnameseSlug');
 
 //Routes will go here
@@ -13,7 +12,8 @@ module.exports = router;
  **/
 router.get('/', function(req, res) {
   Books.find({}, function(err, books) {
-    res.send(books);
+    if (err) return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
+    return res.send(books);
   });
 });
 
@@ -21,8 +21,9 @@ router.get('/', function(req, res) {
  * GET /api/books/_id
  **/
 router.get('/:id', function(req, res) {
+  if (!req.params || !req.params.id) return res.send({ result: false, message: 'Can not find book.' });
   Books.findOne({ _id: req.params.id }, function(err, book) {
-    console.log(book);
+    if (err) return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
     if (book) {
       var viewCount = book.view_count;
       if (!viewCount || viewCount === '') {
@@ -37,8 +38,9 @@ router.get('/:id', function(req, res) {
         .catch(function() {
           console.log('can not update view_count for ' + book);
         });
+      return res.send({ result: true, book: book });
     }
-    res.send(book);
+    return res.send({ result: false, message: 'Can not find book.' });
   });
 });
 
@@ -80,15 +82,13 @@ var upload = multer({ storage: storage, fileFilter: fileFilter, limits: fileLimi
 router.post('/', function(req, res) {
   // req.file is the `cover` file
   upload(req, res, function(err) {
-    if (err) {
-      res.send(JSON.stringify({ result: 'upload error' }));
-      return;
+    if (err) return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
+    if (!req.body) {
+      return res.status(400).send({ result: false, message: 'Request has no body' });
     }
-    if (req.body.name === '' || req.body.author === '') {
-      res.send(JSON.stringify({ result: 'name and author must not empty' }));
-      return;
+    if (!req.body.name || !req.body.author || req.body.name === '' || req.body.author === '') {
+      return res.send({ result: false, message: 'Name and author must not empty' });
     }
-
     var cover = '';
     var epub_link = '';
     var mobi_link = '';
@@ -113,10 +113,10 @@ router.post('/', function(req, res) {
     book
       .save()
       .then(result => {
-        res.send(JSON.stringify({ result: 'success', book: book }));
+        res.send({ result: true, book: book });
       })
-      .catch(function() {
-        res.send(JSON.stringify({ result: 'save to db failed' }));
+      .catch(function(err) {
+        res.send({ result: false, message: 'DB Error: ' + err.message });
       });
   });
 });

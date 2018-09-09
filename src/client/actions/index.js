@@ -13,9 +13,10 @@ export const fetchSearchBarResultsCompleted = searchBarResults => ({
   searchBarResults
 });
 
-export const fetchBookDetailsCompleted = bookDetails => ({
+export const fetchBookDetailsCompleted = ({ result, book }) => ({
   type: 'FETCH_BOOKDETAILS_COMPLETED',
-  bookDetails
+  result,
+  book
 });
 
 export const fetchCategoriesCompleted = categories => ({

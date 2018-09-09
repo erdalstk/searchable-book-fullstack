@@ -2,7 +2,8 @@ const env = process.env.NODE_ENV; // 'dev' or 'production'
 
 const dev = {
   app: {
-    port: parseInt(process.env.DEV_APP_PORT) || 8080
+    port: parseInt(process.env.DEV_APP_PORT) || 8080,
+    secret: process.env.DEV_SECRET || 'supersecret'
   },
   db: {
     host: process.env.DEV_DB_HOST || 'localhost',
@@ -15,7 +16,8 @@ const dev = {
 
 const production = {
   app: {
-    port: parseInt(process.env.PROD_APP_PORT) || 8080
+    port: parseInt(process.env.PROD_APP_PORT) || 8080,
+    secret: process.env.PROD_SECRET || 'supersecret'
   },
   db: {
     host: process.env.PROD_DB_HOST || 'haoict.com',

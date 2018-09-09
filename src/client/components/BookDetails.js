@@ -15,7 +15,9 @@ class BookDetails extends React.Component {
   componentDidMount() {
     fetch('/api/books/' + this.props.match.params.id)
       .then(res => res.json())
-      .then(book => this.props.dispatch(fetchBookDetailsCompleted(book)))
+      .then(res => {
+        this.props.dispatch(fetchBookDetailsCompleted(res));
+      })
       .catch(function() {});
   }
 
@@ -23,14 +25,17 @@ class BookDetails extends React.Component {
     if (this.props.match.params.id !== prevProps.match.params.id) {
       fetch('/api/books/' + this.props.match.params.id)
         .then(res => res.json())
-        .then(book => this.props.dispatch(fetchBookDetailsCompleted(book)))
+        .then(res => {
+          this.props.dispatch(fetchBookDetailsCompleted(res));
+        })
         .catch(function() {});
     }
   }
 
   render() {
+    if (this.props.result === false) return 'No book found';
     const book = this.props.book;
-    if (!book) return '';
+    if (!book) return 'No book found';
     var download_epub_link = '';
     var download_mobi_link = '';
     var download_pdf_link = '';
@@ -109,7 +114,8 @@ class BookDetails extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  book: state.bookDetails
+  result: state.bookDetails.result,
+  book: state.bookDetails.book
 });
 
 export default connect(mapStateToProps)(BookDetails);
