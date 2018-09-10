@@ -1,6 +1,6 @@
 import React from 'react';
-import { STATIC_IMAGE_URL } from '../config/Constants';
-import { noPictureAddDefaultSrc } from '../utils/noPictureCheck';
+import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from '../config';
+import { noPictureAddDefaultSrc } from '../helpers';
 import { connect } from 'react-redux';
 import { fetchBookDetailsCompleted } from '../actions/index';
 import './BookDetails.css';
@@ -74,6 +74,9 @@ class BookDetails extends React.Component {
           <br />
         </a>
       );
+    }
+    if (!book.cover || book.cover === '') {
+      book.cover = NO_COVER_IMAGE;
     }
     return (
       <div className="book-details-content">

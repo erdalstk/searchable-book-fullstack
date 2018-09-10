@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import './BooksTable.css';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { STATIC_IMAGE_URL } from '../config/Constants';
-import { noPictureAddDefaultSrc } from '../utils/noPictureCheck';
+import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from '../config';
+import { noPictureAddDefaultSrc } from '../helpers';
 import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
 const BooksTable = ({ books }) => {
@@ -14,17 +14,22 @@ const BooksTable = ({ books }) => {
   };
 
   const descriptionFormatter = (cell, row) => {
-    if (row.description.length > 500) {
-      row.description = row.description.slice(0, 500) + '...';
+    if (row.description) {
+      if (row.description.length > 500) {
+        row.description = row.description.slice(0, 500) + '...';
+      }
+      return (
+        <div className="books-table-description">
+          <FroalaEditorView model={row.description} />
+        </div>
+      );
     }
-    return (
-      <div className="books-table-description">
-        <FroalaEditorView model={row.description} />
-      </div>
-    );
   };
 
   const basicInfoFormatter = (cell, row) => {
+    if (!row.cover || row.cover === '') {
+      row.cover = NO_COVER_IMAGE;
+    }
     return (
       <div>
         <div className="row">

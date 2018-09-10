@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var vietnameseUtil = require('../utils/vietnameseSlug');
+var vietnameseUtil = require('../helpers/vietnameseSlug');
 var Books = require('../models/Books');
 //Routes will go here
 module.exports = router;

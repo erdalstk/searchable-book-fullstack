@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import BooksTable from './BooksTable';
 import { fetchSearchBarResultsCompleted } from '../actions/index';
 import 'whatwg-fetch';
-import { isStringEmptyOrSpaces } from '../utils/stringUtils';
+import { isStringEmptyOrSpaces } from '../helpers';
 
 class Category extends React.Component {
   constructor(props) {

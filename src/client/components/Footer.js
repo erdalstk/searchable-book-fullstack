@@ -1,5 +1,5 @@
 import React from 'react';
-import './Footer.css'
+import './Footer.css';
 
 const Footer = () => (
   <footer className="page-footer font-small blue pt-4">
@@ -14,10 +14,10 @@ const Footer = () => (
           <h5 className="text-uppercase">Other products</h5>
           <ul className="list-unstyled">
             <li>
-              <a href="#!">Portainer</a>
+              <a href="https://portainer.haoict.com">Portainer</a>
             </li>
             <li>
-              <a href="#!">Owncloud</a>
+              <a href="https://glances.haoict.com">Glances</a>
             </li>
           </ul>
         </div>
@@ -25,10 +25,7 @@ const Footer = () => (
           <h5 className="text-uppercase">Follow us</h5>
           <ul className="list-unstyled">
             <li>
-              <a href="#!">Facebook</a>
-            </li>
-            <li>
-              <a href="#!">Twitter</a>
+              <a href="https://facebook.com/hao.ict">Facebook</a>
             </li>
           </ul>
         </div>

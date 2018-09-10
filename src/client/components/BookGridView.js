@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './BookGridView.css';
-import { STATIC_IMAGE_URL } from '../config/Constants';
-import { noPictureAddDefaultSrc } from '../utils/noPictureCheck';
+import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from '../config';
+import { noPictureAddDefaultSrc } from '../helpers';
 
 const maxNameLen = 35;
 
@@ -10,6 +10,9 @@ const BookGridChildView = props => {
   var name = props.book.name;
   if (props.book.name.length >= maxNameLen) {
     name = props.book.name.slice(0, maxNameLen) + '...';
+  }
+  if (!props.book.cover || props.book.cover === '') {
+    props.book.cover = NO_COVER_IMAGE;
   }
   return (
     <div className="book-grid-view-content-child">

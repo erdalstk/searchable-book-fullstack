@@ -8,7 +8,6 @@ import sanitizeHtml from 'sanitize-html';
 function boldString(str, find) {
   var re = new RegExp(find, 'g');
   str =  str.replace(re, '<b>' + find + '</b>');
-  console.log(str);
   return str;
 }
 

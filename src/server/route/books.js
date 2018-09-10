@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Books = require('../models/Books');
 var multer = require('multer');
-var vietnameseUtil = require('../utils/vietnameseSlug');
+var vietnameseUtil = require('../helpers/vietnameseSlug');
 
 //Routes will go here
 module.exports = router;
@@ -100,8 +100,8 @@ router.post('/', function(req, res) {
     var book = new Books({
       name: req.body.name,
       author: req.body.author,
-      category: req.body.category,
-      description: req.body.description,
+      category: req.body.category || '',
+      description: req.body.description || '',
       cover: cover,
       normalized_name: vietnameseUtil.stringToSlug(req.body.name.trim().toLowerCase()),
       epub_link: epub_link,

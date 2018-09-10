@@ -6,28 +6,48 @@ import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 import { userService } from '../services';
 
-class Login extends React.Component {
+class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: {
+        name: '',
         email: '',
         password: ''
       },
-      submitted: false
+      submitted: false,
+      emailExists: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {}
-
   handleChange(event) {
     const { user } = this.state;
-    user[event.target.name] = event.target.value;
+    const { name, value } = event.target;
+    user[name] = value;
     this.setState({
       user
     });
+
+    //
+    if (name === 'email') {
+      if (value === '') {
+        this.setState({ emailExists: false });
+        return;
+      }
+      clearTimeout(this.delayTimer);
+      this.delayTimer = setTimeout(
+        function() {
+          fetch('/api/auth/checkemail?q=' + value)
+            .then(res => res.json())
+            .then(res => {
+              this.setState({ emailExists: !res.result });
+            });
+        }.bind(this),
+        500
+      );
+    }
   }
 
   handleSubmit(event) {
@@ -37,28 +57,17 @@ class Login extends React.Component {
       submitted: true
     });
     const { user } = this.state;
-    if (user.email && user.password) {
-      mainProps.dispatch(userActions.loginRequesting());
-      userService.login(user).then(
+    if (user.name && user.email && user.password) {
+      mainProps.dispatch(userActions.registerRequesting());
+      userService.register(user).then(
         res => {
-          userService.profile().then(
-            res => {
-              mainProps.dispatch(userActions.profileSuccess(res.user));
-              toast('Login success!', infoToastOptions);
-              mainProps.dispatch(userActions.loginSuccess());
-              mainProps.history.push('/');
-            },
-            error => {
-              toast(error, errorToastOptions);
-              mainProps.dispatch(userActions.profileFailure());
-              return;
-            }
-          );
+          toast('Success!', infoToastOptions);
+          mainProps.dispatch(userActions.registerSuccess());
+          mainProps.history.push('/login');
         },
         error => {
           toast(error, errorToastOptions);
-          mainProps.dispatch(userActions.loginFailure(error));
-          return;
+          mainProps.dispatch(userActions.registerFailure(error));
         }
       );
     }
@@ -66,13 +75,25 @@ class Login extends React.Component {
 
   render() {
     const { status, message } = this.props;
-    const { user, submitted } = this.state;
+    const { user, submitted, emailExists } = this.state;
     return (
       <div>
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
         <div className="col-md-6 col-md-offset-3">
-          <h2>Login</h2>
+          <h2>Register</h2>
           <form name="form" onSubmit={this.handleSubmit}>
+            <div className={'form-group' + (submitted && !user.name ? ' has-error' : '')}>
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                placeholder="Your name..."
+                onChange={this.handleChange}
+              />
+              {submitted && !user.name && <div className="help-block">Name is required</div>}
+            </div>
+
             <div className={'form-group' + (submitted && !this.email ? ' has-error' : '')}>
               <label htmlFor="email">Email</label>
               <input
@@ -83,6 +104,7 @@ class Login extends React.Component {
                 onChange={this.handleChange}
               />
               {submitted && !user.email && <div className="help-block">Email is required</div>}
+              {emailExists && <div className="help-block">Email is already taken</div>}
             </div>
 
             <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
@@ -98,10 +120,13 @@ class Login extends React.Component {
             </div>
 
             <div className="form-group">
-              <button className="btn btn-primary">Login</button>
-              {status === 'processing' && (
+              <button className="btn btn-primary">Register</button>
+              {status === 'registering' && (
                 <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
               )}
+              <Link to="/login" className="btn btn-link">
+                Cancel
+              </Link>
             </div>
           </form>
         </div>
@@ -111,8 +136,8 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  status: state.authentication.status,
-  message: state.authentication.message
+  status: state.registration.status,
+  message: state.registration.message
 });
 
-export default connect(mapStateToProps)(withRouter(Login));
+export default connect(mapStateToProps)(withRouter(Register));

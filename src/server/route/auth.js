@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var User = require('../models/User');
-var verifyToken = require('../utils/verifyToken');
+var verifyToken = require('../helpers/verifyToken');
 
 module.exports = router;
 
@@ -36,17 +36,17 @@ router.post('/register', function(req, res) {
 });
 
 router.post('/login', function(req, res) {
-  if (!req.body || !req.body.email || !req.body.password) return res.status(401).send({ auth: false, token: null });
+  if (!req.body || !req.body.email || !req.body.password) return res.status(401).send({ result: false, token: null });
   User.findOne({ email: req.body.email }, function(err, user) {
     if (err) return res.status(500).send({ result: false, message: 'Error on the server' });
     if (!user) return res.send({ result: false, message: 'User not found' });
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
-    if (!passwordIsValid) return res.status(401).send({ auth: false, message: 'Incorrect password', token: null });
+    if (!passwordIsValid) return res.status(401).send({ result: false, message: 'Incorrect password', token: null });
     var token = jwt.sign({ id: user._id }, config.app.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
-    res.status(200).send({ auth: true, token: token });
+    res.status(200).send({ result: true, token: token });
   });
 });
 
@@ -56,8 +56,18 @@ router.get('/logout', function(req, res) {
 
 router.get('/me', verifyToken, function(req, res) {
   User.findById(req.userId, { password: 0 }, function(err, user) {
-    if (err) return res.status(500).send('There was a problem finding the user.');
-    if (!user) return res.status(404).send('No user found.');
-    res.status(200).send(user);
+    if (err) return res.status(500).send({ result: false, message: 'There was a problem finding the user.' });
+    if (!user) return res.status(404).send({ result: false, message: 'No user found.' });
+    res.status(200).send({ result: true, user: user });
+  });
+});
+
+router.get('/checkemail', function(req, res) {
+  var q = req.query.q;
+  if (!q) return res.send({ result: false });
+  User.findOne({ email: q }, function(err, user) {
+    if (err) return res.status(500).send({ result: false, message: 'Error on the server' });
+    if (!user) return res.send({ result: true });
+    return res.send({ result: false });
   });
 });

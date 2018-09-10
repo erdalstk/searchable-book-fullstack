@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from '../config/Constants';
+import { infoToastOptions, errorToastOptions } from '../config';
 import Dropzone from 'react-dropzone';
 // if use async/await import 'babel-polyfill';
 import 'whatwg-fetch';
