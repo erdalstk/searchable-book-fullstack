@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -17,7 +17,7 @@ window.$ = $;
 window.jQuery = $;
 // END: import for froala-editor
 
-class UploadBook extends React.Component {
+class UploadBook extends Component {
   constructor(props) {
     super(props);
     this.formSubmit = this.formSubmit.bind(this);

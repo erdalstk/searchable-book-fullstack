@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import SearchBar from './SearchBar';
 import BooksTable from './BooksTable';
-import './SearchableBook.css';
 import IndexGridView from './IndexGridView';
 import { connect } from 'react-redux';
 import { fetchSearchBarResultsCompleted } from '../actions';
+import './SearchableBook.css';
 
-class SearchableBook extends React.Component {
+class SearchableBook extends Component {
   constructor(props) {
     super(props);
   }

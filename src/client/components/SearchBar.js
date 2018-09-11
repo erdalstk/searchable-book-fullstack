@@ -7,9 +7,9 @@ import {
   fetchSearchBarResultsCompleted
 } from '../actions';
 import { connect } from 'react-redux';
-import 'whatwg-fetch'; 
+import 'whatwg-fetch';
 
-class SearchBar extends React.Component {
+class SearchBar extends Component {
   constructor(props) {
     super(props);
     this.handleFilterTextChange = this.handleFilterTextChange.bind(this);

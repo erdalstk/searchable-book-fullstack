@@ -27,9 +27,6 @@ const BooksTable = ({ books }) => {
   };
 
   const basicInfoFormatter = (cell, row) => {
-    if (!row.cover || row.cover === '') {
-      row.cover = NO_COVER_IMAGE;
-    }
     return (
       <div>
         <div className="row">

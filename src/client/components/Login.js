@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../actions';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 import { userService } from '../services';
 
-class Login extends React.Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -81,6 +81,7 @@ class Login extends React.Component {
                 name="email"
                 placeholder="example@domain.com"
                 onChange={this.handleChange}
+                onBlur={this.handleChange}
               />
               {submitted && !user.email && <div className="help-block">Email is required</div>}
             </div>
@@ -93,6 +94,7 @@ class Login extends React.Component {
                 name="password"
                 placeholder=""
                 onChange={this.handleChange}
+                onBlur={this.handleChange}
               />
               {submitted && !user.password && <div className="help-block">Password is required</div>}
             </div>

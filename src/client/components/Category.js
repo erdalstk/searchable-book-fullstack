@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import BooksTable from './BooksTable';
@@ -6,7 +6,7 @@ import { fetchSearchBarResultsCompleted } from '../actions/index';
 import 'whatwg-fetch';
 import { isStringEmptyOrSpaces } from '../helpers';
 
-class Category extends React.Component {
+class Category extends Component {
   constructor(props) {
     super(props);
   }

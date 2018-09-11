@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { userService } from '../services';
@@ -6,7 +6,7 @@ import { userActions } from '../actions';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 
-class Profile extends React.Component {
+class Profile extends Component {
   constructor(props) {
     super(props);
   }

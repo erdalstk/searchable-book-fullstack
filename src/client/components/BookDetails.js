@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from '../config';
 import { noPictureAddDefaultSrc } from '../helpers';
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import './BookDetails.css';
 import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 import 'whatwg-fetch';
 
-class BookDetails extends React.Component {
+class BookDetails extends Component {
   constructor(props) {
     super(props);
   }
@@ -74,9 +74,6 @@ class BookDetails extends React.Component {
           <br />
         </a>
       );
-    }
-    if (!book.cover || book.cover === '') {
-      book.cover = NO_COVER_IMAGE;
     }
     return (
       <div className="book-details-content">

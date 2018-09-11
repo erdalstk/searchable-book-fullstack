@@ -11,9 +11,6 @@ const BookGridChildView = props => {
   if (props.book.name.length >= maxNameLen) {
     name = props.book.name.slice(0, maxNameLen) + '...';
   }
-  if (!props.book.cover || props.book.cover === '') {
-    props.book.cover = NO_COVER_IMAGE;
-  }
   return (
     <div className="book-grid-view-content-child">
       <Link to={'/books/' + props.book._id}>

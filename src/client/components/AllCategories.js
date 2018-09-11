@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchCategoriesCompleted } from '../actions';
 import { Link, withRouter } from 'react-router-dom';
@@ -6,7 +6,7 @@ import './AllCategories.css';
 import 'whatwg-fetch';
 import keyIndex from 'react-key-index';
 
-class AllCategories extends React.Component {
+class AllCategories extends Component {
   constructor(props) {
     super(props);
   }

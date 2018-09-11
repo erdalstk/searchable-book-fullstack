@@ -7,7 +7,7 @@ import 'whatwg-fetch';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-class IndexGridView extends React.Component {
+class IndexGridView extends Component {
   static defaultProps = {
     compactType: null,
     useCSSTransforms: true,

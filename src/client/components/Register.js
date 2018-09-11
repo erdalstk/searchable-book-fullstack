@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../actions';
@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 import { userService } from '../services';
 
-class Register extends React.Component {
+class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -90,6 +90,7 @@ class Register extends React.Component {
                 name="name"
                 placeholder="Your name..."
                 onChange={this.handleChange}
+                onBlur={this.handleChange}
               />
               {submitted && !user.name && <div className="help-block">Name is required</div>}
             </div>
@@ -102,6 +103,7 @@ class Register extends React.Component {
                 name="email"
                 placeholder="example@domain.com"
                 onChange={this.handleChange}
+                onBlur={this.handleChange}
               />
               {submitted && !user.email && <div className="help-block">Email is required</div>}
               {emailExists && <div className="help-block">Email is already taken</div>}
@@ -115,6 +117,7 @@ class Register extends React.Component {
                 name="password"
                 placeholder=""
                 onChange={this.handleChange}
+                onBlur={this.handleChange}
               />
               {submitted && !user.password && <div className="help-block">Password is required</div>}
             </div>

@@ -1,17 +1,17 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import './Suggestions.css';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { changeSearchBarFilterText } from '../actions';
 import sanitizeHtml from 'sanitize-html';
+import './Suggestions.css';
 
 function boldString(str, find) {
   var re = new RegExp(find, 'g');
-  str =  str.replace(re, '<b>' + find + '</b>');
+  str = str.replace(re, '<b>' + find + '</b>');
   return str;
 }
 
-class Suggestions extends React.Component {
+class Suggestions extends Component {
   constructor(props) {
     super(props);
     this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
