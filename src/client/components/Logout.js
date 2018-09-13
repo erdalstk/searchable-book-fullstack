@@ -14,6 +14,12 @@ class Logout extends Component {
   componentDidMount() {
     const mainProps = this.props;
     userService.logout();
+    // log out of facebook
+    FB.getLoginStatus(function(response) {
+      if (response && response.status === 'connected') {
+        FB.logout(function(response) {});
+      }
+    });
     toast('Logout Success', infoToastOptions);
     mainProps.dispatch(userActions.logout());
     mainProps.history.push('/');

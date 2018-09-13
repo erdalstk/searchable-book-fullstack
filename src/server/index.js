@@ -12,6 +12,9 @@ app.use(express.static('dist'));
 app.use('/static', express.static('static'));
 
 // connect to mongodb
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 const dbConnectionString = `mongodb://${username}:${password}@${host}:${port}/${name}?authSource=admin`;
 mongoose.connect(
   dbConnectionString,

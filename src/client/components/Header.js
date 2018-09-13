@@ -25,7 +25,7 @@ class Header extends Component {
           </li>
           <li>
             <NavLink className="nav-link" exact to="/logout" activeClassName="active">
-              <i className="fa fa-sign-out-alt fa-fw" />
+              <i className="fa fa-sign-out fa-fw" />
               Logout
             </NavLink>
           </li>
@@ -37,7 +37,7 @@ class Header extends Component {
         <ul className="navbar-nav navbar-right">
           <li>
             <NavLink className="nav-link" exact to="/login" activeClassName="active">
-              <i className="fa fa-sign-in-alt fa-fw" />
+              <i className="fa fa-sign-in fa-fw" />
               Login
             </NavLink>
           </li>

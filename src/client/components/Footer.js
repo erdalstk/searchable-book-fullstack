@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => (
@@ -7,7 +8,15 @@ const Footer = () => (
       <div className="row">
         <div className="col-md-6 mt-md-0 mt-3">
           <h5 className="text-uppercase">About us</h5>
-          <p>Books!!!</p>
+          <p>MDSTBooks!!!</p>
+          <ul className="list-unstyled">
+            <li>
+              <Link to="/privacy">Privacy Policy</Link>
+            </li>
+            <li>
+              <Link to="/term">Term of Service</Link>
+            </li>
+          </ul>
         </div>
         <hr className="clearfix w-100 d-md-none pb-3" />
         <div className="col-md-3 mb-md-0 mb-3">

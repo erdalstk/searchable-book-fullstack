@@ -5,6 +5,7 @@ import { userActions } from '../actions';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 import { userService } from '../services';
+import './Login.css';
 
 class Login extends Component {
   constructor(props) {
@@ -18,9 +19,55 @@ class Login extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateFBLoggedInState = this.updateFBLoggedInState.bind(this);
+    this.onFacebookLoginClick = this.onFacebookLoginClick.bind(this);
   }
 
   componentDidMount() {}
+
+  updateFBLoggedInState(response) {
+    const mainProps = this.props;
+    FB.api('/me', { locale: 'en_US', fields: 'name, email' }, function(data) {
+      var fbUser = {
+        name: data.name,
+        email: data.email,
+        id: data.id,
+        token: response.authResponse.accessToken
+      };
+      userService.loginWithFacebook(fbUser).then(
+        res => {
+          userService.profile().then(
+            res => {
+              mainProps.dispatch(userActions.profileSuccess(res.user));
+              toast('Login success!', infoToastOptions);
+              mainProps.dispatch(userActions.loginSuccess());
+              mainProps.history.push('/');
+            },
+            error => {
+              toast(error, errorToastOptions);
+              mainProps.dispatch(userActions.profileFailure());
+              return;
+            }
+          );
+        },
+        error => {
+          toast(error, errorToastOptions);
+          mainProps.dispatch(userActions.loginFailure(error));
+          return;
+        }
+      );
+    });
+  }
+
+  onFacebookLoginClick() {
+    var main = this;
+    FB.login(
+      response => {
+        main.updateFBLoggedInState(response);
+      },
+      { scope: 'email' }
+    );
+  }
 
   handleChange(event) {
     const { user } = this.state;
@@ -71,7 +118,7 @@ class Login extends Component {
       <div>
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
         <div className="col-md-6 col-md-offset-3">
-          <h2>Login</h2>
+          <h3>Login</h3>
           <form name="form" onSubmit={this.handleSubmit}>
             <div className={'form-group' + (submitted && !this.email ? ' has-error' : '')}>
               <label htmlFor="email">Email</label>
@@ -106,6 +153,21 @@ class Login extends Component {
               )}
             </div>
           </form>
+          <h3>Or</h3>
+          {/* <div
+              className="fb-login-button"
+              data-max-rows="2"
+              data-size="medium"
+              data-button-type="login_with"
+              data-show-faces="false"
+              data-auto-logout-link="false"
+              data-use-continue-as="true"
+              data-scope="email"
+            /> */}
+          <button className="facebook-login-btn btn" onClick={this.onFacebookLoginClick}>
+            <i className="fa fa-facebook fa-fw" />
+            Login with Facebook
+          </button>
         </div>
       </div>
     );

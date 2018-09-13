@@ -30,14 +30,35 @@
     crossorigin="anonymous"></script>
   <!-- Font awesome 4 free-->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
-    crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+    crossorigin="anonymous"> -->
   <!-- Google fonts-->
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <title>Books</title>
 </head>
 
 <body>
+  <!-- ***** Facebook SDK Init Begin ***** -->
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '702372660130091',
+        cookie: true,
+        xfbml: true,
+        version: 'v3.1'
+      });
+      FB.AppEvents.logPageView();
+    };
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <!-- ***** Facebook SDK Init End ****** -->
+
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>

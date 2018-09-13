@@ -4,7 +4,8 @@ export const userService = {
   login,
   logout,
   register,
-  profile
+  profile,
+  loginWithFacebook
 };
 
 function register(user) {
@@ -25,6 +26,25 @@ function login(user) {
   };
 
   return fetch('api/auth/login', requestOptions)
+    .then(handleResponse)
+    .then(res => {
+      // login successful if there's a jwt token in the response
+      if (res.result && res.token) {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem('token', res.token);
+      }
+      return res;
+    });
+}
+
+function loginWithFacebook(user) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(user)
+  };
+
+  return fetch('api/auth/facebook', requestOptions)
     .then(handleResponse)
     .then(res => {
       // login successful if there's a jwt token in the response

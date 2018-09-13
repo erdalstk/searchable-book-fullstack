@@ -9,6 +9,8 @@ import UploadBook from './UploadBook';
 import Register from './Register';
 import Profile from './Profile';
 import Chat from './Chat';
+import PrivacyPolicy from './PrivacyPolicy';
+import Term from './Term';
 
 const Main = () => (
   <main>
@@ -22,6 +24,8 @@ const Main = () => (
       <Route path="/register" component={Register} />
       <Route path="/profile" component={Profile} />
       <Route path="/chat" component={Chat} />
+      <Route path="/privacy" component={PrivacyPolicy} />
+      <Route path="/term" component={Term} />
     </Switch>
   </main>
 );
