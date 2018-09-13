@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import SearchableBook from './SearchableBook';
+import HomePage from './HomePage';
 import Books from './Books';
 import Login from './Login';
 import Logout from './Logout';
@@ -15,7 +15,7 @@ import Term from './Term';
 const Main = () => (
   <main>
     <Switch>
-      <Route exact path="/" component={SearchableBook} />
+      <Route exact path="/" component={HomePage} />
       <Route path="/books" component={Books} />
       <Route path="/categories" component={Categories} />
       <Route path="/uploadbook" component={UploadBook} />

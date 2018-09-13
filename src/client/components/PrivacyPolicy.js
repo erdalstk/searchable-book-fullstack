@@ -12,8 +12,7 @@ const PrivacyPolicy = () => (
 
     <p>
       This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use
-      our Service and the choices you have associated with that data. Our Privacy Policy is managed by the for MDSTBooks
-      is <a href="https://termsfeed.com/privacy-policy/generator/">TermsFeed Privacy Policy Generator</a>.
+      our Service and the choices you have associated with that data. Our Privacy Policy is managed by MDSTBooks
     </p>
 
     <p>

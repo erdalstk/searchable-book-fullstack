@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../helpers/loggingHelper');
 var Books = require('../models/Books');
 
 //Routes will go here

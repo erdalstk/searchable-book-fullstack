@@ -17,8 +17,7 @@ const Term = () => (
 
     <p>
       By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms
-      then you may not access the Service. This Terms and Conditions agreement for MDSTBooks is managed by{' '}
-      <a href="https://termsfeed.com/terms-conditions/generator/">TermsFeed Terms and Conditions Generator</a>.
+      then you may not access the Service.
     </p>
 
     <h2>Accounts</h2>

@@ -79,13 +79,12 @@ function profile() {
 }
 
 function handleResponse(res) {
+  if (res.status === 401) {
+    // auto logout if 401 response returned from api
+    logout();
+  }
   return res.json().then(res => {
     if (!res.result) {
-      if (res.status === 401) {
-        // auto logout if 401 response returned from api
-        logout();
-        location.reload(true);
-      }
       const error = res.message;
       return Promise.reject(error);
     }

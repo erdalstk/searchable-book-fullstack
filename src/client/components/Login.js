@@ -27,6 +27,9 @@ class Login extends Component {
 
   updateFBLoggedInState(response) {
     const mainProps = this.props;
+    if (!response.authResponse || !response.authResponse.accessToken) {
+      return;
+    }
     FB.api('/me', { locale: 'en_US', fields: 'name, email' }, function(data) {
       var fbUser = {
         name: data.name,

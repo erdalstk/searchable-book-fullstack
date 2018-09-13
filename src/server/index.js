@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const logger = require('./helpers/loggingHelper');
 // configurations
 const config = require('./config/main');
 const {
@@ -41,4 +42,4 @@ app.get('*', (req, res) => {
 });
 
 // start listing
-app.listen(config.app.port, () => console.log('Listening on port ' + config.app.port));
+app.listen(config.app.port, () => logger.log('info', 'Listening on port ' + config.app.port));

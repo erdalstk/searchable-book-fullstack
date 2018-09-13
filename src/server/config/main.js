@@ -3,7 +3,8 @@ const env = process.env.NODE_ENV; // 'dev' or 'production'
 const dev = {
   app: {
     port: parseInt(process.env.DEV_APP_PORT) || 8080,
-    secret: process.env.DEV_SECRET || 'supersecret'
+    secret: process.env.DEV_SECRET || 'supersecret',
+    jwtExpireTime:process.env.DEV_JWT_EXPIRE_TIME || 604800 // 5 mins
   },
   db: {
     host: process.env.DEV_DB_HOST || 'localhost',
@@ -17,7 +18,8 @@ const dev = {
 const production = {
   app: {
     port: parseInt(process.env.PROD_APP_PORT) || 8080,
-    secret: process.env.PROD_SECRET || 'supersecret'
+    secret: process.env.PROD_SECRET || 'supersecret',
+    jwtExpireTime:process.env.PROD_JWT_EXPIRE_TIME || 604800 // 1 week
   },
   db: {
     host: process.env.PROD_DB_HOST || 'haoict.com',

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../helpers/loggingHelper');
 var vietnameseUtil = require('../helpers/vietnameseSlug');
 var Books = require('../models/Books');
 //Routes will go here
@@ -9,15 +10,10 @@ router.get('/', function(req, res) {
   var q = req.query.q;
   const inputValue = vietnameseUtil.stringToSlug(q.trim().toLowerCase());
   Books.find({ normalized_name: new RegExp(inputValue, 'i') }, function(err, books) {
+    if (err) {
+      logger.log('error', 'DB Error: ' + err.message);
+      return res.status(500).send({ result: false, message: 'Server error' });
+    }
     res.send(books);
   });
-
-  // Hot fix: vietnamese character
-  // Books.find({}, function(err, books) {
-  //   var results =
-  //     inputLength === 0
-  //       ? []
-  //       : books.filter(book => vietnameseUtil.stringToSlug(book.name.toLowerCase()).includes(inputValue)).slice(0, 10);
-  //   res.json(results);
-  // });
 });

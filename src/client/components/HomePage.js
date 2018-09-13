@@ -4,9 +4,9 @@ import BooksTable from './BooksTable';
 import IndexGridView from './IndexGridView';
 import { connect } from 'react-redux';
 import { fetchSearchBarResultsCompleted } from '../actions';
-import './SearchableBook.css';
+import './HomePage.css';
 
-class SearchableBook extends Component {
+class HomePage extends Component {
   constructor(props) {
     super(props);
   }
@@ -38,4 +38,4 @@ const mapStateToProps = state => ({
   searchBarResults: state.searchBarResults
 });
 
-export default connect(mapStateToProps)(SearchableBook);
+export default connect(mapStateToProps)(HomePage);

@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../helpers/loggingHelper');
 var Books = require('../models/Books');
 var multer = require('multer');
 var vietnameseUtil = require('../helpers/vietnameseSlug');
 
-//Routes will go here
 module.exports = router;
 
 /**
@@ -12,7 +12,10 @@ module.exports = router;
  **/
 router.get('/', function(req, res) {
   Books.find({}, function(err, books) {
-    if (err) return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
+    if (err) {
+      logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+      return res.status(500).send({ result: false, message: 'Server error' });
+    }
     return res.send(books);
   });
 });
@@ -21,9 +24,12 @@ router.get('/', function(req, res) {
  * GET /api/books/_id
  **/
 router.get('/:id', function(req, res) {
-  if (!req.params || !req.params.id) return res.send({ result: false, message: 'Can not find book.' });
+  if (!req.params || !req.params.id) return res.send({ result: false, message: 'Can not find book' });
   Books.findOne({ _id: req.params.id }, function(err, book) {
-    if (err) return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
+    if (err) {
+      logger.log('info', '[%s] DB Error: %s', req.originalUrl, err.message);
+      return res.status(500).send({ result: false, message: 'Can not find book' });
+    }
     if (book) {
       var viewCount = book.view_count;
       if (!viewCount || viewCount === '') {
@@ -36,11 +42,11 @@ router.get('/:id', function(req, res) {
         .save()
         .then(result => {})
         .catch(function() {
-          console.log('can not update view_count for ' + book);
+          logger.log('error', '[%s] Can not update view_count for: %s', req.originalUrl, book);
         });
       return res.send({ result: true, book: book });
     }
-    return res.send({ result: false, message: 'Can not find book.' });
+    return res.send({ result: false, message: 'Can not find book' });
   });
 });
 
@@ -82,8 +88,12 @@ var upload = multer({ storage: storage, fileFilter: fileFilter, limits: fileLimi
 router.post('/', function(req, res) {
   // req.file is the `cover` file
   upload(req, res, function(err) {
-    if (err) return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
+    if (err) {
+      logger.log('error', '[%s] Upload Error: %s', req.originalUrl, err.message);
+      return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
+    }
     if (!req.body) {
+      logger.log('error', '[%s] Request has no body', req.originalUrl);
       return res.status(400).send({ result: false, message: 'Request has no body' });
     }
     if (!req.body.name || !req.body.author || req.body.name === '' || req.body.author === '') {
@@ -116,7 +126,8 @@ router.post('/', function(req, res) {
         res.send({ result: true, book: book });
       })
       .catch(function(err) {
-        res.send({ result: false, message: 'DB Error: ' + err.message });
+        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+        res.send({ result: false, message: 'Server Error' });
       });
   });
 });
