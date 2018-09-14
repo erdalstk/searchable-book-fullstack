@@ -61,7 +61,7 @@ class Profile extends Component {
         <div className="col-lg-3">
           <div className="profile-sidebar">
             <div className="profile-userpic">
-              <img src="/static/upload/1536107791596-panda.jpg" className="img-responsive" alt="" />
+              <img src="/static/upload/panda.jpg" className="img-responsive" alt="" />
             </div>
             <div className="profile-usertitle">
               <div className="profile-usertitle-name">{user.name}</div>
