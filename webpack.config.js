@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const outputDirectory = 'dist';
 
 module.exports = {
@@ -29,9 +28,6 @@ module.exports = {
         loader: 'url-loader?limit=100000'
       }
     ]
-  },
-  optimization: {
-    minimizer: [new UglifyJsPlugin()]
   },
   devServer: {
     port: 3000,

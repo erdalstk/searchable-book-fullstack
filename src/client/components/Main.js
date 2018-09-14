@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import Async from 'react-code-splitting';
 import HomePage from './HomePage';
-import Books from './Books';
-import Login from './Login';
-import Logout from './Logout';
-import Categories from './Categories';
-import UploadBook from './UploadBook';
-import Register from './Register';
-import Profile from './Profile';
-import Chat from './Chat';
-import PrivacyPolicy from './PrivacyPolicy';
-import Term from './Term';
+const Books = () => <Async load={import('./Books')} />;
+const Login = () => <Async load={import('./Login')} />;
+const Logout = () => <Async load={import('./Logout')} />;
+const Categories = () => <Async load={import('./Categories')} />;
+const UploadBook = () => <Async load={import('./UploadBook')} />;
+const Register = () => <Async load={import('./Register')} />;
+const Profile = () => <Async load={import('./Profile')} />;
+const Chat = () => <Async load={import('./Chat')} />;
+const PrivacyPolicy = () => <Async load={import('./PrivacyPolicy')} />;
+const Term = () => <Async load={import('./Term')} />;
 
 const Main = () => (
   <main>

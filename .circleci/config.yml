@@ -12,7 +12,7 @@ jobs:
   deploy:
     machine: true
     steps:
-      - run: ssh $SSH_USER@$SSH_HOST "docker kill searchable-book && docker rm searchable-book && docker pull haoict/searchable-book"
+      - run: ssh $SSH_USER@$SSH_HOST "docker kill searchable-book; docker rm searchable-book; docker pull haoict/searchable-book"
       - run: ssh $SSH_USER@$SSH_HOST "docker run --name searchable-book -d -p 3000:8080 -v /home/ec2-user/docker/bindmount/books/static/:/usr/src/app/static/ haoict/searchable-book"
 
 workflows:
