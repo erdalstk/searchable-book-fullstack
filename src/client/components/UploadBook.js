@@ -62,8 +62,8 @@ class UploadBook extends Component {
     data.append('description', this.state.descriptionEditor);
     data.append('cover', this.state.coverFile[0]);
     data.append('epub', this.state.epubFile[0]);
-    data.append('mobi', this.state.mobiFile);
-    data.append('pdf', this.state.pdfFile);
+    data.append('mobi', this.state.mobiFile[0]);
+    data.append('pdf', this.state.pdfFile[0]);
 
     fetch('/api/books', {
       method: 'POST',

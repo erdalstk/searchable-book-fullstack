@@ -1,4 +1,4 @@
-var logger = require('./loggingHelper');
+var logger = require('./logging.helper');
 var jwt = require('jsonwebtoken');
 var config = require('../config/main');
 

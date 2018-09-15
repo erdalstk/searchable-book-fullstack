@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var logger = require('../helpers/loggingHelper');
+var logger = require('../helpers/logging.helper');
 var Books = require('../models/Books');
 var multer = require('multer');
 var vietnameseUtil = require('../helpers/vietnameseSlug');
@@ -74,8 +74,9 @@ function fileFilter(req, file, cb) {
     file.mimetype !== 'application/octet-stream' && // mobi?
     file.mimetype !== 'application/pdf'
   ) {
-    req.fileValidationError = 'goes wrong on the mimetype';
-    cb(new Error('goes wrong on the mimetype'));
+    req.fileValidationError = 'wrong file format:' + file.mimetype;
+    logger.log('info', '[%s] Upload Error, wrong file type: %s', req.originalUrl, file.mimetype);
+    cb(new Error(req.fileValidationError));
   }
   cb(null, true);
 }

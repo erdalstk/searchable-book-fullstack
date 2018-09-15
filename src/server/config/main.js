@@ -4,7 +4,7 @@ const dev = {
   app: {
     port: parseInt(process.env.DEV_APP_PORT) || 8080,
     secret: process.env.DEV_SECRET || 'supersecret',
-    jwtExpireTime:process.env.DEV_JWT_EXPIRE_TIME || 604800 // 5 mins
+    jwtExpireTime:process.env.DEV_JWT_EXPIRE_TIME || 86400 // 1 day
   },
   db: {
     host: process.env.DEV_DB_HOST || 'localhost',

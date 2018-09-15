@@ -1,28 +1,17 @@
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
-const logger = require('./helpers/loggingHelper');
-// configurations
+const connectMongoWithRetry = require('./helpers/mongoose.helper');
+const logger = require('./helpers/logging.helper');
 const config = require('./config/main');
-const {
-  db: { host, port, name, username, password }
-} = config;
 
 // serve static files
 app.use(express.static('dist'));
 app.use('/static', express.static('static'));
 
-// connect to mongodb
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-const dbConnectionString = `mongodb://${username}:${password}@${host}:${port}/${name}?authSource=admin`;
-mongoose.connect(
-  dbConnectionString,
-  { useNewUrlParser: true }
-);
+// connect to mongo
+connectMongoWithRetry();
 
-// route
+// routes
 var auth = require('./route/auth');
 var books = require('./route/books.js');
 var instantsearch = require('./route/instantsearch.js');
@@ -37,9 +26,10 @@ app.use('/api/categories', categories);
 app.use('/api/recentlyadded', recentlyadded);
 app.use('/api/mostview', mostview);
 
+// handle 404
 app.get('*', (req, res) => {
   res.status(404).send('404 Not Found');
 });
 
-// start listing
+// start server
 app.listen(config.app.port, () => logger.log('info', 'Listening on port ' + config.app.port));

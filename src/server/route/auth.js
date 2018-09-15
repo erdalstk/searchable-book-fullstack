@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var logger = require('../helpers/loggingHelper');
+var logger = require('../helpers/logging.helper');
 var config = require('../config/main');
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');

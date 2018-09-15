@@ -1,6 +1,7 @@
 const winston = require('winston');
 const { format } = require('winston');
-const { combine, timestamp, printf } = format;
+const { combine, printf } = format;
+const moment = require('moment-timezone');
 require('winston-daily-rotate-file');
 
 const consoleFormat = printf(info => {
@@ -15,15 +16,25 @@ const logTransport = new winston.transports.DailyRotateFile({
   maxFiles: '14d'
 });
 
+// handle app exception and write to ./logs/exceptions.log
 const execptionTransport = new winston.transports.File({
   filename: './logs/exceptions.log'
 });
 
+// correct timezone to Tokyo
+const appendTimestamp = format((info, opts) => {
+  if (opts.tz)
+    info.timestamp = moment()
+      .tz(opts.tz)
+      .format();
+  return info;
+});
+
 const logger = winston.createLogger({
   level: 'info',
-  format: combine(timestamp(), format.splat(), winston.format.json()),
+  format: combine(appendTimestamp({ tz: 'Asia/Tokyo' }), format.splat(), winston.format.json()),
   transports: [logTransport],
-  exceptionHandlers: [execptionTransport],
+  exceptionHandlers: [execptionTransport]
   // exitOnError: false
 });
 
