@@ -18,6 +18,7 @@ var instantsearch = require('./route/instantsearch.js');
 var categories = require('./route/categories.js');
 var recentlyadded = require('./route/recentlyadded');
 var mostview = require('./route/mostview');
+var downloadebook = require('./route/downloadebook');
 
 app.use('/api/auth', auth);
 app.use('/api/books', books);
@@ -25,6 +26,7 @@ app.use('/api/instantsearch', instantsearch);
 app.use('/api/categories', categories);
 app.use('/api/recentlyadded', recentlyadded);
 app.use('/api/mostview', mostview);
+app.use('/api/downloadebook', downloadebook);
 
 // handle 404
 app.get('*', (req, res) => {

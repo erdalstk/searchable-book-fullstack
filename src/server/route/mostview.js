@@ -8,8 +8,7 @@ module.exports = router;
 
 router.get('/', function(req, res) {
   Books.find({})
-    .sort({ view_count: -1 })
-    .limit(10)
+    .sort({ view_count:-1 })
     .exec(function(err, books) {
       res.send(books);
     });

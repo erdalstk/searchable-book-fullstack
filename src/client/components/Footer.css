@@ -1,8 +1,9 @@
 .page-footer {
-  margin-top: 20px;
+  margin-top: 40px;
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: #efefef;
+  background-color: #eeeeee;
   text-align: center;
+  border-radius: 4px;
 }

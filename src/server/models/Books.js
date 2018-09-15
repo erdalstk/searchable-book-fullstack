@@ -12,8 +12,8 @@ var BooksSchema = new Schema({
   epub_link: String,
   mobi_link: String,
   pdf_link: String,
-  view_count: String,
-  download_count: String,
+  view_count: Number,
+  download_count: Number,
   create_time: Date,
   update_time: Date
 });

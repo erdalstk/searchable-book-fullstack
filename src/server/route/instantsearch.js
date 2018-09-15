@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
   const inputValue = vietnameseUtil.stringToSlug(q.trim().toLowerCase());
   Books.find({ normalized_name: new RegExp(inputValue, 'i') }, function(err, books) {
     if (err) {
-      logger.log('error', 'DB Error: ' + err.message);
+      logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });
     }
     res.send(books);

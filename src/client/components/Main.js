@@ -12,6 +12,7 @@ const Profile = () => <Async load={import('./Profile')} />;
 const Chat = () => <Async load={import('./Chat')} />;
 const PrivacyPolicy = () => <Async load={import('./PrivacyPolicy')} />;
 const Term = () => <Async load={import('./Term')} />;
+const Download = () => <Async load={import('./Download')} />;
 
 const Main = () => (
   <main>
@@ -27,6 +28,7 @@ const Main = () => (
       <Route path="/chat" component={Chat} />
       <Route path="/privacy" component={PrivacyPolicy} />
       <Route path="/term" component={Term} />
+      <Route path="/download" component={Download} />
     </Switch>
   </main>
 );

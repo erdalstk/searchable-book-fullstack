@@ -4,6 +4,7 @@ var logger = require('../helpers/logging.helper');
 var Books = require('../models/Books');
 var multer = require('multer');
 var vietnameseUtil = require('../helpers/vietnameseSlug');
+var constants = require('../config/constants');
 
 module.exports = router;
 
@@ -11,7 +12,14 @@ module.exports = router;
  * GET /api/books
  **/
 router.get('/', function(req, res) {
-  Books.find({}, function(err, books) {
+  var options = {
+    epub_link: 0,
+    mobi_link: 0,
+    pdf_link: 0,
+    create_time: 0,
+    update_time: 0
+  };
+  Books.find({}, options, function(err, books) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });
@@ -30,23 +38,33 @@ router.get('/:id', function(req, res) {
       logger.log('info', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Can not find book' });
     }
-    if (book) {
-      var viewCount = book.view_count;
-      if (!viewCount || viewCount === '') {
-        viewCount = '0';
-      }
-      viewCount = parseInt(viewCount);
-      viewCount = viewCount + 1;
-      book.view_count = viewCount.toString();
-      book
-        .save()
-        .then(result => {})
-        .catch(function() {
-          logger.log('error', '[%s] Can not update view_count for: %s', req.originalUrl, book);
-        });
-      return res.send({ result: true, book: book });
+    if (!book) {
+      return res.send({ result: false, message: 'Can not find book' });
     }
-    return res.send({ result: false, message: 'Can not find book' });
+    var viewCount = book.view_count;
+    if (!viewCount) {
+      viewCount = 0;
+    }
+    book.view_count = viewCount + 1;
+    let resBook = JSON.parse(JSON.stringify(book));
+    book
+      .save()
+      .then(result => {})
+      .catch(function() {
+        logger.log('error', '[%s] Can not update view_count for: %s', req.originalUrl, book);
+      });
+    if (resBook.epub_link) {
+      resBook.epub_link = true;
+    }
+    if (resBook.mobi_link) {
+      resBook.mobi_link = true;
+    }
+    if (resBook.pdf_link) {
+      resBook.pdf_link = true;
+    }
+    console.log(resBook);
+    console.log(book);
+    return res.send({ result: true, book: resBook });
   });
 });
 
@@ -54,7 +72,7 @@ router.get('/:id', function(req, res) {
  * POST /api/books
  **/
 var storage = multer.diskStorage({
-  destination: './static/upload',
+  destination: constants.STATIC_UPLOAD_PATH,
   filename: function(req, file, cb) {
     cb(null, Date.now() + '-' + vietnameseUtil.starndardUploadName(file.originalname.trim().toLowerCase()));
   }
