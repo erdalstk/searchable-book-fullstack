@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
 import BooksTable from './BooksTable';
+import SearchBar from './SearchBar';
 import { connect } from 'react-redux';
-import { fetchSearchBarResultsCompleted } from '../actions';
-import 'whatwg-fetch'; 
+import './AllBooks.css';
+import 'whatwg-fetch';
 class AllBooks extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {
-    fetch('/api/books')
-      .then(res => res.json())
-      .then(books => this.props.dispatch(fetchSearchBarResultsCompleted(books)));
-  }
+  componentDidMount() {}
 
   render() {
-    return <BooksTable books={this.props.searchBarResults} />;
+    const { searchBarResults } = this.props;
+    let mainView = (
+      <div className="search-hint">
+        <p>Start searching book by typing something in searchbar!</p>
+      </div>
+    );
+    if (searchBarResults && searchBarResults.length) {
+      mainView = <BooksTable books={this.props.searchBarResults} />;
+    }
+    return (
+      <div className="all-book-container">
+        <div className="search-bar">
+          <SearchBar />
+        </div>
+        <div className="table-view">{mainView}</div>
+      </div>
+    );
   }
 }
 

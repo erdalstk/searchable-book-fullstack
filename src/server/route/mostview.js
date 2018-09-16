@@ -7,9 +7,15 @@ var Books = require('../models/Books');
 module.exports = router;
 
 router.get('/', function(req, res) {
+  var limit = parseInt(req.query.limit) || 10;
   Books.find({})
-    .sort({ view_count:-1 })
+    .sort({ view_count: -1 })
+    .limit(limit)
     .exec(function(err, books) {
-      res.send(books);
+      if (err) {
+        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+        return res.status(500).send({ result: false, message: 'Server error' });
+      }
+      res.send({ result: true, data: books });
     });
 });

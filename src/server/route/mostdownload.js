@@ -9,7 +9,7 @@ module.exports = router;
 router.get('/', function(req, res) {
   var limit = parseInt(req.query.limit) || 10;
   Books.find({})
-    .sort({ update_time: -1 })
+    .sort({ download_count: -1 })
     .limit(limit)
     .exec(function(err, books) {
       if (err) {

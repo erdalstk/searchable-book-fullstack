@@ -7,6 +7,7 @@ import {
   fetchSearchBarResultsCompleted
 } from '../actions';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import 'whatwg-fetch';
 
 class SearchBar extends Component {
@@ -20,6 +21,9 @@ class SearchBar extends Component {
     var mainProps = this.props;
     var filterText = e.target.value;
     mainProps.dispatch(changeSearchBarFilterText(filterText));
+    if (!filterText.trim()) {
+      return;
+    }
     clearTimeout(this.delayTimer);
     this.delayTimer = setTimeout(function() {
       fetch('/api/instantsearch?q=' + filterText)
@@ -31,7 +35,8 @@ class SearchBar extends Component {
 
   handleFilterTextSubmit(e) {
     e.preventDefault();
-    if (!this.input.value.trim()) {
+    clearTimeout(this.delayTimer);
+    if (!this.props.searchBarFilterText.trim()) {
       this.props.dispatch(fetchSearchBarResultsCompleted([]));
       return;
     }
@@ -39,6 +44,7 @@ class SearchBar extends Component {
       .then(res => res.json())
       .then(books => this.props.dispatch(fetchSearchBarResultsCompleted(books)))
       .catch(function() {});
+    this.props.history.push('/books');
   }
 
   render() {
@@ -48,7 +54,8 @@ class SearchBar extends Component {
           <input
             type="text"
             placeholder="Search book..."
-            ref={node => (this.input = node)}
+            // ref={node => (this.input = node)}
+            value={this.props.searchBarFilterText}
             onChange={this.handleFilterTextChange}
           />
           <button type="submit">
@@ -65,4 +72,4 @@ const mapStateToProps = state => ({
   searchBarFilterText: state.searchBarFilterText
 });
 
-export default connect(mapStateToProps)(SearchBar);
+export default connect(mapStateToProps)(withRouter(SearchBar));

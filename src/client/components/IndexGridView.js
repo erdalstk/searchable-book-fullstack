@@ -3,7 +3,8 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import BookGridView from './BookGridView';
-import 'whatwg-fetch'; 
+
+import 'whatwg-fetch';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -58,45 +59,23 @@ class IndexGridView extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      recentlyAddedData: [],
-      mostDownloadData: [],
-      userSuggestionData: []
-    };
-  }
-
-  componentDidMount() {
-    fetch('/api/books')
-      .then(res => res.json())
-      .then(books => {
-        this.setState({
-          recentlyAddedData: books.slice(0, 10)
-        });
-        this.setState({
-          mostDownloadData: books.slice(20, 25)
-        });
-        this.setState({
-          userSuggestionData: books.slice(30, 50)
-        });
-      });
   }
 
   render() {
     // layout is an array of objects, see the demo for more complete usage
-
     return (
       <ResponsiveReactGridLayout
         {...this.props}
         // WidthProvider option
         measureBeforeMount={false}>
         <div key="a">
-          <BookGridView title="Recently Added" books={this.state.recentlyAddedData} />
+          <BookGridView title="Recently Added" books={this.props.recentlyAddedData} />
         </div>
         <div key="b">
-          <BookGridView title="Most Downloaded" books={this.state.mostDownloadData} />
+          <BookGridView title="Most Downloaded" books={this.props.mostDownloadData} />
         </div>
         <div key="c">
-          <BookGridView title="Only for you" books={this.state.userSuggestionData} />
+          <BookGridView title="Most View" books={this.props.mostViewData} />
         </div>
       </ResponsiveReactGridLayout>
     );

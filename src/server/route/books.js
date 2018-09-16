@@ -62,8 +62,6 @@ router.get('/:id', function(req, res) {
     if (resBook.pdf_link) {
       resBook.pdf_link = true;
     }
-    console.log(resBook);
-    console.log(book);
     return res.send({ result: true, book: resBook });
   });
 });

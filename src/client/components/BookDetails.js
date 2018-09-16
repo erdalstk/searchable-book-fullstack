@@ -4,6 +4,7 @@ import { noPictureAddDefaultSrc } from '../helpers';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchBookDetailsCompleted } from '../actions/index';
+import Moment from 'react-moment';
 import './BookDetails.css';
 import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 import 'whatwg-fetch';
@@ -81,7 +82,7 @@ class BookDetails extends Component {
           <div className="col-12 col-sm-8 col-md-9 col-lg-9 book-meta">
             <h3>{book.name}</h3>
             <div className="row">
-              <div className="col-12 col-sm-9 col-lg-10 basic-meta">
+              <div className="col-12 col-sm-12 col-lg-8 basic-meta">
                 <p>
                   Tác giả:
                   <button type="button" className="btn btn-light btn-xs">
@@ -95,7 +96,7 @@ class BookDetails extends Component {
                   </button>
                 </p>
               </div>
-              <div className="col-12 col-sm-3 col-lg-2 statistic-meta">
+              <div className="col-12 col-sm-12 col-lg-4 statistic-meta">
                 <div className="row">
                   <div className="view-count col-3 col-sm-12 col-lg-12">
                     <i className="fa fa-eye fa-fw" aria-hidden="true" />
@@ -104,6 +105,14 @@ class BookDetails extends Component {
                   <div className="download-count col-3 col-sm-12 col-lg-12">
                     <i className="fa fa-download fa-fw" aria-hidden="true" />
                     {book.download_count}
+                  </div>
+                  <div className="update-time col-6 col-sm-12 col-lg-12">
+                    <i className="fa fa-clock-o fa-fw" aria-hidden="true" />
+                    Updated&nbsp;
+                    <Moment diff={book.update_time} unit="days">
+                      {Date.now()}
+                    </Moment>
+                    &nbsp;day(s) ago
                   </div>
                 </div>
               </div>

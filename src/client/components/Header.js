@@ -72,14 +72,14 @@ class Header extends Component {
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
               <NavLink className="nav-link" exact to="/" activeClassName="active">
-                <i className="fa fa-search fa-fw" />
-                Search
+                <i className="fa fa-home fa-fw" />
+                Home
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" exact to="/books" activeClassName="active">
-                <i className="fa fa-list-ul fa-fw" />
-                All Books
+                <i className="fa fa-search fa-fw" />
+                Search
               </NavLink>
             </li>
             <li className="nav-item dropdown">

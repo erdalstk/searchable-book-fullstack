@@ -49,14 +49,9 @@ const BooksTable = ({ books }) => {
       </div>
     );
   };
-
-  const rows = [];
+  
   if (!books || !books.length) {
-    return (
-      <div>
-        <p>No book!</p>
-      </div>
-    );
+    return <div />;
   }
 
   return (
