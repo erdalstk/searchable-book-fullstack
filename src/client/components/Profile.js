@@ -5,38 +5,13 @@ import { userService } from '../services';
 import { userActions } from '../actions';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
+import AccountSettings from './AccountSettings.Profile';
+import Overview from './Overview.Profile';
 import './Profile.css';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      passwordChange: {
-        oldPassword: '',
-        newPassword: '',
-        mewPasswordConfirm: ''
-      },
-      submitted: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    const { passwordChange } = this.state;
-    passwordChange[event.target.name] = event.target.value;
-    this.setState({
-      passwordChange
-    });
-  }
-
-  handlePasswordChangeSubmit(event) {
-    event.preventDefault();
-    const mainProps = this.props;
-    this.setState({
-      submitted: true
-    });
-    const { passwordChange } = this.state;
   }
 
   componentDidMount() {
@@ -55,7 +30,6 @@ class Profile extends Component {
 
   render() {
     const { user } = this.props;
-    const { passwordChange, submitted } = this.state;
     return (
       <div className="row profile">
         <div className="col-lg-3">
@@ -134,58 +108,20 @@ class Profile extends Component {
                 id="v-pills-overview"
                 role="tabpanel"
                 aria-labelledby="v-pills-overview-tab">
-                ... Overview
+                <Overview />
               </div>
               <div
                 className="tab-pane fade"
                 id="v-pills-settings"
                 role="tabpanel"
                 aria-labelledby="v-pills-settings-tab">
-                <h3>Login</h3>
-                <form name="form" onSubmit={this.handlePasswordChangeSubmit}>
-                  <div className={'form-group'}>
-                    <label htmlFor="password">Old Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="oldpassword"
-                      onChange={this.handleChange}
-                      onBlur={this.handleChange}
-                    />
-                    {submitted && !passwordChange.oldPassword && <div className="help-block">Password is required</div>}
-                  </div>
-
-                  <div className={'form-group'}>
-                    <label htmlFor="password">New Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="newPassword"
-                      onChange={this.handleChange}
-                      onBlur={this.handleChange}
-                    />
-                    {submitted && !passwordChange.newPassword && <div className="help-block">Password is required</div>}
-                  </div>
-
-                  <div className={'form-group'}>
-                    <label htmlFor="password">New Password Confirm</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="newPasswordConfirm"
-                      onChange={this.handleChange}
-                      onBlur={this.handleChange}
-                    />
-                    {submitted &&
-                      !passwordChange.newPasswordConfirm && <div className="help-block">Password is required</div>}
-                  </div>
-                </form>
+                <AccountSettings />
               </div>
               <div className="tab-pane fade" id="v-pills-tasks" role="tabpanel" aria-labelledby="v-pills-tasks-tab">
-                ... Tasks
+                ... Under construction
               </div>
               <div className="tab-pane fade" id="v-pills-help" role="tabpanel" aria-labelledby="v-pills-help-tab">
-                ... Help
+                ... Under construction
               </div>
             </div>
           </div>

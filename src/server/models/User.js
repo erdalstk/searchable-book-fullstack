@@ -15,6 +15,7 @@ var UserSchema = new Schema({
     id: String,
     token: String
   },
+  level: Number,
   create_time: Date,
   update_time: Date
 });

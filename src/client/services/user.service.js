@@ -1,11 +1,12 @@
-import { authHeader } from '../helpers';
+import { authHeader, authHeaderJson } from '../helpers';
 
 export const userService = {
   login,
   logout,
   register,
   profile,
-  loginWithFacebook
+  loginWithFacebook,
+  changePassword
 };
 
 function register(user) {
@@ -26,6 +27,25 @@ function login(user) {
   };
 
   return fetch('api/auth/login', requestOptions)
+    .then(handleResponse)
+    .then(res => {
+      // login successful if there's a jwt token in the response
+      if (res.result && res.token) {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem('token', res.token);
+      }
+      return res;
+    });
+}
+
+function changePassword(user) {
+  const requestOptions = {
+    method: 'POST',
+    headers: authHeaderJson(),
+    body: JSON.stringify(user)
+  };
+
+  return fetch('api/auth/changepassword', requestOptions)
     .then(handleResponse)
     .then(res => {
       // login successful if there's a jwt token in the response

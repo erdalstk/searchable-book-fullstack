@@ -140,11 +140,11 @@ router.post('/', function(req, res) {
     book
       .save()
       .then(result => {
-        res.send({ result: true, book: book });
+        return res.send({ result: true, book: book });
       })
       .catch(function(err) {
         logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
-        res.send({ result: false, message: 'Server Error' });
+        return res.send({ result: false, message: 'Server Error' });
       });
   });
 });
