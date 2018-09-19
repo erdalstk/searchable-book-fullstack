@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { bookService } from '../services';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 import Dropzone from 'react-dropzone';
@@ -65,22 +66,17 @@ class UploadBook extends Component {
     data.append('mobi', this.state.mobiFile[0]);
     data.append('pdf', this.state.pdfFile[0]);
 
-    fetch('/api/books', {
-      method: 'POST',
-      body: data
-    })
-      .then(res => res.json())
-      .then(function(res) {
-        if (res.result === true) {
-          toast('Success!', infoToastOpt);
-          historyProps.push('/books/' + res.book._id);
-        } else {
-          toast(res.message, errorToastOpt);
-        }
-      })
-      .catch(function(err) {
-        toast(err.message, errorToastOpt);
-      });
+    bookService.uploadBook(data).then(
+      res => {
+        toast('Success!', infoToastOpt);
+        historyProps.push('/books/' + res.data._id);
+        return;
+      },
+      error => {
+        toast(error, errorToastOpt);
+        return;
+      }
+    );
   }
 
   onCoverDrop(files) {

@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import BooksTable from './BooksTable';
 import SearchBar from './SearchBar';
 import { connect } from 'react-redux';
-import './AllBooks.css';
+import './BooksSearchResult.css';
 import 'whatwg-fetch';
-class AllBooks extends Component {
+
+class BooksSearchResult extends Component {
   constructor(props) {
     super(props);
   }
@@ -36,4 +37,4 @@ const mapStateToProps = state => ({
   searchBarResults: state.searchBarResults
 });
 
-export default connect(mapStateToProps)(AllBooks);
+export default connect(mapStateToProps)(BooksSearchResult);

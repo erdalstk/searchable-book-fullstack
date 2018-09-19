@@ -3,10 +3,12 @@ var router = express.Router();
 var logger = require('../helpers/logging.helper');
 var Books = require('../models/Books');
 var constants = require('../config/constants');
+var verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
+
 //Routes will go here
 module.exports = router;
 
-router.get('/:id/:type', function(req, res) {
+router.get('/:id/:type', verifyApiAccessToken, function(req, res) {
   if (!req.params.id || !req.params.type || req.params.id === '' || req.params.type === '') {
     return res.status(400).send({ result: false, message: 'Bad request' });
   }
@@ -56,6 +58,6 @@ router.get('/:id/:type', function(req, res) {
       .catch(function() {
         logger.log('error', '[%s] Can not update download_count for: %s', req.originalUrl, book);
       });
-    return res.send({ result: true, link: link });
+    return res.send({ result: true, data: link });
   });
 });

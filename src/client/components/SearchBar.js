@@ -8,6 +8,7 @@ import {
 } from '../actions';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { bookService } from '../services';
 import 'whatwg-fetch';
 
 class SearchBar extends Component {
@@ -26,11 +27,16 @@ class SearchBar extends Component {
     }
     clearTimeout(this.delayTimer);
     this.delayTimer = setTimeout(function() {
-      fetch('/api/instantsearch?q=' + filterText)
-        .then(res => res.json())
-        .then(books => mainProps.dispatch(fetchSearchBarSuggestionCompleted(books.slice(0, 10))))
-        .catch(function() {});
-    }, 500);
+      bookService.instantSearch(filterText).then(
+        res => {
+          mainProps.dispatch(fetchSearchBarSuggestionCompleted(res.data.slice(0, 10)));
+          return;
+        },
+        error => {
+          return;
+        }
+      );
+    });
   }
 
   handleFilterTextSubmit(e) {
@@ -40,11 +46,16 @@ class SearchBar extends Component {
       this.props.dispatch(fetchSearchBarResultsCompleted([]));
       return;
     }
-    fetch('/api/instantsearch?q=' + this.props.searchBarFilterText)
-      .then(res => res.json())
-      .then(books => this.props.dispatch(fetchSearchBarResultsCompleted(books)))
-      .catch(function() {});
-    this.props.history.push('/books');
+    bookService.instantSearch(this.props.searchBarFilterText).then(
+      res => {
+        this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
+        this.props.history.push('/books');
+        return;
+      },
+      error => {
+        return;
+      }
+    );
   }
 
   render() {

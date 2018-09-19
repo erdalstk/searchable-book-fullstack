@@ -1,0 +1,26 @@
+.email-check-form {
+  position: relative;
+}
+
+.email-check-form .check-icon {
+  z-index: 10;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  font-size: 20px;
+}
+
+.email-check-form .check-icon.true {
+  color: red;
+}
+.email-check-form .check-icon.false {
+  color: green;
+}
+
+.requirements {
+  max-height: 200px;
+  transition: 0.28s;
+  overflow: hidden;
+  color: red;
+  font-style: italic;
+}

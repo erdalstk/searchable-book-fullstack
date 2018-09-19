@@ -3,7 +3,8 @@ import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from '../config';
 import { noPictureAddDefaultSrc } from '../helpers';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchBookDetailsCompleted } from '../actions/index';
+import { fetchBookDetailsCompleted, userActions } from '../actions';
+import { bookService } from '../services';
 import Moment from 'react-moment';
 import './BookDetails.css';
 import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
@@ -15,29 +16,32 @@ class BookDetails extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/books/' + this.props.match.params.id)
-      .then(res => res.json())
-      .then(res => {
-        this.props.dispatch(fetchBookDetailsCompleted(res));
-      })
-      .catch(function() {});
+    bookService.getBookDetails(this.props.match.params.id).then(
+      res => {
+        this.props.dispatch(fetchBookDetailsCompleted(res.data));
+      },
+      error => {
+        return;
+      }
+    );
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
-      fetch('/api/books/' + this.props.match.params.id)
-        .then(res => res.json())
-        .then(res => {
-          this.props.dispatch(fetchBookDetailsCompleted(res));
-        })
-        .catch(function() {});
+      bookService.getBookDetails(this.props.match.params.id).then(
+        res => {
+          this.props.dispatch(fetchBookDetailsCompleted(res.data));
+        },
+        error => {
+          return;
+        }
+      );
     }
   }
 
   render() {
-    if (this.props.result === false) return 'No book found';
     const book = this.props.book;
-    if (!book) return 'No book found';
+    if (!book || !book.name) return 'No book found';
     var download_epub_link = '';
     var download_mobi_link = '';
     var download_pdf_link = '';
@@ -92,7 +96,7 @@ class BookDetails extends Component {
                 <p>
                   Thể loại:
                   <button type="button" className="btn btn-light btn-xs">
-                    #{book.category}
+                    <Link to={'/categories/' + book.category}>#{book.category}</Link>
                   </button>
                 </p>
               </div>
@@ -100,19 +104,26 @@ class BookDetails extends Component {
                 <div className="row">
                   <div className="view-count col-3 col-sm-12 col-lg-12">
                     <i className="fa fa-eye fa-fw" aria-hidden="true" />
-                    {book.view_count}
+                    View: {book.view_count ? book.view_count : 0}
                   </div>
                   <div className="download-count col-3 col-sm-12 col-lg-12">
                     <i className="fa fa-download fa-fw" aria-hidden="true" />
-                    {book.download_count}
+                    Download: {book.download_count ? book.download_count : 0}
                   </div>
-                  <div className="update-time col-6 col-sm-12 col-lg-12">
-                    <i className="fa fa-clock-o fa-fw" aria-hidden="true" />
-                    Updated&nbsp;
-                    <Moment diff={book.update_time} unit="days">
-                      {Date.now()}
-                    </Moment>
-                    &nbsp;day(s) ago
+                  {book.update_time && (
+                    <div className="update-time col-3 col-sm-12 col-lg-12">
+                      <i className="fa fa-clock-o fa-fw" aria-hidden="true" />
+                      Updated:&nbsp;
+                      <Moment diff={book.update_time} unit="days">
+                        {Date.now()}
+                      </Moment>
+                      &nbsp;day(s) ago
+                    </div>
+                  )}
+                  <div className="upload-by col-3 col-sm-12 col-lg-12">
+                    <i className="fa fa-user fa-fw" aria-hidden="true" />
+                    Upload by:&nbsp;
+                    {book.create_by ? <Link to={'/profile/' + book.create_by}>{book.create_by}</Link> : 'anonymous'}
                   </div>
                 </div>
               </div>
@@ -135,8 +146,7 @@ class BookDetails extends Component {
 }
 
 const mapStateToProps = state => ({
-  result: state.bookDetails.result,
-  book: state.bookDetails.book
+  book: state.bookDetails
 });
 
 export default connect(mapStateToProps)(BookDetails);

@@ -31,12 +31,14 @@ const BooksTable = ({ books }) => {
       <div>
         <div className="row">
           <div className="col-sm-5 col-md-3 col-lg-3 bookcover">
-            <img
-              className="books-table-image"
-              onError={noPictureAddDefaultSrc}
-              alt={row.name}
-              src={STATIC_IMAGE_URL + row.cover}
-            />
+            <Link to={'/books/' + row._id}>
+              <img
+                className="books-table-image"
+                onError={noPictureAddDefaultSrc}
+                alt={row.name}
+                src={STATIC_IMAGE_URL + row.cover}
+              />
+            </Link>
           </div>
           <div className="col-sm-7 col-md-9 col-lg-9 bookmeta">
             <div className="bookmeta-title">
@@ -49,18 +51,22 @@ const BooksTable = ({ books }) => {
       </div>
     );
   };
-  
+
   if (!books || !books.length) {
-    return <div />;
+    return (
+      <div>
+        <p>No book here</p>
+      </div>
+    );
   }
 
   return (
-    <BootstrapTable data={books} options={options} hover pagination className="books-table">
+    <BootstrapTable version="4" data={books} options={options} hover pagination className="books-table">
       <TableHeaderColumn dataField="_id" isKey width="50%" hidden>
         Id
       </TableHeaderColumn>
-      <TableHeaderColumn dataField="name" dataFormat={basicInfoFormatter} width="40%">
-        BasicInfo
+      <TableHeaderColumn dataSort dataField="name" dataFormat={basicInfoFormatter} width="40%">
+        Info
       </TableHeaderColumn>
       <TableHeaderColumn dataField="description" dataFormat={descriptionFormatter} width="60%">
         Description

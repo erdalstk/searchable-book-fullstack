@@ -5,6 +5,7 @@ import { userActions } from '../actions';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 import { userService } from '../services';
+import './Register.css';
 
 class Register extends Component {
   constructor(props) {
@@ -16,7 +17,9 @@ class Register extends Component {
         password: ''
       },
       submitted: false,
-      emailExists: false
+      emailExists: false,
+      validPassword: false,
+      validEmail: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,21 +35,40 @@ class Register extends Component {
 
     //
     if (name === 'email') {
-      if (value === '') {
-        this.setState({ emailExists: false });
+      var regexEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      if (regexEmail.test(value.toLowerCase())) {
+        this.setState({ validEmail: true });
+      } else {
+        this.setState({ validEmail: false });
+        this.setState({ emailExists: true });
         return;
       }
+      // if (value === '') {
+      //   this.setState({ emailExists: true });
+      //   return;
+      // }
       clearTimeout(this.delayTimer);
       this.delayTimer = setTimeout(
         function() {
-          fetch('/api/auth/checkemail?q=' + value)
-            .then(res => res.json())
-            .then(res => {
-              this.setState({ emailExists: !res.result });
-            });
+          userService.checkEmail(value).then(
+            res => {
+              this.setState({ emailExists: res.emailExists });
+            },
+            error => {
+              return;
+            }
+          );
         }.bind(this),
         500
       );
+    }
+
+    if (name === 'password') {
+      if (value.length >= 6) {
+        this.setState({ validPassword: true });
+      } else {
+        this.setState({ validPassword: false });
+      }
     }
   }
 
@@ -56,8 +78,8 @@ class Register extends Component {
     this.setState({
       submitted: true
     });
-    const { user } = this.state;
-    if (user.name && user.email && user.password) {
+    const { user, emailExists, validEmail, validPassword } = this.state;
+    if (user.name && user.email && user.password && !emailExists && validEmail && validPassword) {
       mainProps.dispatch(userActions.registerRequesting());
       userService.register(user).then(
         res => {
@@ -75,7 +97,7 @@ class Register extends Component {
 
   render() {
     const { status, message } = this.props;
-    const { user, submitted, emailExists } = this.state;
+    const { user, submitted, emailExists, validEmail, validPassword } = this.state;
     return (
       <div>
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
@@ -91,22 +113,31 @@ class Register extends Component {
                 placeholder="Your name..."
                 onChange={this.handleChange}
                 onBlur={this.handleChange}
+                required
               />
               {submitted && !user.name && <div className="help-block">Name is required</div>}
             </div>
 
             <div className={'form-group' + (submitted && !this.email ? ' has-error' : '')}>
               <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                placeholder="example@domain.com"
-                onChange={this.handleChange}
-                onBlur={this.handleChange}
-              />
-              {submitted && !user.email && <div className="help-block">Email is required</div>}
-              {emailExists && <div className="help-block">Email is already taken</div>}
+              <div className="email-check-form">
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email"
+                  placeholder="example@domain.com"
+                  onChange={this.handleChange}
+                  onBlur={this.handleChange}
+                  required
+                />
+                <div className={'check-icon ' + emailExists}>
+                  {emailExists ? <i className="fa fa-close" /> : <i className="fa fa-check" />}
+                </div>
+              </div>
+              {submitted && !validEmail && <div className="requirements">Your email must follow correct format</div>}
+              {submitted &&
+                validEmail &&
+                emailExists && <div className="requirements">This email has been already taken</div>}
             </div>
 
             <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
@@ -118,8 +149,11 @@ class Register extends Component {
                 placeholder=""
                 onChange={this.handleChange}
                 onBlur={this.handleChange}
+                required
               />
-              {submitted && !user.password && <div className="help-block">Password is required</div>}
+              {/* {submitted && !user.password && <div className="help-block">Password is required</div>} */}
+              {submitted &&
+                !validPassword && <div className="requirements">Your password must be at least 6 characters</div>}
             </div>
 
             <div className="form-group">

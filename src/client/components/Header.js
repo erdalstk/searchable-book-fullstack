@@ -10,7 +10,6 @@ class Header extends Component {
   }
 
   render() {
-    const { status, userProfile } = this.props;
     var auth, loggedIn;
     if (localStorage.getItem('user')) {
       loggedIn = true;
@@ -18,7 +17,7 @@ class Header extends Component {
       auth = (
         <ul className="navbar-nav navbar-right">
           <li>
-            <NavLink className="nav-link" exact to="/profile" activeClassName="active">
+            <NavLink className="nav-link" exact to="/profile/me" activeClassName="active">
               <i className="fa fa-user fa-fw" />
               {user.name}
             </NavLink>
@@ -97,12 +96,14 @@ class Header extends Component {
                 <AllCategories />
               </div>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" exact to="/uploadbook" activeClassName="active">
-                <i className="fa fa-upload fa-fw" />
-                Upload book
-              </NavLink>
-            </li>
+            {loggedIn && (
+              <li className="nav-item">
+                <NavLink className="nav-link" exact to="/uploadbook" activeClassName="active">
+                  <i className="fa fa-upload fa-fw" />
+                  Upload book
+                </NavLink>
+              </li>
+            )}
             {loggedIn && (
               <li className="nav-item">
                 <NavLink className="nav-link" exact to="/chat" activeClassName="active">

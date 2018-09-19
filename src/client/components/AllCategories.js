@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchCategoriesCompleted } from '../actions';
 import { Link, withRouter } from 'react-router-dom';
+import { categoryService } from '../services';
 import './AllCategories.css';
 import 'whatwg-fetch';
 import keyIndex from 'react-key-index';
@@ -12,9 +13,15 @@ class AllCategories extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(categories => this.props.dispatch(fetchCategoriesCompleted(categories)));
+    categoryService.getAllCategories().then(
+      res => {
+        this.props.dispatch(fetchCategoriesCompleted(res.data));
+      },
+      error => {
+        // toast(error, errorToastOptions);
+        return;
+      }
+    );
   }
 
   render() {

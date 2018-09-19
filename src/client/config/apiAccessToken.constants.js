@@ -1,0 +1,1 @@
+export const API_ACCESS_TOKEN = 'mdstbooks-react-app-123456';

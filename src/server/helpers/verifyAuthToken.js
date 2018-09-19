@@ -2,7 +2,7 @@ var logger = require('./logging.helper');
 var jwt = require('jsonwebtoken');
 var config = require('../config/main');
 
-function verifyToken(req, res, next) {
+function verifyAuthToken(req, res, next) {
   var token = req.headers['x-access-token'];
   if (!token) {
     logger.log('info', '[%s] No token provided', req.originalUrl);
@@ -19,9 +19,9 @@ function verifyToken(req, res, next) {
       return res.status(401).send({ result: false, message: 'Failed to authenticate token: ' + err.message });
     }
     // if everything good, save to request for use in other routes
-    req.userId = decoded.id;
+    req.userEmail = decoded.email;
     next();
   });
 }
 
-module.exports = verifyToken;
+module.exports = verifyAuthToken;

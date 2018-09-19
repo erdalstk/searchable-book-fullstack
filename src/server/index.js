@@ -13,6 +13,7 @@ connectMongoWithRetry();
 
 // routes
 var auth = require('./route/auth');
+var profile = require('./route/profile.js');
 var books = require('./route/books.js');
 var instantsearch = require('./route/instantsearch.js');
 var categories = require('./route/categories.js');
@@ -22,6 +23,7 @@ var mostdownload = require('./route/mostdownload');
 var downloadebook = require('./route/downloadebook');
 
 app.use('/api/auth', auth);
+app.use('/api/profile', profile);
 app.use('/api/books', books);
 app.use('/api/instantsearch', instantsearch);
 app.use('/api/categories', categories);

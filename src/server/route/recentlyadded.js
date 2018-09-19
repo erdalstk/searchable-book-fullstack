@@ -2,11 +2,12 @@ var express = require('express');
 var router = express.Router();
 var logger = require('../helpers/logging.helper');
 var Books = require('../models/Books');
+var verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
 
 //Routes will go here
 module.exports = router;
 
-router.get('/', function(req, res) {
+router.get('/', verifyApiAccessToken, function(req, res) {
   var limit = parseInt(req.query.limit) || 10;
   Books.find({})
     .sort({ update_time: -1 })

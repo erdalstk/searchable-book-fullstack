@@ -6,7 +6,8 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var User = require('../models/User');
-var verifyToken = require('../helpers/verifyToken');
+var verifyAuthToken = require('../helpers/verifyAuthToken');
+var verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
 var request = require('request');
 var constants = require('../config/constants');
 
@@ -19,7 +20,13 @@ router.use(bodyParser.json());
 /**
  *  Routes
  **/
-router.post('/register', function(req, res) {
+router.post('/register', verifyApiAccessToken, function(req, res) {
+  if (!req.body || !req.body.name || !req.body.email || !req.body.password) {
+    return res.status(400).send({ result: false, message: 'Name and email and password must not empty' });
+  }
+  if (req.body.password.length < 6) {
+    return res.status(400).send({ result: false, message: 'Password does not follow password policy' });
+  }
   User.findOne({ email: req.body.email }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
@@ -48,7 +55,7 @@ router.post('/register', function(req, res) {
           return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
         }
         // create token
-        var token = jwt.sign({ id: user._id }, config.app.secret, {
+        var token = jwt.sign({ email: user.email }, config.app.secret, {
           expiresIn: config.app.jwtExpireTime
         });
         res.status(200).send({ result: true, token: token });
@@ -57,7 +64,7 @@ router.post('/register', function(req, res) {
   });
 });
 
-router.post('/login', function(req, res) {
+router.post('/login', verifyApiAccessToken, function(req, res) {
   if (!req.body || !req.body.email || !req.body.password) return res.status(401).send({ result: false, token: null });
   User.findOne({ email: req.body.email }, function(err, user) {
     if (err) {
@@ -84,20 +91,27 @@ router.post('/login', function(req, res) {
       logger.log('info', '[%s] Incorrect password: %s', req.originalUrl, req.body.email);
       return res.status(401).send({ result: false, message: 'Incorrect password', token: null });
     }
-    var token = jwt.sign({ id: user._id }, config.app.secret, {
+    var token = jwt.sign({ email: user.email }, config.app.secret, {
       expiresIn: config.app.jwtExpireTime
     });
     res.status(200).send({ result: true, token: token });
   });
 });
 
-router.get('/logout', function(req, res) {
+router.get('/logout', verifyApiAccessToken, function(req, res) {
   res.status(200).send({ result: true, token: null });
 });
 
-router.post('/changepassword', verifyToken, function(req, res) {
-  if (!req.body || !req.body.email || !req.body.newPassword)
+router.post('/changepassword', verifyAuthToken, function(req, res) {
+  if (!req.body || !req.body.email || !req.body.newPassword) {
     return res.status(400).send({ result: false, message: 'New password must not empty' });
+  }
+  if (req.userEmail !== req.body.email) {
+    return res.status(400).send({ result: false, message: 'x-access-token and email not match' });
+  }
+  if (req.body.newPassword.length < 6) {
+    return res.status(400).send({ result: false, message: 'New password does not follow password policy' });
+  }
   User.findOne({ email: req.body.email }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
@@ -126,15 +140,15 @@ router.post('/changepassword', verifyToken, function(req, res) {
         logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
         return res.send({ result: false, message: 'Server Error' });
       });
-    var token = jwt.sign({ id: user._id }, config.app.secret, {
+    var token = jwt.sign({ email: user.email }, config.app.secret, {
       expiresIn: config.app.jwtExpireTime
     });
     res.status(200).send({ result: true, token: token });
   });
 });
 
-router.get('/me', verifyToken, function(req, res) {
-  User.findById(req.userId, { 'facebook.token': 0 }, function(err, user) {
+router.get('/me', verifyAuthToken, function(req, res) {
+  User.findOne({ email: req.userEmail }, { 'facebook.token': 0 }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
@@ -148,31 +162,31 @@ router.get('/me', verifyToken, function(req, res) {
       resUser.hasPassword = true;
       delete resUser.password;
     }
-    res.status(200).send({ result: true, user: resUser });
+    res.status(200).send({ result: true, data: resUser });
   });
 });
 
-router.get('/checkemail', function(req, res) {
+router.get('/checkemail', verifyApiAccessToken, function(req, res) {
   var q = req.query.q;
-  if (!q) return res.send({ result: false });
+  if (!q) return res.send({ result: false, message: 'Empty query string' });
   User.findOne({ email: q }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
     }
-    if (!user) return res.send({ result: true });
-    return res.send({ result: false });
+    if (!user) return res.send({ result: true, emailExists: false });
+    return res.send({ result: true, emailExists: true });
   });
 });
 
-router.post('/facebook', function(req, res) {
+router.post('/facebook', verifyApiAccessToken, function(req, res) {
   User.findOne({ email: req.body.email }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
     }
     if (user) {
-      // already logged in before, now verify accessToken
+      // already logged in before, now verify x-access-token
       request.get(constants.FB_GRAPH_API_URL + req.body.token, function(err1, res1, body1) {
         if (!err1 && res1.statusCode == 200) {
           var fbGraphRes = JSON.parse(body1);
@@ -188,7 +202,7 @@ router.post('/facebook', function(req, res) {
                 }
               });
               // send token
-              var token = jwt.sign({ id: user._id }, config.app.secret, {
+              var token = jwt.sign({ email: user.email }, config.app.secret, {
                 expiresIn: config.app.jwtExpireTime
               });
               return res.status(200).send({ result: true, token: token });
@@ -220,7 +234,7 @@ router.post('/facebook', function(req, res) {
             return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
           }
           // create token
-          var token = jwt.sign({ id: user._id }, config.app.secret, {
+          var token = jwt.sign({ email: user.email }, config.app.secret, {
             expiresIn: config.app.jwtExpireTime
           });
           res.status(200).send({ result: true, token: token });

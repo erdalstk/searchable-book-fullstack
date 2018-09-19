@@ -39,9 +39,9 @@ class Login extends Component {
       };
       userService.loginWithFacebook(fbUser).then(
         res => {
-          userService.profile().then(
+          userService.me().then(
             res => {
-              mainProps.dispatch(userActions.profileSuccess(res.user));
+              mainProps.dispatch(userActions.profileSuccess(res.data));
               toast('Login success!', infoToastOptions);
               mainProps.dispatch(userActions.loginSuccess());
               mainProps.history.push('/');
@@ -91,9 +91,9 @@ class Login extends Component {
       mainProps.dispatch(userActions.loginRequesting());
       userService.login(user).then(
         res => {
-          userService.profile().then(
+          userService.me().then(
             res => {
-              mainProps.dispatch(userActions.profileSuccess(res.user));
+              mainProps.dispatch(userActions.profileSuccess(res.data));
               toast('Login success!', infoToastOptions);
               mainProps.dispatch(userActions.loginSuccess());
               mainProps.history.push('/');
@@ -133,7 +133,7 @@ class Login extends Component {
                 onChange={this.handleChange}
                 onBlur={this.handleChange}
               />
-              {submitted && !user.email && <div className="help-block">Email is required</div>}
+              {submitted && !user.email && <div className="requirements">Email is required</div>}
             </div>
 
             <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
@@ -146,7 +146,7 @@ class Login extends Component {
                 onChange={this.handleChange}
                 onBlur={this.handleChange}
               />
-              {submitted && !user.password && <div className="help-block">Password is required</div>}
+              {submitted && !user.password && <div className="requirements">Password is required</div>}
             </div>
 
             <div className="form-group">

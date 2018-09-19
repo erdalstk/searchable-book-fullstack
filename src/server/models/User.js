@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var constants = require('../config/constants');
 
 var UserSchema = new Schema({
   name: String,
@@ -15,7 +16,8 @@ var UserSchema = new Schema({
     id: String,
     token: String
   },
-  level: Number,
+  level: { type: Number, default: constants.USER_LEVEL_BASIC },
+  active: { type: Boolean, default: true },
   create_time: Date,
   update_time: Date
 });

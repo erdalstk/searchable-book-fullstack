@@ -1,26 +1,88 @@
-import { authHeader } from '../helpers';
+import { authHeader, apiAccessTokenHeader } from '../helpers';
 
 export const bookService = {
+  instantSearch,
   getMostDownload,
   getMostView,
   getRecentlyAdded,
-  getDownloadLink
+  getDownloadLink,
+  getBookDetails,
+  uploadBook,
+  getUploadedBy,
+  admin_getAllBooks
 };
 
+function instantSearch(filterText) {
+  const requestOptions = {
+    method: 'GET',
+    headers: apiAccessTokenHeader()
+  };
+  return fetch(`/api/instantsearch?q=${filterText}`, requestOptions).then(handleResponse);
+}
+
+function getBookDetails(id) {
+  const requestOptions = {
+    method: 'GET',
+    headers: apiAccessTokenHeader()
+  };
+  return fetch(`/api/books/${id}`, requestOptions).then(handleResponse);
+}
+
 function getMostDownload(limit) {
-  return fetch(`api/mostdownload?limit=${limit}`).then(handleResponse);
+  const requestOptions = {
+    method: 'GET',
+    headers: apiAccessTokenHeader()
+  };
+  return fetch(`api/mostdownload?limit=${limit}`, requestOptions).then(handleResponse);
 }
 
 function getMostView(limit) {
-  return fetch(`api/mostview?limit=${limit}`).then(handleResponse);
+  const requestOptions = {
+    method: 'GET',
+    headers: apiAccessTokenHeader()
+  };
+  return fetch(`api/mostview?limit=${limit}`, requestOptions).then(handleResponse);
 }
 
 function getRecentlyAdded(limit) {
-  return fetch(`api/recentlyadded?limit=${limit}`).then(handleResponse);
+  const requestOptions = {
+    method: 'GET',
+    headers: apiAccessTokenHeader()
+  };
+  return fetch(`api/recentlyadded?limit=${limit}`, requestOptions).then(handleResponse);
 }
 
 function getDownloadLink(bookId, type) {
-  return fetch(`api/downloadebook/${bookId}/${type}`).then(handleResponse);
+  const requestOptions = {
+    method: 'GET',
+    headers: apiAccessTokenHeader()
+  };
+  return fetch(`api/downloadebook/${bookId}/${type}`, requestOptions).then(handleResponse);
+}
+
+function uploadBook(data) {
+  const requestOptions = {
+    method: 'POST',
+    headers: authHeader(),
+    body: data
+  };
+  return fetch('/api/books', requestOptions).then(handleResponse);
+}
+
+function getUploadedBy(email) {
+  const requestOptions = {
+    method: 'GET',
+    headers: authHeader()
+  };
+  return fetch(`api/books/${email}/uploaded`, requestOptions).then(handleResponse);
+}
+
+function admin_getAllBooks() {
+  const requestOptions = {
+    method: 'GET',
+    headers: authHeader()
+  };
+  return fetch(`api/books/all`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(res) {

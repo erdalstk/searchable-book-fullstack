@@ -14,6 +14,8 @@ var BooksSchema = new Schema({
   pdf_link: String,
   view_count: Number,
   download_count: Number,
+  create_by: String, // user email
+  update_by: String, // user email
   create_time: Date,
   update_time: Date
 });

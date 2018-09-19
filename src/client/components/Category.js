@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import BooksTable from './BooksTable';
 import { fetchSearchBarResultsCompleted } from '../actions/index';
+import { categoryService } from '../services';
 import 'whatwg-fetch';
 import { isStringEmptyOrSpaces } from '../helpers';
 
@@ -15,10 +16,15 @@ class Category extends Component {
     if (isStringEmptyOrSpaces(this.props.match.params.id)) {
       return;
     }
-    fetch('/api/categories/' + this.props.match.params.id)
-      .then(res => res.json())
-      .then(books => this.props.dispatch(fetchSearchBarResultsCompleted(books)))
-      .catch(function() {});
+    categoryService.getBooksInCategory(this.props.match.params.id).then(
+      res => {
+        this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
+      },
+      error => {
+        // toast(error, errorToastOptions);
+        return;
+      }
+    );
   }
 
   componentDidUpdate(prevProps) {
@@ -26,10 +32,15 @@ class Category extends Component {
       return;
     }
     if (this.props.match.params.id !== prevProps.match.params.id) {
-      fetch('/api/categories/' + this.props.match.params.id)
-        .then(res => res.json())
-        .then(books => this.props.dispatch(fetchSearchBarResultsCompleted(books)))
-        .catch(function() {});
+      categoryService.getBooksInCategory(this.props.match.params.id).then(
+        res => {
+          this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
+        },
+        error => {
+          // toast(error, errorToastOptions);
+          return;
+        }
+      );
     }
   }
 

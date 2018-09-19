@@ -1,9 +1,7 @@
-const bookDetails = (state = { result: false, book: {} }, action) => {
+const bookDetails = (state = {}, action) => {
   switch (action.type) {
     case 'FETCH_BOOKDETAILS_COMPLETED':
-      state.result = action.result;
-      state.book = action.book;
-      return state;
+      return action.book;
     default:
       return state;
   }

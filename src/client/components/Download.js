@@ -4,11 +4,13 @@ import { bookService } from '../services';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from '../config';
 import Countdown from 'react-countdown-now';
+import NotFoundRoute from './NotFoundRoute';
 import './Download.css';
 
 const Download = () => (
   <Switch>
     <Route exact path="/download/:id/:type" component={DownloadEbook} />
+    <Route component={NotFoundRoute} />
   </Switch>
 );
 
@@ -61,7 +63,7 @@ class DownloadEbook extends Component {
   componentDidMount() {
     bookService.getDownloadLink(this.id, this.type).then(
       res => {
-        this.setState({ link: res.link });
+        this.setState({ link: res.data });
       },
       error => {
         toast(error, errorToastOptions);

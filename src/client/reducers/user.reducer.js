@@ -5,7 +5,7 @@ const user = (state = {}, action) => {
     case userConstants.PROFILE_SUCCESS:
       return action.user;
     case userConstants.PROFILE_FAILURE:
-      return state;
+      return {};
     default:
       return state;
   }

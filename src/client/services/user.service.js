@@ -1,31 +1,40 @@
-import { authHeader, authHeaderJson } from '../helpers';
+import { authHeader, authHeaderJson, apiAccessTokenHeader, apiAccessTokenHeaderJson } from '../helpers';
 
 export const userService = {
   login,
   logout,
   register,
-  profile,
+  me,
   loginWithFacebook,
-  changePassword
+  changePassword,
+  checkEmail,
+  profile,
+  admin_getAllUsers
 };
 
 function register(user) {
   const requestOptions = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: apiAccessTokenHeaderJson(),
     body: JSON.stringify(user)
   };
-
   return fetch('api/auth/register', requestOptions).then(handleResponse);
+}
+
+function checkEmail(email) {
+  const requestOptions = {
+    method: 'GET',
+    headers: apiAccessTokenHeaderJson()
+  };
+  return fetch(`/api/auth/checkemail?q=${email}`, requestOptions).then(handleResponse);
 }
 
 function login(user) {
   const requestOptions = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: apiAccessTokenHeaderJson(),
     body: JSON.stringify(user)
   };
-
   return fetch('api/auth/login', requestOptions)
     .then(handleResponse)
     .then(res => {
@@ -44,7 +53,6 @@ function changePassword(user) {
     headers: authHeaderJson(),
     body: JSON.stringify(user)
   };
-
   return fetch('api/auth/changepassword', requestOptions)
     .then(handleResponse)
     .then(res => {
@@ -60,10 +68,9 @@ function changePassword(user) {
 function loginWithFacebook(user) {
   const requestOptions = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: apiAccessTokenHeaderJson(),
     body: JSON.stringify(user)
   };
-
   return fetch('api/auth/facebook', requestOptions)
     .then(handleResponse)
     .then(res => {
@@ -82,20 +89,35 @@ function logout() {
   localStorage.removeItem('user');
 }
 
-function profile() {
+function me() {
   const requestOptions = {
     method: 'GET',
     headers: authHeader()
   };
-
   return fetch('api/auth/me', requestOptions)
     .then(handleResponse)
     .then(res => {
-      if (res.result && res.user) {
-        localStorage.setItem('user', JSON.stringify(res.user));
+      if (res.result && res.data) {
+        localStorage.setItem('user', JSON.stringify(res.data));
       }
       return res;
     });
+}
+
+function profile(email) {
+  const requestOptions = {
+    method: 'GET',
+    headers: authHeader()
+  };
+  return fetch(`api/profile/${email}`, requestOptions).then(handleResponse);
+}
+
+function admin_getAllUsers() {
+  const requestOptions = {
+    method: 'GET',
+    headers: authHeader()
+  };
+  return fetch(`api/profile/all`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(res) {
