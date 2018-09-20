@@ -192,6 +192,7 @@ class UploadBook extends Component {
     }
     return (
       <div className="upload-container">
+        <h3>Upload book</h3>
         <form className="upload-book-form" onSubmit={this.formSubmit}>
           <div className="row">
             <div className="col-sm-6 col-md-8 col-lg-9">

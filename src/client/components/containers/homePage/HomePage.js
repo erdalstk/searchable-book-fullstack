@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SearchBar from '../searchBar/SearchBar';
 import IndexGridView from 'src/client/components/presentational/IndexGridView';
 import { bookService } from 'src/client/services';
 import { connect } from 'react-redux';
@@ -50,9 +49,6 @@ class HomePage extends Component {
   render() {
     return (
       <div className="main-box">
-        <div className="search-bar">
-          <SearchBar />
-        </div>
         <div className="main-view">
           <IndexGridView
             mostDownloadData={this.state.mostDownloadData}

@@ -75,7 +75,7 @@ class BookDetails extends Component {
     return (
       <div className="book-details-content">
         <div className="row">
-          <div className="col-12 col-sm-4 col-md-3 col-lg-3 book-cover">
+          <div className="col-8 col-sm-4 col-md-3 col-lg-3 book-cover">
             <img
               onError={noPictureAddDefaultSrc}
               src={STATIC_IMAGE_URL + book.cover}
@@ -88,13 +88,13 @@ class BookDetails extends Component {
             <div className="row">
               <div className="col-12 col-sm-12 col-lg-8 basic-meta">
                 <p>
-                  Tác giả:
+                  Tác giả:&nbsp;
                   <button type="button" className="btn btn-light btn-xs">
                     #{book.author}
                   </button>
                 </p>
                 <p>
-                  Thể loại:
+                  Thể loại:&nbsp;
                   <button type="button" className="btn btn-light btn-xs">
                     <Link to={'/categories/' + book.category}>#{book.category}</Link>
                   </button>
@@ -104,15 +104,18 @@ class BookDetails extends Component {
                 <div className="row">
                   <div className="view-count col-12 col-sm-12 col-lg-12">
                     <i className="fa fa-eye fa-fw" aria-hidden="true" />
+                    &nbsp;
                     {book.view_count ? book.view_count : 0}
                   </div>
                   <div className="download-count col-12 col-sm-12 col-lg-12">
                     <i className="fa fa-download fa-fw" aria-hidden="true" />
+                    &nbsp;
                     {book.download_count ? book.download_count : 0}
                   </div>
                   {book.update_time && (
                     <div className="update-time col-12 col-sm-12 col-lg-12">
                       <i className="fa fa-clock-o fa-fw" aria-hidden="true" />
+                      &nbsp;
                       <Moment diff={book.update_time} unit="days">
                         {Date.now()}
                       </Moment>
@@ -121,6 +124,7 @@ class BookDetails extends Component {
                   )}
                   <div className="upload-by col-12 col-sm-12 col-lg-12">
                     <i className="fa fa-user fa-fw" aria-hidden="true" />
+                    &nbsp;
                     {book.create_by ? <Link to={'/profile/' + book.create_by}>{book.create_by}</Link> : 'anonymous'}
                   </div>
                 </div>
@@ -130,11 +134,13 @@ class BookDetails extends Component {
             <hr />
             <FroalaEditorView model={book.description} />
             <hr />
-            <h5>Download: </h5>
-            <div className="btn-group" role="group">
-              {download_epub_link}
-              {download_mobi_link}
-              {download_pdf_link}
+            <div className="download-section">
+              <h5>Download: </h5>
+              <div className="btn-group" role="group">
+                {download_epub_link}
+                {download_mobi_link}
+                {download_pdf_link}
+              </div>
             </div>
           </div>
         </div>

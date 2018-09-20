@@ -2,7 +2,6 @@ body {
   font-family: 'Montserrat', sans-serif;
   background: #f3f3f3;
   color: #333 !important;
-  margin-top: 20px;
   font-size: 13px!important;
 }
 
@@ -28,8 +27,4 @@ ul {
   background-color: grey;
   padding: 20px;
   margin: 20px;
-}
-
-i {
-  margin-right: 5px;
 }

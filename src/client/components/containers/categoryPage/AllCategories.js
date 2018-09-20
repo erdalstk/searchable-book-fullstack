@@ -29,11 +29,7 @@ class AllCategories extends Component {
     this.props.categories.map(c => {
       if (c.value === '') return;
       categories.push(
-        <Link
-          className="nav-link-toggle dropdown-item category"
-          to={'/categories/' + c.value}
-          key={c.id}
-          onClick={this.props.onClick}>
+        <Link className="nav-link-toggle dropdown-item category" to={'/categories/' + c.value} key={c.id}>
           <i className="fa fa-tag fa-fw" />
           {c.value}
         </Link>

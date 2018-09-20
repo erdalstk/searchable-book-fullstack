@@ -10,7 +10,7 @@ class Chat extends Component {
   render() {
     return (
       <div>
-        <h2>Under construction</h2>
+        <h2>Chat Function Under construction</h2>
       </div>
     );
   }

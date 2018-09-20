@@ -120,8 +120,7 @@ class Login extends Component {
     return (
       <div>
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
-        <div className="col-md-6 col-md-offset-3">
-          <h3>Login</h3>
+        <div className="">
           <form name="form" onSubmit={this.handleSubmit}>
             <div className={'form-group' + (submitted && !this.email ? ' has-error' : '')}>
               <label htmlFor="email">Email</label>

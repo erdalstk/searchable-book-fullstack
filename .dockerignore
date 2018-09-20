@@ -4,3 +4,8 @@
 *Dockerfile*
 *docker-compose*
 node_modules
+.vscode
+dist
+*.log
+static/upload
+logs

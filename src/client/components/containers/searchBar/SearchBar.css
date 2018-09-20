@@ -1,32 +1,43 @@
 /* For search bar component */
-* { box-sizing: border-box; }
 form.search-form .autocomplete {
   display: inline-block;
   width: 100%;
   position: relative;
 }
 
-form.search-form input[type=text] {
+form.search-form input[type='text'] {
   padding: 10px;
   font-size: 17px;
   border: 1px solid grey;
-  border-radius: 0px 0px 0px 0px ;
+  border-radius: 5px 0px 0px 5px;
   float: left;
   width: 85%;
   background: #f1f1f1;
+}
+
+form.search-form input[type='text']:focus {
+  outline: none !important;
+  border: 1px solid gray;
+  box-shadow: 0 0 10px #719ece;
 }
 
 form.search-form button {
   float: left;
   width: 15%;
   padding: 10px;
-  background: #2196F3;
+  background: gray;
   color: white;
   font-size: 17px;
   border: 1px solid grey;
-  border-radius: 0px 0px 0px 0px ;
+  border-radius: 0px 5px 5px 0px;
   border-left: none; /* Prevent double borders */
   cursor: pointer;
+}
+
+form.search-form button:focus {
+  outline: none !important;
+  border: 1px solid gray;
+  box-shadow: 0 0 10px #719ece;
 }
 
 form.search-form button:hover {
@@ -35,7 +46,7 @@ form.search-form button:hover {
 
 /* Clear floats */
 form.search-form::after {
-  content: "";
+  content: '';
   clear: both;
   display: table;
 }

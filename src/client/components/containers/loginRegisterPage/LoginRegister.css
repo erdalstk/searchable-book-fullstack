@@ -1,0 +1,22 @@
+/* .nav-tabs > li {
+  
+} */
+.tab-content {
+  margin-top: 20px;
+}
+
+.nav-tabs > li > a {
+  font-size: 18px;
+  text-align: center;
+  color: inherit;
+}
+/* .nav-tabs > li > a:hover {
+  background-color: #303136 !important;
+  border: medium none;
+  border-radius: 0;
+  color: #fff;
+} */
+
+.login-register-container {
+  margin: auto;
+}
