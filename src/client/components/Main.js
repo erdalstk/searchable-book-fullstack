@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Async from 'react-code-splitting';
-import HomePage from './HomePage';
-const Books = () => <Async load={import('./Books')} />;
-const Login = () => <Async load={import('./Login')} />;
-const Logout = () => <Async load={import('./Logout')} />;
-const Categories = () => <Async load={import('./Categories')} />;
-const UploadBook = () => <Async load={import('./UploadBook')} />;
-const Register = () => <Async load={import('./Register')} />;
-const Profile = () => <Async load={import('./Profile')} />;
-const Chat = () => <Async load={import('./Chat')} />;
-const PrivacyPolicy = () => <Async load={import('./PrivacyPolicy')} />;
-const Term = () => <Async load={import('./Term')} />;
-const Download = () => <Async load={import('./Download')} />;
-const NotFoundRoute = () => <Async load={import('./NotFoundRoute')} />;
+import HomePage from './containers/homePage/HomePage';
+const Books = () => <Async load={import('./containers/searchPage/Books')} />;
+const Login = () => <Async load={import('./containers/loginPage/Login')} />;
+const Logout = () => <Async load={import('./containers/logoutPage/Logout')} />;
+const Categories = () => <Async load={import('./containers/categoryPage/Categories')} />;
+const UploadBook = () => <Async load={import('./containers/uploadPage/UploadBook')} />;
+const Register = () => <Async load={import('./containers/registerPage/Register')} />;
+const Profile = () => <Async load={import('./containers/profilePage/Profile')} />;
+const Chat = () => <Async load={import('./containers/chatPage/Chat')} />;
+const PrivacyPolicy = () => <Async load={import('./presentational/PrivacyPolicy')} />;
+const Term = () => <Async load={import('./presentational/Term')} />;
+const Download = () => <Async load={import('./containers/downloadPage/Download')} />;
+const NotFoundRoute = () => <Async load={import('./presentational/NotFoundRoute')} />;
 
 const Main = () => (
   <main>

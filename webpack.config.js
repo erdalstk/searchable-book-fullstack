@@ -9,6 +9,11 @@ module.exports = {
     path: path.join(__dirname, outputDirectory),
     filename: 'bundle.js'
   },
+  resolve: {
+    alias: {
+      src: path.resolve('src/')
+    }
+  },
   module: {
     rules: [
       {
@@ -30,6 +35,7 @@ module.exports = {
     ]
   },
   devServer: {
+    // https: true,
     port: 3000,
     open: true,
     proxy: {

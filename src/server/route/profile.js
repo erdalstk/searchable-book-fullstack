@@ -41,7 +41,7 @@ router.get('/:email', verifyAuthToken, function(req, res) {
   if (req.params.email === 'me') {
     req.params.email = req.userEmail;
   }
-  User.findOne({ email: req.params.email }, { password: 0, facebook: 0 }, function(err, user) {
+  User.findOne({ email: req.params.email }, { facebook: 0 }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });
@@ -49,6 +49,11 @@ router.get('/:email', verifyAuthToken, function(req, res) {
     if (!user) {
       return res.send({ result: false, message: 'User not found' });
     }
-    return res.send({ result: true, data: user });
+    let resUser = JSON.parse(JSON.stringify(user));
+    if (user.password) {
+      resUser.hasPassword = true;
+      delete resUser.password;
+    }
+    return res.send({ result: true, data: resUser });
   });
 });

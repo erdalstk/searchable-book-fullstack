@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Header from './Header';
+import Header from './presentational/Header';
 import Main from './Main';
-import Footer from './Footer';
+import Footer from './presentational/Footer';
 import { ToastContainer } from 'react-toastify';
-import '../../../node_modules/react-toastify/dist/ReactToastify.css';
+import 'src/../node_modules/react-toastify/dist/ReactToastify.css';
 const App = () => (
   <div>
     <ToastContainer />
