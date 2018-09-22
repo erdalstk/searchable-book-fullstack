@@ -230,7 +230,7 @@ class UploadBook extends Component {
             <div className="col-sm-6 col-md-4 col-lg-3">
               <div className="form-group">
                 <label htmlFor="coverInput">Cover image</label>
-                <Dropzone accept="image/jpeg, image/png, image/gif" onDrop={this.onCoverDrop.bind(this)}>
+                <Dropzone accept="image/jpeg, image/png" onDrop={this.onCoverDrop.bind(this)}>
                   {imagePreview}
                 </Dropzone>
               </div>

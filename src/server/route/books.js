@@ -4,6 +4,7 @@ var logger = require('../helpers/logging.helper');
 var Books = require('../models/Books');
 var User = require('../models/User');
 var multer = require('multer');
+var sharp = require('sharp');
 var vietnameseUtil = require('../helpers/vietnameseSlug');
 var constants = require('../config/constants');
 var verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
@@ -100,7 +101,6 @@ function fileFilter(req, file, cb) {
     file.mimetype !== 'image/png' &&
     file.mimetype !== 'image/jpg' &&
     file.mimetype !== 'image/jpeg' &&
-    file.mimetype !== 'image/gif' &&
     file.mimetype !== 'application/epub+zip' &&
     file.mimetype !== 'application/x-mobipocket-ebook' && // mobi?
     file.mimetype !== 'pocketMobi*' && // mobi?
@@ -121,7 +121,7 @@ var upload = multer({ storage: storage, fileFilter: fileFilter, limits: fileLimi
 ]);
 router.post('/', verifyAuthToken, function(req, res) {
   // req.file is the `cover` file
-  upload(req, res, function(err) {
+  upload(req, res, async function(err) {
     if (err) {
       logger.log('error', '[%s] Upload Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
@@ -137,7 +137,23 @@ router.post('/', verifyAuthToken, function(req, res) {
     var epub_link = '';
     var mobi_link = '';
     var pdf_link = '';
-    if (req.files['cover']) cover = req.files['cover'][0].filename;
+    // begin: resize and compress cover image
+    let img_dest = 'optimized-' + req.files['cover'][0].filename;
+
+    if (req.files['cover']) {
+      try {
+        await sharp(req.files['cover'][0].path)
+          .resize(250)
+          .jpeg({ quality: 80, force: false })
+          .png({ compressionLevel: 9, force: false })
+          .toFile(constants.STATIC_UPLOAD_PATH + img_dest);
+        cover = img_dest;
+      } catch (err) {
+        logger.log('error', '[%s] Compress image error: %s', req.originalUrl, err.message);
+        cover = req.files['cover'][0].filename;
+      }
+    }
+    // end: resize and compress cover image
     if (req.files['epub']) epub_link = req.files['epub'][0].filename;
     if (req.files['mobi']) mobi_link = req.files['mobi'][0].filename;
     if (req.files['pdf']) pdf_link = req.files['pdf'][0].filename;
