@@ -43,6 +43,7 @@ router.post('/register', verifyApiAccessToken, function(req, res) {
         email: req.body.email,
         password: hashedPassword,
         level: constants.USER_LEVEL_BASIC,
+        enable: true,
         create_time: new Date(),
         update_time: new Date()
       },
@@ -66,7 +67,7 @@ router.post('/register', verifyApiAccessToken, function(req, res) {
 
 router.post('/login', verifyApiAccessToken, function(req, res) {
   if (!req.body || !req.body.email || !req.body.password) return res.status(401).send({ result: false, token: null });
-  User.findOne({ email: req.body.email }, function(err, user) {
+  User.findOne({ email: req.body.email, enable: true }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
@@ -112,7 +113,7 @@ router.post('/changepassword', verifyAuthToken, function(req, res) {
   if (req.body.newPassword.length < 6) {
     return res.status(400).send({ result: false, message: 'New password does not follow password policy' });
   }
-  User.findOne({ email: req.body.email }, function(err, user) {
+  User.findOne({ email: req.body.email, enable: true }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
@@ -148,7 +149,7 @@ router.post('/changepassword', verifyAuthToken, function(req, res) {
 });
 
 router.get('/me', verifyAuthToken, function(req, res) {
-  User.findOne({ email: req.userEmail }, { 'facebook.token': 0 }, function(err, user) {
+  User.findOne({ email: req.userEmail, enable: true }, { 'facebook.token': 0 }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
@@ -169,7 +170,7 @@ router.get('/me', verifyAuthToken, function(req, res) {
 router.get('/checkemail', verifyApiAccessToken, function(req, res) {
   var q = req.query.q;
   if (!q) return res.send({ result: false, message: 'Empty query string' });
-  User.findOne({ email: q }, function(err, user) {
+  User.findOne({ email: q, enable: true }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
@@ -180,7 +181,7 @@ router.get('/checkemail', verifyApiAccessToken, function(req, res) {
 });
 
 router.post('/facebook', verifyApiAccessToken, function(req, res) {
-  User.findOne({ email: req.body.email }, function(err, user) {
+  User.findOne({ email: req.body.email, enable: true }, function(err, user) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
@@ -225,6 +226,7 @@ router.post('/facebook', verifyApiAccessToken, function(req, res) {
             token: req.body.token
           },
           level: constants.USER_LEVEL_BASIC,
+          enable: true,
           create_time: new Date(),
           update_time: new Date()
         },

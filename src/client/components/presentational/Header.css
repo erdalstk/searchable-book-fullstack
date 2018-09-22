@@ -58,3 +58,15 @@
   display: block;
   overflow: hidden;
 } */
+.navbar .dropdown-item {
+  font-size: 12px;
+  padding: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  overflow: hidden;
+}
+
+.dropdown-menu.columns-3 {
+  min-width: 600px;
+}

@@ -58,7 +58,7 @@ class SearchBar extends Component {
     bookService.instantSearch(this.props.searchBarFilterText).then(
       res => {
         this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
-        this.props.history.push('/books');
+        this.props.history.push('/search');
         return;
       },
       error => {

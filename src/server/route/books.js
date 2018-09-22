@@ -13,45 +13,11 @@ var verifyAuthToken = require('../helpers/verifyAuthToken');
 module.exports = router;
 
 /**
- * GET /api/books
- **/
-router.get('/all', verifyAuthToken, function(req, res) {
-  User.findOne({ email: req.userEmail }, { password: 0, facebook: 0 }, function(err, user) {
-    if (err) {
-      logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
-      return res.status(500).send({ result: false, message: 'Server error' });
-    }
-    if (!user) {
-      logger.log('error', '[%s] Can not find user: %s', req.originalUrl, req.userEmail);
-      return res.status(500).send({ result: false, message: 'Can not find user' });
-    }
-    if (!user.level || user.level < constants.USER_LEVEL_ADMIN) {
-      logger.log('info', '[%s] Not enough authority: %s', req.originalUrl, user.email);
-      return res.status(403).send({ result: false, message: 'Not enough authority' });
-    }
-    var options = {
-      epub_link: 0,
-      mobi_link: 0,
-      pdf_link: 0,
-      create_time: 0,
-      update_time: 0
-    };
-    Books.find({}, options, function(err, books) {
-      if (err) {
-        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
-        return res.status(500).send({ result: false, message: 'Server error' });
-      }
-      return res.send({ result: true, data: books });
-    });
-  });
-});
-
-/**
  * GET /api/books/_id
  **/
 router.get('/:id', verifyApiAccessToken, function(req, res) {
   if (!req.params || !req.params.id) return res.send({ result: false, message: 'Can not find book' });
-  Books.findOne({ _id: req.params.id }, function(err, book) {
+  Books.findOne({ _id: req.params.id, enable: true }, function(err, book) {
     if (err) {
       logger.log('info', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Can not find book' });
@@ -138,10 +104,9 @@ router.post('/', verifyAuthToken, function(req, res) {
     var mobi_link = '';
     var pdf_link = '';
     // begin: resize and compress cover image
-    let img_dest = 'optimized-' + req.files['cover'][0].filename;
-
     if (req.files['cover']) {
       try {
+        let img_dest = 'optimized-' + req.files['cover'][0].filename;
         await sharp(req.files['cover'][0].path)
           .resize(250)
           .jpeg({ quality: 80, force: false })
@@ -157,30 +122,62 @@ router.post('/', verifyAuthToken, function(req, res) {
     if (req.files['epub']) epub_link = req.files['epub'][0].filename;
     if (req.files['mobi']) mobi_link = req.files['mobi'][0].filename;
     if (req.files['pdf']) pdf_link = req.files['pdf'][0].filename;
-    var book = new Books({
-      name: req.body.name,
-      author: req.body.author,
-      category: req.body.category || '',
-      description: req.body.description || '',
-      cover: cover,
-      normalized_name: vietnameseUtil.stringToSlug(req.body.name.trim().toLowerCase()),
-      epub_link: epub_link,
-      mobi_link: mobi_link,
-      pdf_link: pdf_link,
-      create_by: req.userEmail,
-      update_by: req.userEmail,
-      create_time: new Date(),
-      update_time: new Date()
-    });
-    book
-      .save()
-      .then(result => {
+
+    if (req.body._id) {
+      var updateBook = {
+        name: req.body.name,
+        author: req.body.author,
+        category: req.body.category,
+        description: req.body.description,
+        update_by: req.userEmail,
+        update_time: new Date()
+      };
+      if (cover !== '') {
+        updateBook.cover = cover;
+      }
+      if (epub_link !== '') {
+        updateBook.epub_link = epub_link;
+      }
+      if (mobi_link !== '') {
+        updateBook.mobi_link = mobi_link;
+      }
+      if (pdf_link !== '') {
+        updateBook.pdf_link = pdf_link;
+      }
+      try {
+        book = await Books.findOneAndUpdate({ _id: req.body._id, enable: true }, updateBook);
         return res.send({ result: true, data: book });
-      })
-      .catch(function(err) {
-        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
-        return res.send({ result: false, message: 'Server Error' });
+      } catch (err) {
+        logger.log('info', '[%s] DB Error: %s', req.originalUrl, err.message);
+        return res.status(500).send({ result: false, message: 'Can not find book' });
+      }
+    } else {
+      book = new Books({
+        name: req.body.name,
+        author: req.body.author,
+        category: req.body.category || '',
+        description: req.body.description || '',
+        cover: cover,
+        normalized_name: vietnameseUtil.stringToSlug(req.body.name.trim().toLowerCase()),
+        epub_link: epub_link,
+        mobi_link: mobi_link,
+        pdf_link: pdf_link,
+        enable: true,
+        create_by: req.userEmail,
+        update_by: req.userEmail,
+        create_time: new Date(),
+        update_time: new Date()
       });
+      book
+        .save()
+        .then(result => {
+          return res.send({ result: true, data: book });
+        })
+        .catch(function(err) {
+          logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+          return res.send({ result: false, message: 'Server Error' });
+        });
+    }
   });
 });
 

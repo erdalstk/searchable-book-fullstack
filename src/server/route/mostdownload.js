@@ -9,7 +9,7 @@ module.exports = router;
 
 router.get('/', verifyApiAccessToken, function(req, res) {
   var limit = parseInt(req.query.limit) || 10;
-  Books.find({})
+  Books.find({ enable: true })
     .sort({ download_count: -1 })
     .limit(limit)
     .exec(function(err, books) {

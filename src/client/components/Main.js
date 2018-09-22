@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Async from 'react-code-splitting';
 import HomePage from './containers/homePage/HomePage';
-import './Main.css';
-const Books = () => <Async load={import('./containers/searchPage/Books')} />;
+const SearchPage = () => <Async load={import('./containers/searchPage/SearchPage')} />;
+const Books = () => <Async load={import('./containers/bookDetailPage/Books')} />;
 const LoginRegister = () => <Async load={import('./containers/loginRegisterPage/LoginRegister')} />;
 const Logout = () => <Async load={import('./containers/logoutPage/Logout')} />;
 const Categories = () => <Async load={import('./containers/categoryPage/Categories')} />;
@@ -13,12 +13,14 @@ const Chat = () => <Async load={import('./containers/chatPage/Chat')} />;
 const PrivacyPolicy = () => <Async load={import('./presentational/PrivacyPolicy')} />;
 const Term = () => <Async load={import('./presentational/Term')} />;
 const Download = () => <Async load={import('./containers/downloadPage/Download')} />;
+const Admin = () => <Async load={import('./containers/admin/Admin')} />;
 const NotFoundRoute = () => <Async load={import('./presentational/NotFoundRoute')} />;
 
 const Main = () => (
   <main className="container">
     <Switch>
       <Route exact path="/" component={HomePage} />
+      <Route exact path="/search" component={SearchPage} />
       <Route path="/books" component={Books} />
       <Route path="/categories" component={Categories} />
       <Route exact path="/uploadbook" component={UploadBook} />
@@ -29,6 +31,7 @@ const Main = () => (
       <Route exact path="/privacy" component={PrivacyPolicy} />
       <Route exact path="/term" component={Term} />
       <Route path="/download" component={Download} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFoundRoute} />
     </Switch>
   </main>

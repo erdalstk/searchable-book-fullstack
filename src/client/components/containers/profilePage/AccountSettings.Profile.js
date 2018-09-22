@@ -57,7 +57,7 @@ class AccountSettings extends Component {
     userService.changePassword(user).then(
       res => {
         // mainProps.dispatch(userActions.profileSuccess(res.user));
-        toast('Change password success!', infoToastOptions);
+        toast('✅ Change password success!', infoToastOptions);
         // mainProps.dispatch(userActions.loginSuccess());
         // mainProps.history.push('/');
         this.setState({
@@ -72,7 +72,7 @@ class AccountSettings extends Component {
         });
       },
       error => {
-        toast(error, errorToastOptions);
+        toast('❌ ' + error, errorToastOptions);
         // mainProps.dispatch(userActions.profileFailure());
         return;
       }

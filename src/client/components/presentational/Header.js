@@ -54,7 +54,7 @@ class Header extends Component {
     }
 
     return (
-      <div className="row navbar bg-light">
+      <div className="navbar bg-light">
         <div className="col-2 col-md-3 col-lg-3">
           <a className="brand" href="#">
             <img
@@ -75,21 +75,38 @@ class Header extends Component {
         <div className="col-12 col-md-3 col-lg-3">
           <div className="row right-navbar">
             <div className={loggedIn ? 'col-3 col-lg-3' : 'col-6 col-md-6 col-lg-6'}>
-              <NavLink
-                href="#"
-                role="button"
-                className="category-dropdown dropdown-toggle"
-                id="categoryDropdownMenuLink"
-                className="nav-button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-                to="/categories"
-                activeClassName="active">
-                <i className="fa fa-tag fa-fw" />
-              </NavLink>
-              <div className="dropdown-menu" aria-labelledby="categoryDropdownMenuLink">
-                <AllCategories />
+              <div className="d-sm-block d-md-none d-lg-none d-xl-none">
+                <NavLink href="#" role="button" className="nav-button" to="/categories" activeClassName="active">
+                  <i className="fa fa-tag fa-fw" />
+                </NavLink>
+              </div>
+              <div className="d-none d-md-block d-lg-block">
+                <NavLink
+                  href="#"
+                  role="button"
+                  className="category-dropdown dropdown-toggle"
+                  id="categoryDropdownMenuLink"
+                  className="nav-button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  to="/categories"
+                  activeClassName="active">
+                  <i className="fa fa-tag fa-fw" />
+                </NavLink>
+                <div className="dropdown-menu dropdown-menu-right multi-column columns-3" aria-labelledby="categoryDropdownMenuLink">
+                  <div className="row">
+                    <div className="col-4">
+                      <AllCategories col="0" total="3" />
+                    </div>
+                    <div className="col-4">
+                      <AllCategories col="1" total="3" />
+                    </div>
+                    <div className="col-4">
+                      <AllCategories col="2" total="3" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -116,8 +133,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-  status: state.authentication.status,
-  userProfile: state.user
+  status: state.authentication.status
 });
 
 export default connect(

@@ -14,7 +14,7 @@ router.get('/', verifyApiAccessToken, function(req, res) {
   if (!inputValue || !/\S/.test(inputValue)) {
     return res.send({ result: true, data: [] });
   }
-  Books.find({ normalized_name: new RegExp(inputValue, 'i') }, function(err, books) {
+  Books.find({ normalized_name: new RegExp(inputValue, 'i'), enable: true }, function(err, books) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });

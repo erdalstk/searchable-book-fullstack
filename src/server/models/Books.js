@@ -16,6 +16,7 @@ var BooksSchema = new Schema({
   download_count: Number,
   create_by: String, // user email
   update_by: String, // user email
+  enable: { type: Boolean, default: true },
   create_time: Date,
   update_time: Date
 });

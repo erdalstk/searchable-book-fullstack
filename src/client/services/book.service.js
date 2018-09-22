@@ -1,4 +1,4 @@
-import { authHeader, apiAccessTokenHeader } from '../helpers';
+import { authHeader, authHeaderJson, apiAccessTokenHeader } from '../helpers';
 
 export const bookService = {
   instantSearch,
@@ -9,7 +9,8 @@ export const bookService = {
   getBookDetails,
   uploadBook,
   getUploadedBy,
-  admin_getAllBooks
+  admin_getAllBooks,
+  admin_updateBooks
 };
 
 function instantSearch(filterText) {
@@ -82,7 +83,16 @@ function admin_getAllBooks() {
     method: 'GET',
     headers: authHeader()
   };
-  return fetch(`api/books/all`, requestOptions).then(handleResponse);
+  return fetch(`api/admin/books`, requestOptions).then(handleResponse);
+}
+
+function admin_updateBooks(books) {
+  const requestOptions = {
+    method: 'POST',
+    headers: authHeaderJson(),
+    body: JSON.stringify({ data: books })
+  };
+  return fetch(`api/admin/books/update`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(res) {

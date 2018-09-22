@@ -87,12 +87,12 @@ class Register extends Component {
       mainProps.dispatch(userActions.registerRequesting());
       userService.register(user).then(
         res => {
-          toast('Success!', infoToastOptions);
+          toast('✅ Register Success!', infoToastOptions);
           mainProps.dispatch(userActions.registerSuccess());
           mainProps.history.push('/login');
         },
         error => {
-          toast(error, errorToastOptions);
+          toast('❌ ' + error, errorToastOptions);
           mainProps.dispatch(userActions.registerFailure(error));
         }
       );

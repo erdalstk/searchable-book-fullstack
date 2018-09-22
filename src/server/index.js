@@ -21,6 +21,8 @@ var recentlyadded = require('./route/recentlyadded');
 var mostview = require('./route/mostview');
 var mostdownload = require('./route/mostdownload');
 var downloadebook = require('./route/downloadebook');
+var booksAdmin = require('./route/admin/books.admin.js');
+var usersAdmin = require('./route/admin/users.admin.js');
 
 app.use('/api/auth', auth);
 app.use('/api/profile', profile);
@@ -31,6 +33,8 @@ app.use('/api/recentlyadded', recentlyadded);
 app.use('/api/mostview', mostview);
 app.use('/api/mostdownload', mostdownload);
 app.use('/api/downloadebook', downloadebook);
+app.use('/api/admin/books', booksAdmin);
+app.use('/api/admin/users', usersAdmin);
 
 // handle 404
 app.get('*', (req, res) => {

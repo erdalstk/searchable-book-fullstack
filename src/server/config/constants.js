@@ -11,11 +11,11 @@ module.exports = Object.freeze({
   STATIC_UPLOAD_PATH: './static/upload/',
 
   // user levels
-  USER_LEVEL_BASIC: 0,
-  USER_LEVEL_ADVANCE: 1,
+  USER_LEVEL_BASIC: 4,
+  USER_LEVEL_ADVANCE: 3,
   USER_LEVEL_MOD: 2,
-  USER_LEVEL_ADMIN: 3,
-  USER_LEVEL_SUPERADMIN: 4,
+  USER_LEVEL_ADMIN: 1,
+  USER_LEVEL_SUPERADMIN: 0,
 
   // Api access Token
   API_ACCESS_TOKEN: {

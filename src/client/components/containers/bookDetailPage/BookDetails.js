@@ -13,29 +13,40 @@ import 'whatwg-fetch';
 class BookDetails extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      canEdit: false
+    };
   }
 
-  componentDidMount() {
+  fetchBookDetail() {
     bookService.getBookDetails(this.props.match.params.id).then(
       res => {
         this.props.dispatch(fetchBookDetailsCompleted(res.data));
+        if (localStorage.getItem('user')) {
+          var localStorageUser = JSON.parse(localStorage.getItem('user'));
+          if (
+            localStorageUser.email === res.data.update_by ||
+            localStorageUser.email === res.data.create_by ||
+            localStorageUser.level <= 2
+          ) {
+            this.setState({ canEdit: true });
+          }
+        }
       },
       error => {
+        this.props.dispatch(fetchBookDetailsCompleted({}));
         return;
       }
     );
   }
 
+  componentDidMount() {
+    this.fetchBookDetail();
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
-      bookService.getBookDetails(this.props.match.params.id).then(
-        res => {
-          this.props.dispatch(fetchBookDetailsCompleted(res.data));
-        },
-        error => {
-          return;
-        }
-      );
+      this.fetchBookDetail();
     }
   }
 
@@ -84,7 +95,21 @@ class BookDetails extends Component {
             />
           </div>
           <div className="col-12 col-sm-8 col-md-9 col-lg-9 book-meta">
-            <h3>{book.name}</h3>
+            <div className="row">
+              <div >
+                <h3>{book.name}</h3>
+              </div>
+              <div >
+                {this.state.canEdit && (
+                  <div className="can-edit">
+                      <Link to={'/books/' + book._id + '/edit'}>
+                        <i className="fa fa-edit fa-fw" />
+                        Edit
+                      </Link>
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="row">
               <div className="col-12 col-sm-12 col-lg-8 basic-meta">
                 <p>
@@ -125,7 +150,7 @@ class BookDetails extends Component {
                   <div className="upload-by col-12 col-sm-12 col-lg-12">
                     <i className="fa fa-user fa-fw" aria-hidden="true" />
                     &nbsp;
-                    {book.create_by ? <Link to={'/profile/' + book.create_by}>{book.create_by}</Link> : 'anonymous'}
+                    {book.update_by ? <Link to={'/profile/' + book.create_by}>{book.update_by}</Link> : 'anonymous'}
                   </div>
                 </div>
               </div>
@@ -150,7 +175,8 @@ class BookDetails extends Component {
 }
 
 const mapStateToProps = state => ({
-  book: state.bookDetails
+  book: state.bookDetails,
+  user: state.user
 });
 
 export default connect(mapStateToProps)(BookDetails);

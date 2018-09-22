@@ -8,7 +8,7 @@ var verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
 module.exports = router;
 
 router.get('/', verifyApiAccessToken, function(req, res) {
-  Books.find().distinct('category', function(err, categories) {
+  Books.find({ enable: true }).distinct('category', function(err, categories) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });
@@ -18,7 +18,7 @@ router.get('/', verifyApiAccessToken, function(req, res) {
 });
 
 router.get('/:id', verifyApiAccessToken, function(req, res) {
-  Books.find({ category: req.params.id }, function(err, books) {
+  Books.find({ category: req.params.id, enable: true }, function(err, books) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });

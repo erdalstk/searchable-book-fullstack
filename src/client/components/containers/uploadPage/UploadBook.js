@@ -68,12 +68,12 @@ class UploadBook extends Component {
 
     bookService.uploadBook(data).then(
       res => {
-        toast('Success!', infoToastOpt);
+        toast('✅ Upload Success!', infoToastOpt);
         historyProps.push('/books/' + res.data._id);
         return;
       },
       error => {
-        toast(error, errorToastOpt);
+        toast('❌ ' + error, errorToastOpt);
         return;
       }
     );

@@ -12,7 +12,7 @@ router.get('/:id/:type', verifyApiAccessToken, function(req, res) {
   if (!req.params.id || !req.params.type || req.params.id === '' || req.params.type === '') {
     return res.status(400).send({ result: false, message: 'Bad request' });
   }
-  Books.findOne({ _id: req.params.id }, function(err, book) {
+  Books.findOne({ _id: req.params.id, enable: true }, function(err, book) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });

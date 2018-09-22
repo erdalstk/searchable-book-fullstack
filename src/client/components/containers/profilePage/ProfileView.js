@@ -8,6 +8,7 @@ import AccountSettings from './AccountSettings.Profile';
 import Overview from './Overview.Profile';
 import './ProfileView.css';
 import Activities from './Activities.Profile';
+import { Link } from 'react-router-dom';
 
 class ProfileView extends Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class ProfileView extends Component {
         this.props.dispatch(userActions.profileSuccess(res.data));
       },
       error => {
-        toast(error, errorToastOptions);
+        toast('❌ ' + error, errorToastOptions);
         this.props.dispatch(userActions.profileFailure());
       }
     );
@@ -149,7 +150,17 @@ class ProfileView extends Component {
                 <Activities />
               </div>
               <div className="tab-pane fade" id="v-pills-help" role="tabpanel" aria-labelledby="v-pills-help-tab">
-                ... Under construction
+                {user.level <= 1 && (
+                  <Link className="btn btn-link" to="/admin/users">
+                    Users Manager
+                  </Link>
+                )}
+                <br />
+                {user.level <= 2 && (
+                  <Link className="btn btn-link" to="/admin/books">
+                    Books Manager
+                  </Link>
+                )}
               </div>
             </div>
           </div>

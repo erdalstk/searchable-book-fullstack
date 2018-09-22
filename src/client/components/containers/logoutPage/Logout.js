@@ -20,7 +20,7 @@ class Logout extends Component {
         FB.logout(function(response) {});
       }
     });
-    toast('Logout Success', infoToastOptions);
+    toast('✅ Logout Success', infoToastOptions);
     mainProps.dispatch(userActions.logout());
     mainProps.history.push('/');
   }

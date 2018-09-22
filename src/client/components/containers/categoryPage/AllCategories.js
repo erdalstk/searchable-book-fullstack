@@ -26,7 +26,13 @@ class AllCategories extends Component {
 
   render() {
     const categories = [];
-    this.props.categories.map(c => {
+    var start = 0;
+    var end = this.props.categories.length;
+    if (this.props.col && this.props.total) {
+      start = Math.ceil((this.props.categories.length * parseInt(this.props.col)) / parseInt(this.props.total));
+      end = Math.ceil((this.props.categories.length * (parseInt(this.props.col) + 1)) / parseInt(this.props.total));
+    }
+    this.props.categories.slice(start, end).map(c => {
       if (c.value === '') return;
       categories.push(
         <Link className="nav-link-toggle dropdown-item category" to={'/categories/' + c.value} key={c.id}>

@@ -9,7 +9,8 @@ export const userService = {
   changePassword,
   checkEmail,
   profile,
-  admin_getAllUsers
+  admin_getAllUsers,
+  admin_updateUsers
 };
 
 function register(user) {
@@ -117,7 +118,16 @@ function admin_getAllUsers() {
     method: 'GET',
     headers: authHeader()
   };
-  return fetch(`api/profile/all`, requestOptions).then(handleResponse);
+  return fetch(`api/admin/users/`, requestOptions).then(handleResponse);
+}
+
+function admin_updateUsers(users) {
+  const requestOptions = {
+    method: 'POST',
+    headers: authHeaderJson(),
+    body: JSON.stringify({ data: users })
+  };
+  return fetch(`api/admin/users/update`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(res) {
