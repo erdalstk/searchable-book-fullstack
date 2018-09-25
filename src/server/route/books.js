@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var logger = require('../helpers/logging.helper');
 var Books = require('../models/Books');
-var User = require('../models/User');
 var multer = require('multer');
 var sharp = require('sharp');
 var vietnameseUtil = require('../helpers/vietnameseSlug');

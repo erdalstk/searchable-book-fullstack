@@ -123,6 +123,9 @@ class Login extends Component {
       <div>
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
         <div className="">
+          <button onClick={this.props.changeTab} className="btn btn-link">
+            Don't have account? Register!
+          </button>
           <form name="form" onSubmit={this.handleSubmit}>
             <div className={'form-group' + (submitted && !this.email ? ' has-error' : '')}>
               <label htmlFor="email">Email</label>

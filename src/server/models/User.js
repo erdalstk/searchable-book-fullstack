@@ -17,6 +17,7 @@ var UserSchema = new Schema({
     token: String
   },
   level: { type: Number, default: constants.USER_LEVEL_BASIC },
+  profile_picture: String,
   enable: { type: Boolean, default: true },
   active: { type: Boolean, default: true },
   create_time: Date,

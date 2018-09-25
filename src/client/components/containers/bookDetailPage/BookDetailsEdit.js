@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from 'src/client/config';
-import { noPictureAddDefaultSrc } from 'src/client/helpers';
+import { STATIC_IMAGE_URL } from 'src/client/config';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchBookDetailsCompleted, userActions } from 'src/client/actions';
+import { fetchBookDetailsCompleted } from 'src/client/actions';
 import { bookService } from 'src/client/services';
-import Moment from 'react-moment';
 import '../uploadPage/UploadBook.css';
 import './BookDetailsEdit.css';
 import { toast } from 'react-toastify';
@@ -72,7 +70,6 @@ class BookDetails extends Component {
             this.setState({
               canEdit: true,
               descriptionEditor: res.data.description
-              // coverFile: res.data.cover
             });
           }
         }

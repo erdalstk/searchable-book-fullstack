@@ -9,11 +9,19 @@ import Overview from './Overview.Profile';
 import './ProfileView.css';
 import Activities from './Activities.Profile';
 import { Link } from 'react-router-dom';
+import Dropzone from 'react-dropzone';
+import { STATIC_IMAGE_URL } from 'src/client/config';
 
 class ProfileView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      profilePictureFile: []
+    };
     this.fetchProfile = this.fetchProfile.bind(this);
+    this.onCoverDrop = this.onCoverDrop.bind(this);
+    this.onSaveProfilePictureClick = this.onSaveProfilePictureClick.bind(this);
+    this.onClearProfilePictureClick = this.onClearProfilePictureClick.bind(this);
   }
 
   fetchProfile() {
@@ -41,6 +49,42 @@ class ProfileView extends Component {
     }
   }
 
+  onCoverDrop(files) {
+    if (files.slice(0, 1)[0].size > this.maxFileSize) {
+      toast('File size must below 5MB', errorToastOptions);
+      return;
+    }
+    this.setState({
+      profilePictureFile: files.slice(0, 1)
+    });
+  }
+
+  onSaveProfilePictureClick() {
+    var data = new FormData();
+    data.append('name', 'WTF');
+    if (this.state.profilePictureFile.length) {
+      data.append('profile_picture', this.state.profilePictureFile[0]);
+      userService.updateProfile(data).then(
+        res => {
+          toast('✅ Success!', infoToastOptions);
+          this.setState({ profilePictureFile: [] });
+          this.fetchProfile();
+          return;
+        },
+        error => {
+          toast('❌ ' + error, errorToastOptions);
+          return;
+        }
+      );
+    }
+  }
+
+  onClearProfilePictureClick() {
+    this.setState({
+      profilePictureFile: []
+    });
+  }
+
   render() {
     const { user } = this.props;
     var me = false;
@@ -53,12 +97,69 @@ class ProfileView extends Component {
     } else {
       return <h3>You have to login to view user profile</h3>;
     }
+
+    var imagePreview = user.profile_picture ? (
+      <div className="upload-image-preview">
+        <img src={STATIC_IMAGE_URL + user.profile_picture} alt={user.name} />
+        <div className="overlay">
+          <div className="text">Click or drop here to change</div>
+        </div>
+      </div>
+    ) : (
+      <p className="upload-image-dropzone-text">
+        <i className="fa fa-upload fa-3x" />
+        <br />
+        <br />
+        Drop cover image here
+      </p>
+    );
+
+    if (this.state.profilePictureFile.length) {
+      imagePreview = (
+        <div className="upload-image-preview">
+          <img alt={this.state.profilePictureFile[0].name} src={this.state.profilePictureFile[0].preview} />
+        </div>
+      );
+    }
+
     return (
       <div className="row profile">
         <div className="col-lg-3">
           <div className="profile-sidebar">
             <div className="profile-userpic">
-              <img src="/static/upload/panda.jpg" className="img-responsive" alt="" />
+              {/* <img src="/static/upload/panda.jpg" className="img-responsive" alt="" /> */}
+              {me ? (
+                <div>
+                  <Dropzone
+                    className="profile-picture-dropzone"
+                    accept="image/jpeg, image/png"
+                    onDrop={this.onCoverDrop.bind(this)}>
+                    {imagePreview}
+                  </Dropzone>
+                  {this.state.profilePictureFile.length ? (
+                    <div>
+                      <button
+                        onClick={this.onSaveProfilePictureClick}
+                        className="update-profile-picture-btn btn btn-xs">
+                        Save
+                      </button>
+                      <button
+                        onClick={this.onClearProfilePictureClick}
+                        className="clear-profile-picture-btn btn btn-xs">
+                        Clear
+                      </button>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              ) : (
+                <div className="profile-picture-static">
+                  <div className="upload-image-preview">
+                    <img src={STATIC_IMAGE_URL + user.profile_picture} alt={user.name} />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="profile-usertitle">
               <div className="profile-usertitle-name">{user.name}</div>

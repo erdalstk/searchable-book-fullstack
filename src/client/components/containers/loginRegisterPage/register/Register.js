@@ -89,7 +89,7 @@ class Register extends Component {
         res => {
           toast('✅ Register Success!', infoToastOptions);
           mainProps.dispatch(userActions.registerSuccess());
-          mainProps.history.push('/login');
+          this.props.changeTab();
         },
         error => {
           toast('❌ ' + error, errorToastOptions);
@@ -106,6 +106,9 @@ class Register extends Component {
       <div>
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
         <div className="">
+          <button onClick={this.props.changeTab} className="btn btn-link">
+            Already have account? Login!
+          </button>
           <form name="form" onSubmit={this.handleSubmit}>
             <div className={'form-group' + (submitted && !user.name ? ' has-error' : '')}>
               <label htmlFor="name">Name</label>

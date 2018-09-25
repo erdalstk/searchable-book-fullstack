@@ -9,6 +9,7 @@ export const userService = {
   changePassword,
   checkEmail,
   profile,
+  updateProfile,
   admin_getAllUsers,
   admin_updateUsers
 };
@@ -111,6 +112,15 @@ function profile(email) {
     headers: authHeader()
   };
   return fetch(`api/profile/${email}`, requestOptions).then(handleResponse);
+}
+
+function updateProfile(data) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: authHeader(),
+    body: data
+  };
+  return fetch(`api/profile/me`, requestOptions).then(handleResponse);
 }
 
 function admin_getAllUsers() {
