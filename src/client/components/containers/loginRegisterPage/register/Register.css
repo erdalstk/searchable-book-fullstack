@@ -1,8 +1,8 @@
-.email-check-form {
+.register-container .email-check-form {
   position: relative;
 }
 
-.email-check-form .check-icon {
+.register-container .email-check-form .check-icon {
   z-index: 10;
   position: absolute;
   right: 4px;
@@ -10,14 +10,14 @@
   font-size: 20px;
 }
 
-.email-check-form .check-icon.true {
+.register-container .email-check-form .check-icon.true {
   color: red;
 }
-.email-check-form .check-icon.false {
+.register-container .email-check-form .check-icon.false {
   color: green;
 }
 
-.requirements {
+.register-container .requirements {
   max-height: 200px;
   transition: 0.28s;
   overflow: hidden;

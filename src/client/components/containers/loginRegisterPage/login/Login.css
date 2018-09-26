@@ -1,9 +1,9 @@
-.container .facebook-login-btn {
+.login-container .facebook-login-btn {
   background: #3b5998;
   color: white;
 }
 
-.requirements {
+.login-container .requirements {
   max-height: 200px;
   transition: 0.28s;
   overflow: hidden;

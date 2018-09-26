@@ -103,7 +103,7 @@ class Register extends Component {
     const { status, message } = this.props;
     const { user, submitted, emailExists, validEmail, validPassword } = this.state;
     return (
-      <div>
+      <div className="register-container">
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
         <div className="">
           <button onClick={this.props.changeTab} className="btn btn-link">

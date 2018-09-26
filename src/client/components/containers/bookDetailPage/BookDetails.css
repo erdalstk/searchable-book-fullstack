@@ -1,34 +1,34 @@
-.book-details-content {
+.book-details-container {
   top: 10px;
   position: relative;
 }
 
-.book-details-content .book-meta {
+.book-details-container .book-meta {
   top: 10px;
 }
 
-.book-details-content .statistic-meta {
+.book-details-container .statistic-meta {
   color: gray;
 }
 
-.book-details-content .book-cover {
+.book-details-container .book-cover {
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
 
-.book-details-content .book-cover img {
+.book-details-container .book-cover img {
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
 
-.book-details-content .btn {
+.book-details-container .btn {
   border: 1px solid;
   border-radius: 8px;
 }
 
-.book-details-content .btn-xs {
+.book-details-container .btn-xs {
   padding: 0.25rem 0.4rem;
   font-size: 0.875rem;
   line-height: 0.8;
@@ -38,15 +38,15 @@
 }
 
 @media (max-width: 575px) {
-  .download-section {
+  .book-details-container .download-section {
     text-align: center;
   }
 }
 
-.can-edit {
+.book-details-container .can-edit {
   margin: 8px 0px 0px 15px;
 }
 
-.upload-by a {
+.book-details-container .upload-by a {
   color: inherit;
 }

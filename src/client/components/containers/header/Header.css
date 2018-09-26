@@ -1,0 +1,138 @@
+.header-container .navbar {
+  margin-bottom: 10px;
+}
+
+.header-container .navbar .nav-button i {
+  text-decoration: none;
+  color: gray;
+  text-align: center;
+  font-size: 18px;
+}
+
+.header-container .right-navbar > div {
+  text-align: center;
+}
+
+.header-container .right-navbar .active {
+  color: black;
+}
+
+@media (max-width: 767px) {
+  .header-container .right-navbar {
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.header-container .brand .logo-pc {
+  max-width: 220px;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+}
+
+.header-container .brand .logo-mobile {
+  max-width: 40px;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+}
+
+.header-container .dropdown-toggle::after {
+  display: none;
+}
+
+.header-container .search-bar {
+  position: relative;
+  z-index: 1;
+  margin: auto;
+  width: 100%;
+  max-width: 800px;
+  padding-top: 10px;
+}
+
+.header-container .navbar .dropdown-item {
+  font-size: 12px;
+  padding: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  overflow: hidden;
+}
+
+.header-container .navbar .dropdown-menu.columns-1 {
+  min-width: 250px;
+}
+
+.header-container .navbar .dropdown-menu.columns-3 {
+  min-width: 600px;
+}
+
+.header-container .navbar .all-categories-link {
+  text-align: center;
+  font-size: 13px;
+}
+
+.header-container .navbar .user-dropdown .profile-picture-static {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  text-align: center;
+}
+
+.header-container .navbar .user-dropdown .profile-picture-static img {
+  display: block;
+  float: none;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  max-width: 100px;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+.header-container .navbar .dropdown-menu .dropdown-profile-picture {
+  width: 30px;
+  height: 30px;
+  margin: auto;
+  text-align: center;
+}
+
+.header-container .navbar .dropdown-menu .dropdown-profile-picture img {
+  display: block;
+  float: none;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  max-width: 100px;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+.header-container .dropdown-profile-picture {
+  float: left;
+}
+.header-container .dropdown-user-info {
+  float: left;
+  margin-left: 10px;
+}
+
+.header-container .dropdown-user-overview {
+  text-align: left;
+}
+
+.header-container .dropdown hr {
+  margin: 0;
+}
+
+.header-container .user-dropdown-menu i {
+  width: 30px;
+  float: left;
+}
+
+.header-container .user-dropdown-menu .text {
+  margin-left: 10px;
+  float: left;
+}

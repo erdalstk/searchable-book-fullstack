@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
 import { bookService } from 'src/client/services';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from 'src/client/config';
 import Countdown from 'react-countdown-now';
-import NotFoundRoute from 'src/client/components/presentational/NotFoundRoute';
-import './Download.css';
-
-const Download = () => (
-  <Switch>
-    <Route exact path="/download/:id/:type" component={DownloadEbook} />
-    <Route component={NotFoundRoute} />
-  </Switch>
-);
+import './DownloadEbook.css';
 
 class DownloadEbook extends Component {
   constructor(props) {
@@ -31,7 +22,7 @@ class DownloadEbook extends Component {
       // Render a complete state
       window.location = this.state.link;
       return (
-        <div>
+        <div className="download-ebook-countdown-container">
           If your browser doesn't automatically download:
           <br />
           <a href={this.state.link} download>
@@ -42,7 +33,7 @@ class DownloadEbook extends Component {
     } else {
       // Render a countdown
       return (
-        <div>
+        <div className="download-ebook-countdown--container">
           Your download will start shortly:
           <br />
           <div id="countdown">
@@ -66,7 +57,7 @@ class DownloadEbook extends Component {
         this.setState({ link: res.data });
       },
       error => {
-        toast(error, errorToastOptions);
+        toast('❌  ' + error, errorToastOptions);
         return;
       }
     );
@@ -74,7 +65,7 @@ class DownloadEbook extends Component {
 
   render() {
     return (
-      <div className="download-container">
+      <div className="download-ebook-container">
         <Countdown
           date={Date.now() + 6000}
           intervalDelay={10}
@@ -87,4 +78,4 @@ class DownloadEbook extends Component {
   }
 }
 
-export default Download;
+export default DownloadEbook;

@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Async from 'react-code-splitting';
 import HomePage from './containers/homePage/HomePage';
-const SearchPage = () => <Async load={import('./containers/searchPage/SearchPage')} />;
-const Books = () => <Async load={import('./containers/bookDetailPage/Books')} />;
+const SearchPage = () => <Async load={import('./containers/searchPage/SearchPage.router')} />;
+const Books = () => <Async load={import('./containers/bookDetailPage/Books.router')} />;
 const LoginRegister = () => <Async load={import('./containers/loginRegisterPage/LoginRegister')} />;
 const Logout = () => <Async load={import('./containers/logoutPage/Logout')} />;
-const Categories = () => <Async load={import('./containers/categoryPage/Categories')} />;
+const Categories = () => <Async load={import('./containers/categoryPage/Categories.router')} />;
 const UploadBook = () => <Async load={import('./containers/uploadPage/UploadBook')} />;
-const Profile = () => <Async load={import('./containers/profilePage/Profile')} />;
+const Profile = () => <Async load={import('./containers/profilePage/Profile.router')} />;
 const Chat = () => <Async load={import('./containers/chatPage/Chat')} />;
 const PrivacyPolicy = () => <Async load={import('./presentational/PrivacyPolicy')} />;
 const Term = () => <Async load={import('./presentational/Term')} />;
-const Download = () => <Async load={import('./containers/downloadPage/Download')} />;
-const Admin = () => <Async load={import('./containers/admin/Admin')} />;
+const Download = () => <Async load={import('./containers/downloadPage/Download.router')} />;
+const Admin = () => <Async load={import('./containers/admin/Admin.router')} />;
 const NotFoundRoute = () => <Async load={import('./presentational/NotFoundRoute')} />;
 
 const Main = () => (

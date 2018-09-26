@@ -1,20 +1,20 @@
 /* Profile container */
-.profile {
+.profile-view-container {
   margin-top: 20px;
 }
 
 /* Profile sidebar */
-.profile-sidebar {
+.profile-view-container .profile-sidebar {
   padding: 20px 0 1px 0;
   background: #fff;
   border-radius: 4px;
 }
 
-.profile-userpic {
+.profile-view-container .profile-userpic {
   text-align: center;
 }
 
-.profile-userpic img {
+.profile-view-container .profile-userpic img {
   display: block;
   float: none;
   margin: auto;
@@ -24,24 +24,21 @@
   -webkit-border-radius: 50% !important;
   -moz-border-radius: 50% !important;
   border-radius: 50% !important;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
 }
 
-.profile-usertitle {
+.profile-view-container .profile-usertitle {
   text-align: center;
   margin-top: 20px;
 }
 
-.profile-usertitle-name {
+.profile-view-container .profile-usertitle-name {
   color: #5a7391;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 7px;
 }
 
-.profile-usertitle-job {
+.profile-view-container .profile-usertitle-job {
   /* text-transform: uppercase; */
   color: #5b9bd1;
   font-size: 12px;
@@ -49,12 +46,12 @@
   margin-bottom: 15px;
 }
 
-.profile-userbuttons {
+.profile-view-container .profile-userbuttons {
   text-align: center;
   margin-top: 10px;
 }
 
-.profile-userbuttons .btn {
+.profile-view-container .profile-userbuttons .btn {
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 600;
@@ -62,15 +59,15 @@
   margin-right: 5px;
 }
 
-.profile-userbuttons .btn:last-child {
+.profile-view-container .profile-userbuttons .btn:last-child {
   margin-right: 0px;
 }
 
-.profile-usermenu {
+.profile-view-container .profile-usermenu {
   margin-top: 30px;
 }
 
-.profile-usermenu a {
+.profile-view-container .profile-usermenu a {
   color: #93a3b5;
   font-size: 14px;
   font-weight: 400;
@@ -81,21 +78,21 @@
   border-bottom: 1px solid #f0f4f7;
 }
 
-.profile-usermenu a:last-child {
+.profile-view-container .profile-usermenu a:last-child {
   border-bottom: none;
 }
 
-.profile-usermenu a i {
+.profile-view-container .profile-usermenu a i {
   margin-right: 8px;
   font-size: 14px;
 }
 
-.profile-usermenu a:hover {
+.profile-view-container .profile-usermenu a:hover {
   background-color: #fafcfd;
   color: #5b9bd1;
 }
 
-.profile-usermenu a.active {
+.profile-view-container .profile-usermenu a.active {
   color: #5b9bd1;
   background-color: #f6f9fb;
   border-left: 2px solid #5b9bd1;
@@ -104,22 +101,20 @@
 }
 
 /* Profile Content */
-.profile-content {
+.profile-view-container .profile-content {
   padding: 20px;
   background: #fff;
   min-height: 474px;
   border-radius: 4px;
 }
 
-.profile-picture-static {
+.profile-view-container .profile-picture-static {
   width: 120px;
   height: 120px;
   margin: auto;
 }
 
-.profile-picture-dropzone {
-  position: relative;
-  z-index: 2;
+.profile-view-container .profile-picture-dropzone {
   width: 120px;
   height: 120px;
   margin: auto;
@@ -131,15 +126,16 @@
   border-radius: 50% !important;
 }
 
-.upload-image-preview {
+.profile-view-container .profile-picture-dropzone input {
   width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 10;
 }
 
-.upload-image-preview img {
+.profile-view-container .upload-image-preview {
+  width: 100%;
+  height: 100%;
+}
+
+.profile-view-container .upload-image-preview img {
   max-width: 100%;
   max-height: 100%;
   display: block;
@@ -147,7 +143,7 @@
   background-repeat: no-repeat;
 }
 
-.upload-image-dropzone-text {
+.profile-view-container .upload-image-dropzone-text {
   width: 100%;
   height: 100%;
   margin: auto;
@@ -157,12 +153,11 @@
   opacity: 0.5;
 }
 
-.update-profile-picture-btn {
+.profile-view-container .update-profile-picture-btn {
   margin: 5px;
 }
 
-
-.overlay {
+.profile-view-container .overlay {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -171,18 +166,18 @@
   height: 100%;
   width: 100%;
   opacity: 0;
-  transition: .5s ease;
-  background-color: #008CBA;
+  transition: 0.5s ease;
+  background-color: #008cba;
   -webkit-border-radius: 50% !important;
   -moz-border-radius: 50% !important;
   border-radius: 50% !important;
 }
 
-.upload-image-preview:hover .overlay {
-  opacity: 1;
+.profile-view-container .upload-image-preview:hover .overlay {
+  opacity: 0.5;
 }
 
-.upload-image-preview .overlay .text {
+.profile-view-container .text {
   color: white;
   font-size: 10px;
   position: absolute;

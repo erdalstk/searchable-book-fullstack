@@ -42,12 +42,12 @@ class Login extends Component {
           userService.me().then(
             res => {
               mainProps.dispatch(userActions.profileSuccess(res.data));
-              toast('Login success!', infoToastOptions);
+              toast('✅ Login success!', infoToastOptions);
               mainProps.dispatch(userActions.loginSuccess());
               mainProps.history.push('/');
             },
             error => {
-              toast(error, errorToastOptions);
+              toast('❌  ' + error, errorToastOptions);
               mainProps.dispatch(userActions.profileFailure());
               mainProps.dispatch(userActions.loginFailure(error));
               return;
@@ -55,7 +55,7 @@ class Login extends Component {
           );
         },
         error => {
-          toast(error, errorToastOptions);
+          toast('❌  ' + error, errorToastOptions);
           mainProps.dispatch(userActions.loginFailure(error));
           return;
         }
@@ -108,7 +108,7 @@ class Login extends Component {
           );
         },
         error => {
-          toast(error, errorToastOptions);
+          toast('❌ ' + error, errorToastOptions);
           mainProps.dispatch(userActions.loginFailure(error));
           return;
         }
@@ -120,7 +120,7 @@ class Login extends Component {
     const { status, message } = this.props;
     const { user, submitted } = this.state;
     return (
-      <div>
+      <div className="login-container">
         {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
         <div className="">
           <button onClick={this.props.changeTab} className="btn btn-link">

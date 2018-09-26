@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { fetchCategoriesCompleted } from 'src/client/actions';
-import { Link, withRouter } from 'react-router-dom';
-import { categoryService } from 'src/client/services';
-import './AllCategories.css';
-import 'whatwg-fetch';
+import CategoryList from '../../presentational/CategoryList';
 import keyIndex from 'react-key-index';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { categoryService } from 'src/client/services';
+import { fetchCategoriesCompleted } from 'src/client/actions';
 
 class AllCategories extends Component {
   constructor(props) {
@@ -18,30 +17,18 @@ class AllCategories extends Component {
         this.props.dispatch(fetchCategoriesCompleted(res.data));
       },
       error => {
-        // toast(error, errorToastOptions);
         return;
       }
     );
   }
 
   render() {
-    const categories = [];
-    var start = 0;
-    var end = this.props.categories.length;
-    if (this.props.col && this.props.total) {
-      start = Math.ceil((this.props.categories.length * parseInt(this.props.col)) / parseInt(this.props.total));
-      end = Math.ceil((this.props.categories.length * (parseInt(this.props.col) + 1)) / parseInt(this.props.total));
-    }
-    this.props.categories.slice(start, end).map(c => {
-      if (c.value === '') return;
-      categories.push(
-        <Link className="nav-link-toggle dropdown-item category" to={'/categories/' + c.value} key={c.id}>
-          <i className="fa fa-tag fa-fw" />
-          {c.value}
-        </Link>
-      );
-    });
-    return categories;
+    return (
+      <div>
+        <h3>All categories</h3>
+        <CategoryList categories={this.props.categories} />
+      </div>
+    );
   }
 }
 

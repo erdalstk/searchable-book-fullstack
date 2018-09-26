@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import IndexGridView from 'src/client/components/presentational/IndexGridView';
+import FixedGridLayoutView from 'src/client/components/presentational/FixedGridLayoutView';
+import DynamicGridLayoutView from 'src/client/components/presentational/DynamicGridLayoutView';
 import { bookService } from 'src/client/services';
 import { connect } from 'react-redux';
 import './HomePage.css';
@@ -15,12 +16,11 @@ class HomePage extends Component {
   }
 
   componentDidMount() {
-    bookService.getMostDownload(10).then(
+    bookService.getMostDownload(6).then(
       res => {
         this.setState({ mostDownloadData: res.data });
       },
       error => {
-        // toast(error, errorToastOptions);
         return;
       }
     );
@@ -30,7 +30,6 @@ class HomePage extends Component {
         this.setState({ mostViewData: res.data });
       },
       error => {
-        // toast(error, errorToastOptions);
         return;
       }
     );
@@ -40,7 +39,6 @@ class HomePage extends Component {
         this.setState({ recentlyAddedData: res.data });
       },
       error => {
-        // toast(error, errorToastOptions);
         return;
       }
     );
@@ -48,14 +46,12 @@ class HomePage extends Component {
 
   render() {
     return (
-      <div className="main-box">
-        <div className="main-view">
-          <IndexGridView
-            mostDownloadData={this.state.mostDownloadData}
-            mostViewData={this.state.mostViewData}
-            recentlyAddedData={this.state.recentlyAddedData}
-          />
-        </div>
+      <div className="home-page-container">
+        <FixedGridLayoutView mostDownloadData={this.state.mostDownloadData} />
+        <DynamicGridLayoutView
+          mostViewData={this.state.mostViewData}
+          recentlyAddedData={this.state.recentlyAddedData}
+        />
       </div>
     );
   }

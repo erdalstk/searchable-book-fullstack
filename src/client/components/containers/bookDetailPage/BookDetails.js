@@ -84,7 +84,7 @@ class BookDetails extends Component {
       );
     }
     return (
-      <div className="book-details-content">
+      <div className="book-details-container">
         <div className="row">
           <div className="col-8 col-sm-4 col-md-3 col-lg-3 book-cover">
             <img
@@ -150,7 +150,7 @@ class BookDetails extends Component {
                   <div className="upload-by col-12 col-sm-12 col-lg-12">
                     <i className="fa fa-user fa-fw" aria-hidden="true" />
                     &nbsp;
-                    {book.update_by ? <Link to={'/profile/' + book.create_by}>{book.update_by}</Link> : 'anonymous'}
+                    {book.update_by ? <Link to={'/profile/' + book.update_by}>{book.update_by}</Link> : 'anonymous'}
                   </div>
                 </div>
               </div>

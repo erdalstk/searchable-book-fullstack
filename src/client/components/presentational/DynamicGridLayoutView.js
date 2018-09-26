@@ -8,7 +8,7 @@ import 'whatwg-fetch';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-class IndexGridView extends Component {
+class DynamicGridLayoutView extends Component {
   static defaultProps = {
     compactType: null,
     useCSSTransforms: true,
@@ -72,9 +72,6 @@ class IndexGridView extends Component {
           <BookGridView title="Recently Added" books={this.props.recentlyAddedData} />
         </div>
         <div key="b">
-          <BookGridView title="Most Downloaded" books={this.props.mostDownloadData} />
-        </div>
-        <div key="c">
           <BookGridView title="Most View" books={this.props.mostViewData} />
         </div>
       </ResponsiveReactGridLayout>
@@ -82,4 +79,4 @@ class IndexGridView extends Component {
   }
 }
 
-export default IndexGridView;
+export default DynamicGridLayoutView;

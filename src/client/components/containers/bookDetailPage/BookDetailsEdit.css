@@ -1,13 +1,13 @@
-.can-edit a {
+.book-details-edit-container .can-edit a {
   color: inherit;
   text-decoration: none;
 }
 
-.save-btn:hover {
+.book-details-edit-container .save-btn:hover {
   color: black;
 }
 
-.book-details-content .book-cover img {
+.book-details-edit-container .book-cover img {
   margin-left: auto;
   margin-right: auto;
   display: block;
@@ -15,10 +15,36 @@
   max-height: 100%;
 }
 
-.reset-cover-btn {
+.book-details-edit-container .btn {
+  border: 1px solid;
+  border-radius: 8px;
+}
+
+.book-details-edit-container .btn-xs {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.875rem;
+  line-height: 0.8;
+  border-radius: 0.2rem;
+  border-color: gray;
+  color: gray;
+}
+
+.book-details-edit-container .upload-image-dropzone-text {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  padding: 60px 0;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+}
+
+
+.book-details-edit-container .reset-cover-btn {
   width: 200px;
 }
 
-.back-btn:hover {
+.book-details-edit-container .back-btn:hover {
   color: black;
 }

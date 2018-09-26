@@ -1,11 +1,15 @@
+.login-register-container {
+  margin: auto;
+}
+
 /* .nav-tabs > li {
   
 } */
-.tab-content {
+.login-register-container .tab-content {
   margin-top: 20px;
 }
 
-.nav-tabs > li > a {
+.login-register-container .nav-tabs > li > a {
   font-size: 18px;
   text-align: center;
   color: inherit;
@@ -16,7 +20,3 @@
   border-radius: 0;
   color: #fff;
 } */
-
-.login-register-container {
-  margin: auto;
-}

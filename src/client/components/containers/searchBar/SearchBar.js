@@ -69,23 +69,25 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <form className="search-form" onSubmit={this.handleFilterTextSubmit}>
-        <div className="autocomplete">
-          <input
-            type="text"
-            placeholder="Search book..."
-            // ref={node => (this.input = node)}
-            value={this.props.searchBarFilterText}
-            onChange={this.handleFilterTextChange}
-            onFocus={this.handleFilterTextChange}
-            onBlur={this.handleFilterTextLostFocus}
-          />
-          <button type="submit">
-            <i className="fa fa-search" />
-          </button>
-          <Suggestions />
-        </div>
-      </form>
+      <div className="search-bar-container">
+        <form className="search-form" onSubmit={this.handleFilterTextSubmit}>
+          <div className="autocomplete">
+            <input
+              type="text"
+              placeholder="Search book..."
+              // ref={node => (this.input = node)}
+              value={this.props.searchBarFilterText}
+              onChange={this.handleFilterTextChange}
+              onFocus={this.handleFilterTextChange}
+              onBlur={this.handleFilterTextLostFocus}
+            />
+            <button type="submit">
+              <i className="fa fa-search" />
+            </button>
+            <Suggestions />
+          </div>
+        </form>
+      </div>
     );
   }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bookService } from 'src/client/services';
 import { Link } from 'react-router-dom';
+import BooksTable from 'src/client/components/presentational/BooksTable';
 
 class Activities extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class Activities extends Component {
     return (
       <div>
         <h3>Uploaded books</h3>
-        {uploadedBooksList}
+        <BooksTable books={this.state.uploadedBooks} />
       </div>
     );
   }

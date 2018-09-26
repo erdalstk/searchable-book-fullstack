@@ -11,6 +11,7 @@ import Activities from './Activities.Profile';
 import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import { STATIC_IMAGE_URL } from 'src/client/config';
+import { noProfilePictureAddDefaultSrc } from 'src/client/helpers';
 
 class ProfileView extends Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class ProfileView extends Component {
 
   onCoverDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -123,7 +124,7 @@ class ProfileView extends Component {
     }
 
     return (
-      <div className="row profile">
+      <div className="row profile-view-container">
         <div className="col-lg-3">
           <div className="profile-sidebar">
             <div className="profile-userpic">
@@ -156,7 +157,11 @@ class ProfileView extends Component {
               ) : (
                 <div className="profile-picture-static">
                   <div className="upload-image-preview">
-                    <img src={STATIC_IMAGE_URL + user.profile_picture} alt={user.name} />
+                    <img
+                      onError={noProfilePictureAddDefaultSrc}
+                      src={STATIC_IMAGE_URL + user.profile_picture}
+                      alt={user.name}
+                    />
                   </div>
                 </div>
               )}
@@ -251,13 +256,13 @@ class ProfileView extends Component {
                 <Activities />
               </div>
               <div className="tab-pane fade" id="v-pills-help" role="tabpanel" aria-labelledby="v-pills-help-tab">
-                {user.level <= 1 && (
+                {userLocalStorage.level <= 1 && (
                   <Link className="btn btn-link" to="/admin/users">
                     Users Manager
                   </Link>
                 )}
                 <br />
-                {user.level <= 2 && (
+                {userLocalStorage.level <= 2 && (
                   <Link className="btn btn-link" to="/admin/books">
                     Books Manager
                   </Link>

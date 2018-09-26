@@ -33,8 +33,6 @@ class AccountSettings extends Component {
   handleuserSubmit(event) {
     event.preventDefault();
     const { user } = this.state;
-    // if (user.newPassword !== user.newPasswordConfirm) {
-    // }
     this.setState({
       submitted: true
     });
@@ -56,10 +54,7 @@ class AccountSettings extends Component {
     });
     userService.changePassword(user).then(
       res => {
-        // mainProps.dispatch(userActions.profileSuccess(res.user));
         toast('✅ Change password success!', infoToastOptions);
-        // mainProps.dispatch(userActions.loginSuccess());
-        // mainProps.history.push('/');
         this.setState({
           user: {
             currentPassword: '',
@@ -73,7 +68,6 @@ class AccountSettings extends Component {
       },
       error => {
         toast('❌ ' + error, errorToastOptions);
-        // mainProps.dispatch(userActions.profileFailure());
         return;
       }
     );

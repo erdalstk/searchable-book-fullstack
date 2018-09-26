@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import AllCategories from './AllCategories';
 import Category from './Category';
 import NotFoundRoute from 'src/client/components/presentational/NotFoundRoute';
+import AllCategories from './AllCategories';
 
 const Categories = () => (
   <Switch>

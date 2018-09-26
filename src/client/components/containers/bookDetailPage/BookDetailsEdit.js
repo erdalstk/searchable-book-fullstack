@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchBookDetailsCompleted } from 'src/client/actions';
 import { bookService } from 'src/client/services';
-import '../uploadPage/UploadBook.css';
 import './BookDetailsEdit.css';
 import { toast } from 'react-toastify';
 import { infoToastOptions, errorToastOptions } from 'src/client/config';
@@ -104,7 +103,7 @@ class BookDetails extends Component {
 
   onCoverDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -114,7 +113,7 @@ class BookDetails extends Component {
 
   onEpubDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -123,7 +122,7 @@ class BookDetails extends Component {
   }
   onMobiDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -132,7 +131,7 @@ class BookDetails extends Component {
   }
   onPdfDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -150,8 +149,6 @@ class BookDetails extends Component {
   formSubmit(e) {
     e.preventDefault();
     var { book } = this.props;
-    var infoToastOpt = infoToastOptions;
-    var errorToastOpt = errorToastOptions;
     var historyProps = this.props.history;
     var data = new FormData();
     data.append('_id', book._id);
@@ -174,12 +171,12 @@ class BookDetails extends Component {
 
     bookService.uploadBook(data).then(
       res => {
-        toast('✅ Success!', infoToastOpt);
+        toast('✅ Success!', infoToastOptions);
         historyProps.push('/books/' + res.data._id);
         return;
       },
       error => {
-        toast('❌ ' + error, errorToastOpt);
+        toast('❌ ' + error, errorToastOptions);
         return;
       }
     );
@@ -276,7 +273,7 @@ class BookDetails extends Component {
     }
 
     return (
-      <div className="book-details-content">
+      <div className="book-details-edit-container">
         <form className="edit-book-form" onSubmit={this.formSubmit}>
           {this.state.canEdit && (
             <div className="can-edit">
@@ -354,7 +351,7 @@ class BookDetails extends Component {
             <div className="row">
               <div className="col-sm-6 col-md-4 col-lg-4">
                 <div className="form-group">
-                  <label htmlFor="bookNameInput">EPUB</label>
+                  <label>EPUB</label>
                   <Dropzone accept="application/epub+zip" onDrop={this.onEpubDrop.bind(this)}>
                     {epubPreview}
                   </Dropzone>
@@ -365,7 +362,7 @@ class BookDetails extends Component {
               </div>
               <div className="col-sm-6 col-md-4 col-lg-4">
                 <div className="form-group">
-                  <label htmlFor="bookNameInput">MOBI</label>
+                  <label>MOBI</label>
                   <Dropzone onDrop={this.onMobiDrop.bind(this)}>{mobiPreview}</Dropzone>
                   <small id="fileSizeHelp" className="form-text text-muted">
                     File size below 5MB
@@ -374,7 +371,7 @@ class BookDetails extends Component {
               </div>
               <div className="col-sm-12 col-md-4 col-lg-4">
                 <div className="form-group">
-                  <label htmlFor="bookNameInput">PDF</label>
+                  <label>PDF</label>
                   <Dropzone accept="application/pdf" onDrop={this.onPdfDrop.bind(this)}>
                     {pdfPreview}
                   </Dropzone>

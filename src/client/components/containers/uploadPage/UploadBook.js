@@ -53,8 +53,6 @@ class UploadBook extends Component {
 
   formSubmit(e) {
     e.preventDefault();
-    var infoToastOpt = infoToastOptions;
-    var errorToastOpt = errorToastOptions;
     var historyProps = this.props.history;
     var data = new FormData();
     data.append('name', this.name.value);
@@ -68,12 +66,12 @@ class UploadBook extends Component {
 
     bookService.uploadBook(data).then(
       res => {
-        toast('✅ Upload Success!', infoToastOpt);
+        toast('✅ Upload Success!', infoToastOptions);
         historyProps.push('/books/' + res.data._id);
         return;
       },
       error => {
-        toast('❌ ' + error, errorToastOpt);
+        toast('❌ ' + error, errorToastOptions);
         return;
       }
     );
@@ -81,7 +79,7 @@ class UploadBook extends Component {
 
   onCoverDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -91,7 +89,7 @@ class UploadBook extends Component {
 
   onEpubDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -100,7 +98,7 @@ class UploadBook extends Component {
   }
   onMobiDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -109,7 +107,7 @@ class UploadBook extends Component {
   }
   onPdfDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', errorToastOptions);
       return;
     }
     this.setState({
@@ -191,7 +189,7 @@ class UploadBook extends Component {
       );
     }
     return (
-      <div className="upload-container">
+      <div className="upload-book-container">
         <h3>Upload book</h3>
         <form className="upload-book-form" onSubmit={this.formSubmit}>
           <div className="row">

@@ -21,7 +21,6 @@ class Category extends Component {
         this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
       },
       error => {
-        // toast(error, errorToastOptions);
         return;
       }
     );
@@ -37,7 +36,6 @@ class Category extends Component {
           this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
         },
         error => {
-          // toast(error, errorToastOptions);
           return;
         }
       );

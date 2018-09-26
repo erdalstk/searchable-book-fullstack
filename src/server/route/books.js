@@ -187,10 +187,7 @@ router.get('/:email/uploaded', verifyAuthToken, function(req, res) {
   if (req.params.email === 'me') {
     req.params.email = req.userEmail;
   }
-  Books.find({ create_by: req.params.email }, { name: 1, author: 1, category: 1, normalized_name: 1 }, function(
-    err,
-    books
-  ) {
+  Books.find({ create_by: req.params.email, enable: true }, function(err, books) {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });
