@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import Suggestions from 'src/client/components/presentational/Suggestions';
 import './SearchBar.css';
-import {
-  changeSearchBarFilterText,
-  fetchSearchBarSuggestionCompleted,
-  fetchSearchBarResultsCompleted
-} from 'src/client/actions';
+import { searchBarActions } from 'src/client/actions';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bookService } from 'src/client/services';
@@ -19,55 +15,49 @@ class SearchBar extends Component {
     this.handleFilterTextLostFocus = this.handleFilterTextLostFocus.bind(this);
   }
 
-  handleFilterTextLostFocus(e) {
-    var mainProps = this.props;
+  handleFilterTextLostFocus() {
+    const mainProps = this.props;
     clearTimeout(this.delayTimerBlur);
-    this.delayTimerBlur = setTimeout(function() {
-      mainProps.dispatch(fetchSearchBarSuggestionCompleted([]));
+    this.delayTimerBlur = setTimeout(() => {
+      mainProps.dispatch(searchBarActions.fetchSearchBarSuggestionCompleted([]));
     }, 200);
   }
 
   handleFilterTextChange(e) {
-    var mainProps = this.props;
-    var filterText = e.target.value;
-    mainProps.dispatch(changeSearchBarFilterText(filterText));
+    const mainProps = this.props;
+    const filterText = e.target.value;
+    mainProps.dispatch(searchBarActions.changeSearchBarFilterText(filterText));
     if (!filterText.trim()) {
+      clearTimeout(this.delayTimer);
+      mainProps.dispatch(searchBarActions.fetchSearchBarSuggestionCompleted([]));
       return;
     }
     clearTimeout(this.delayTimer);
-    this.delayTimer = setTimeout(function() {
-      bookService.instantSearch(filterText).then(
-        res => {
-          mainProps.dispatch(fetchSearchBarSuggestionCompleted(res.data.slice(0, 10)));
-          return;
-        },
-        error => {
-          return;
-        }
-      );
+    this.delayTimer = setTimeout(() => {
+      bookService.instantSearch(filterText).then((res) => {
+        mainProps.dispatch(
+          searchBarActions.fetchSearchBarSuggestionCompleted(res.data.slice(0, 10))
+        );
+      });
     }, 500);
   }
 
   handleFilterTextSubmit(e) {
     e.preventDefault();
+    const mainProps = this.props;
     clearTimeout(this.delayTimer);
-    if (!this.props.searchBarFilterText.trim()) {
-      this.props.dispatch(fetchSearchBarResultsCompleted([]));
+    mainProps.dispatch(searchBarActions.fetchSearchBarSuggestionCompleted([]));
+    if (!mainProps.searchBarFilterText.trim()) {
       return;
     }
-    bookService.instantSearch(this.props.searchBarFilterText).then(
-      res => {
-        this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
-        this.props.history.push('/search');
-        return;
-      },
-      error => {
-        return;
-      }
-    );
+    bookService.instantSearch(mainProps.searchBarFilterText).then((res) => {
+      mainProps.dispatch(searchBarActions.fetchSearchBarResultsCompleted(res.data));
+      mainProps.history.push('/search');
+    });
   }
 
   render() {
+    const mainProps = this.props;
     return (
       <div className="search-bar-container">
         <form className="search-form" onSubmit={this.handleFilterTextSubmit}>
@@ -75,8 +65,7 @@ class SearchBar extends Component {
             <input
               type="text"
               placeholder="Search book..."
-              // ref={node => (this.input = node)}
-              value={this.props.searchBarFilterText}
+              value={mainProps.searchBarFilterText}
               onChange={this.handleFilterTextChange}
               onFocus={this.handleFilterTextChange}
               onBlur={this.handleFilterTextLostFocus}

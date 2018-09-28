@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 const connectMongoWithRetry = require('./helpers/mongoose.helper');
 const logger = require('./helpers/logging.helper');
@@ -12,17 +13,17 @@ app.use('/static', express.static('static'));
 connectMongoWithRetry();
 
 // routes
-var auth = require('./route/auth');
-var profile = require('./route/profile.js');
-var books = require('./route/books.js');
-var instantsearch = require('./route/instantsearch.js');
-var categories = require('./route/categories.js');
-var recentlyadded = require('./route/recentlyadded');
-var mostview = require('./route/mostview');
-var mostdownload = require('./route/mostdownload');
-var downloadebook = require('./route/downloadebook');
-var booksAdmin = require('./route/admin/books.admin.js');
-var usersAdmin = require('./route/admin/users.admin.js');
+const auth = require('./route/auth');
+const profile = require('./route/profile.js');
+const books = require('./route/books.js');
+const instantsearch = require('./route/instantsearch.js');
+const categories = require('./route/categories.js');
+const recentlyadded = require('./route/recentlyadded');
+const mostview = require('./route/mostview');
+const mostdownload = require('./route/mostdownload');
+const downloadebook = require('./route/downloadebook');
+const booksAdmin = require('./route/admin/books.admin.js');
+const usersAdmin = require('./route/admin/users.admin.js');
 
 app.use('/api/auth', auth);
 app.use('/api/profile', profile);
@@ -42,4 +43,4 @@ app.get('*', (req, res) => {
 });
 
 // start server
-app.listen(config.app.port, () => logger.log('info', 'Listening on port ' + config.app.port));
+app.listen(config.app.port, () => logger.log('info', `Listening on port ${config.app.port}`));

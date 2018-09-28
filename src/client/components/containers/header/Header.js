@@ -1,40 +1,30 @@
 import React, { Component } from 'react';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import keyIndex from 'react-key-index';
-import CategoryList from '../../presentational/CategoryList';
 import { connect } from 'react-redux';
-import SearchBar from 'src/client/components/containers/searchBar/SearchBar.js';
+import SearchBar from 'src/client/components/containers/searchBar/SearchBar';
 import './Header.css';
 import { categoryService } from 'src/client/services';
-import { fetchCategoriesCompleted } from 'src/client/actions';
-import { STATIC_IMAGE_URL } from 'src/client/config';
-import { noProfilePictureAddDefaultSrc } from 'src/client/helpers';
+import { categoryActions } from 'src/client/actions';
+import { imageConstants } from 'src/client/config';
+import { noPictureUtil } from 'src/client/helpers';
+import CategoryList from '../../presentational/CategoryList';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
-    categoryService.getAllCategories().then(
-      res => {
-        this.props.dispatch(fetchCategoriesCompleted(res.data));
-      },
-      error => {
-        return;
-      }
-    );
+    const mainProps = this.props;
+    categoryService.getAllCategories().then((res) => {
+      mainProps.dispatch(categoryActions.fetchCategoriesCompleted(res.data));
+    });
   }
 
   render() {
-    var auth, loggedIn;
+    const mainProps = this.props;
+    let auth;
+    let loggedIn;
     if (localStorage.getItem('user')) {
       loggedIn = true;
-      var user = JSON.parse(localStorage.getItem('user'));
-      var lastName = user.name
-        .split(' ')
-        .slice(-1)
-        .join(' ');
+      const user = JSON.parse(localStorage.getItem('user'));
       auth = (
         <div className="dropdown nav-button">
           <NavLink
@@ -47,10 +37,15 @@ class Header extends Component {
             aria-expanded="false"
             exact
             to="/profile/me"
-            activeClassName="active">
+            activeClassName="active"
+          >
             {user.profile_picture ? (
               <div className="profile-picture-static">
-                <img onError={noProfilePictureAddDefaultSrc} src={STATIC_IMAGE_URL + user.profile_picture} />
+                <img
+                  onError={noPictureUtil.noProfilePictureAddDefaultSrc}
+                  src={imageConstants.STATIC_IMAGE_URL + user.profile_picture}
+                  alt={user.name}
+                />
               </div>
             ) : (
               <i className="fa fa-user fa-fw" />
@@ -58,10 +53,15 @@ class Header extends Component {
           </NavLink>
           <div
             className="dropdown-menu dropdown-menu-right columns-1 user-dropdown-menu"
-            aria-labelledby="userDropdownMenuLink">
+            aria-labelledby="userDropdownMenuLink"
+          >
             <Link className="dropdown-item dropdown-user-overview" to="/profile/me">
               <div className="dropdown-profile-picture">
-                <img onError={noProfilePictureAddDefaultSrc} src={STATIC_IMAGE_URL + user.profile_picture} />
+                <img
+                  onError={noPictureUtil.noProfilePictureAddDefaultSrc}
+                  src={imageConstants.STATIC_IMAGE_URL + user.profile_picture}
+                  alt={user.name}
+                />
               </div>
               <div className="dropdown-user-info">
                 <strong>{user.name}</strong>
@@ -94,7 +94,7 @@ class Header extends Component {
       <div className="header-container">
         <div className="navbar bg-light">
           <div className="col-2 col-md-3 col-lg-3">
-            <a className="brand" href="#">
+            <Link to="/" className="brand">
               <img
                 className="logo-mobile d-sm-block d-md-none d-lg-none d-xl-none"
                 src="https://books.haoict.com/static/upload/MDST-logo.png"
@@ -105,7 +105,7 @@ class Header extends Component {
                 src="https://books.haoict.com/static/upload/1536132952932-mdst-logo.png"
                 alt="MDST"
               />
-            </a>
+            </Link>
           </div>
           <div className="search-bar col-10 col-md-6 col-lg-6">
             <SearchBar />
@@ -114,7 +114,13 @@ class Header extends Component {
             <div className="row right-navbar">
               <div className={loggedIn ? 'col-3 col-lg-3' : 'col-6 col-md-6 col-lg-6'}>
                 <div className="d-sm-block d-md-none d-lg-none d-xl-none">
-                  <NavLink href="#" role="button" className="nav-button" to="/categories" activeClassName="active">
+                  <NavLink
+                    href="#"
+                    role="button"
+                    className="nav-button"
+                    to="/categories"
+                    activeClassName="active"
+                  >
                     <i className="fa fa-tag fa-fw" />
                   </NavLink>
                 </div>
@@ -122,28 +128,29 @@ class Header extends Component {
                   <NavLink
                     href="#"
                     role="button"
-                    className="category-dropdown dropdown-toggle"
+                    className="category-dropdown dropdown-toggle nav-button"
                     id="categoryDropdownMenuLink"
-                    className="nav-button"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
                     to="/categories"
-                    activeClassName="active">
+                    activeClassName="active"
+                  >
                     <i className="fa fa-tag fa-fw" />
                   </NavLink>
                   <div
                     className="dropdown-menu dropdown-menu-right multi-column columns-3"
-                    aria-labelledby="categoryDropdownMenuLink">
+                    aria-labelledby="categoryDropdownMenuLink"
+                  >
                     <div className="row">
                       <div className="col-4">
-                        <CategoryList col="0" total="3" categories={this.props.categories} />
+                        <CategoryList col="0" total="3" categories={mainProps.categories} />
                       </div>
                       <div className="col-4">
-                        <CategoryList col="1" total="3" categories={this.props.categories} />
+                        <CategoryList col="1" total="3" categories={mainProps.categories} />
                       </div>
                       <div className="col-4">
-                        <CategoryList col="2" total="3" categories={this.props.categories} />
+                        <CategoryList col="2" total="3" categories={mainProps.categories} />
                       </div>
                     </div>
                     <hr />

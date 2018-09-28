@@ -1,17 +1,14 @@
 import { authHeader, authHeaderJson, apiAccessTokenHeader } from '../helpers';
 
-export const bookService = {
-  instantSearch,
-  getMostDownload,
-  getMostView,
-  getRecentlyAdded,
-  getDownloadLink,
-  getBookDetails,
-  uploadBook,
-  getUploadedBy,
-  admin_getAllBooks,
-  admin_updateBooks
-};
+function handleResponse(res) {
+  return res.json().then((resJson) => {
+    if (!resJson.result) {
+      const error = resJson.message;
+      return Promise.reject(error);
+    }
+    return resJson;
+  });
+}
 
 function instantSearch(filterText) {
   const requestOptions = {
@@ -78,29 +75,34 @@ function getUploadedBy(email) {
   return fetch(`api/books/${email}/uploaded`, requestOptions).then(handleResponse);
 }
 
-function admin_getAllBooks() {
+function adminGetAllBooks() {
   const requestOptions = {
     method: 'GET',
     headers: authHeader()
   };
-  return fetch(`api/admin/books`, requestOptions).then(handleResponse);
+  return fetch('api/admin/books', requestOptions).then(handleResponse);
 }
 
-function admin_updateBooks(books) {
+function adminUpdateBooks(books) {
   const requestOptions = {
     method: 'POST',
     headers: authHeaderJson(),
     body: JSON.stringify({ data: books })
   };
-  return fetch(`api/admin/books/update`, requestOptions).then(handleResponse);
+  return fetch('api/admin/books/update', requestOptions).then(handleResponse);
 }
 
-function handleResponse(res) {
-  return res.json().then(res => {
-    if (!res.result) {
-      const error = res.message;
-      return Promise.reject(error);
-    }
-    return res;
-  });
-}
+const bookServices = {
+  instantSearch,
+  getMostDownload,
+  getMostView,
+  getRecentlyAdded,
+  getDownloadLink,
+  getBookDetails,
+  uploadBook,
+  getUploadedBy,
+  adminGetAllBooks,
+  adminUpdateBooks
+};
+
+export default bookServices;

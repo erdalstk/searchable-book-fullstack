@@ -1,9 +1,11 @@
+/* global FB */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from 'src/client/actions';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
+import { toastOptions } from 'src/client/config';
 import { userService } from 'src/client/services';
 import './Login.css';
 
@@ -25,52 +27,50 @@ class Login extends Component {
 
   componentDidMount() {}
 
+  onFacebookLoginClick() {
+    const main = this;
+    FB.login(
+      (response) => {
+        main.updateFBLoggedInState(response);
+      },
+      { scope: 'email' }
+    );
+  }
+
   updateFBLoggedInState(response) {
     const mainProps = this.props;
     if (!response.authResponse || !response.authResponse.accessToken) {
       return;
     }
-    FB.api('/me', { locale: 'en_US', fields: 'name, email' }, function(data) {
-      var fbUser = {
+    FB.api('/me', { locale: 'en_US', fields: 'name, email' }, (data) => {
+      const fbUser = {
         name: data.name,
         email: data.email,
         id: data.id,
         token: response.authResponse.accessToken
       };
       userService.loginWithFacebook(fbUser).then(
-        res => {
+        () => {
           userService.me().then(
-            res => {
+            (res) => {
               mainProps.dispatch(userActions.profileSuccess(res.data));
-              toast('✅ Login success!', infoToastOptions);
+              toast('✅ Login success!', toastOptions.INFO);
               mainProps.dispatch(userActions.loginSuccess());
               mainProps.history.push('/');
             },
-            error => {
-              toast('❌  ' + error, errorToastOptions);
+            (error) => {
+              toast(`❌  ${error}`, toastOptions.ERROR);
               mainProps.dispatch(userActions.profileFailure());
               mainProps.dispatch(userActions.loginFailure(error));
-              return;
             }
           );
         },
-        error => {
-          toast('❌  ' + error, errorToastOptions);
+        (error) => {
+          toast(`❌  ${error}`, toastOptions.ERROR);
           mainProps.dispatch(userActions.loginFailure(error));
-          return;
         }
       );
     });
-  }
-
-  onFacebookLoginClick() {
-    var main = this;
-    FB.login(
-      response => {
-        main.updateFBLoggedInState(response);
-      },
-      { scope: 'email' }
-    );
   }
 
   handleChange(event) {
@@ -91,43 +91,43 @@ class Login extends Component {
     if (user.email && user.password) {
       mainProps.dispatch(userActions.loginRequesting());
       userService.login(user).then(
-        res => {
+        () => {
           userService.me().then(
-            res => {
+            (res) => {
               mainProps.dispatch(userActions.profileSuccess(res.data));
-              toast('✅ Login success!', infoToastOptions);
+              toast('✅ Login success!', toastOptions.INFO);
               mainProps.dispatch(userActions.loginSuccess());
               mainProps.history.push('/');
             },
-            error => {
-              toast('❌ ' + error, errorToastOptions);
+            (error) => {
+              toast(`❌ ${error}`, toastOptions.ERROR);
               mainProps.dispatch(userActions.profileFailure());
               mainProps.dispatch(userActions.loginFailure(error));
-              return;
             }
           );
         },
-        error => {
-          toast('❌ ' + error, errorToastOptions);
+        (error) => {
+          toast(`❌ ${error}`, toastOptions.ERROR);
           mainProps.dispatch(userActions.loginFailure(error));
-          return;
         }
       );
     }
   }
 
   render() {
+    const mainProps = this.props;
     const { status, message } = this.props;
     const { user, submitted } = this.state;
     return (
       <div className="login-container">
-        {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
+        {status === 'failed' && <div className="alert alert-danger">{message}</div>}
         <div className="">
-          <button onClick={this.props.changeTab} className="btn btn-link">
+          <button type="button" onClick={mainProps.changeTab} className="btn btn-link">
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
             Don't have account? Register!
           </button>
           <form name="form" onSubmit={this.handleSubmit}>
-            <div className={'form-group' + (submitted && !this.email ? ' has-error' : '')}>
+            <div className={`form-group${submitted && !this.email ? ' has-error' : ''}`}>
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -140,7 +140,7 @@ class Login extends Component {
               {submitted && !user.email && <div className="requirements">Email is required</div>}
             </div>
 
-            <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
+            <div className={`form-group${submitted && !user.password ? ' has-error' : ''}`}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -150,13 +150,19 @@ class Login extends Component {
                 onChange={this.handleChange}
                 onBlur={this.handleChange}
               />
-              {submitted && !user.password && <div className="requirements">Password is required</div>}
+              {submitted
+                && !user.password && <div className="requirements">Password is required</div>}
             </div>
 
             <div className="form-group">
-              <button className="btn btn-primary">Login</button>
+              <button type="submit" className="btn btn-primary">
+                Login
+              </button>
               {status === 'processing' && (
-                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                <img
+                  alt="processing"
+                  src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                />
               )}
             </div>
           </form>
@@ -171,7 +177,11 @@ class Login extends Component {
               data-use-continue-as="true"
               data-scope="email"
             /> */}
-          <button className="facebook-login-btn btn" onClick={this.onFacebookLoginClick}>
+          <button
+            type="button"
+            className="facebook-login-btn btn"
+            onClick={this.onFacebookLoginClick}
+          >
             <i className="fa fa-facebook fa-fw" />
             Login with Facebook
           </button>
@@ -185,5 +195,14 @@ const mapStateToProps = state => ({
   status: state.authentication.status,
   message: state.authentication.message
 });
+
+Login.defaultProps = {
+  message: ''
+};
+
+Login.propTypes = {
+  status: PropTypes.string.isRequired,
+  message: PropTypes.string
+};
 
 export default connect(mapStateToProps)(withRouter(Login));

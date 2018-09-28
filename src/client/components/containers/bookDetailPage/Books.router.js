@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import BookDetails from './BookDetails';
 import NotFoundRoute from 'src/client/components/presentational/NotFoundRoute';
+import BookDetails from './BookDetails';
 import BookDetailsEdit from './BookDetailsEdit';
 
 const Books = () => (

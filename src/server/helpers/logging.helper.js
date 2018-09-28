@@ -1,12 +1,11 @@
 const winston = require('winston');
 const { format } = require('winston');
+
 const { combine, printf } = format;
 const moment = require('moment-timezone');
 require('winston-daily-rotate-file');
 
-const consoleFormat = printf(info => {
-  return `${info.timestamp} [${info.level}] ${info.message}`;
-});
+const consoleFormat = printf(info => `${info.timestamp} [${info.level}] ${info.message}`);
 
 const logTransport = new winston.transports.DailyRotateFile({
   filename: './logs/mdstbooks-%DATE%.log',
@@ -23,11 +22,13 @@ const execptionTransport = new winston.transports.File({
 
 // correct timezone to Tokyo
 const appendTimestamp = format((info, opts) => {
-  if (opts.tz)
-    info.timestamp = moment()
+  const infoz = info;
+  if (opts.tz) {
+    infoz.timestamp = moment()
       .tz(opts.tz)
       .format();
-  return info;
+  }
+  return infoz;
 });
 
 const logger = winston.createLogger({

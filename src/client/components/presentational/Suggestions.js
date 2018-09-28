@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { propTypesHelper } from 'src/client/helpers';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import sanitizeHtml from 'sanitize-html';
 import './Suggestions.css';
-
-function boldString(str, find) {
-  var re = new RegExp(find, 'g');
-  str = str.replace(re, '<b>' + find + '</b>');
-  return str;
-}
 
 class Suggestions extends Component {
   constructor(props) {
@@ -16,19 +11,24 @@ class Suggestions extends Component {
     this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
   }
 
-  handleSuggestionClick = _id => event => {
-    console.log('wt');
-    this.props.history.push('/books/' + _id);
+  handleSuggestionClick = _id => () => {
+    const { history } = this.props;
+    history.push(`/books/${_id}`);
   };
 
   render() {
-    if (!this.props.searchBarSuggestions.length) return '';
-    const options = this.props.searchBarSuggestions.map(r => (
+    const { searchBarSuggestions } = this.props;
+    if (!searchBarSuggestions.length) return '';
+    const options = searchBarSuggestions.map(r => (
       <div
         key={r._id}
+        role="button"
+        tabIndex={0}
         onClick={this.handleSuggestionClick(r._id)}
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(boldString(r.name, this.props.searchBarFilterText)) }}
-      />
+        onKeyPress={this.handleSuggestionClick(r._id)}
+      >
+        {r.name}
+      </div>
     ));
     return (
       <div className="autocomplete-items" id="myInputautocomplete-list">
@@ -39,8 +39,16 @@ class Suggestions extends Component {
 }
 
 const mapStateToProps = state => ({
-  searchBarSuggestions: state.searchBarSuggestions,
-  searchBarFilterText: state.searchBarFilterText
+  searchBarSuggestions: state.searchBarSuggestions
 });
+
+Suggestions.defaultProps = {
+  searchBarSuggestions: []
+};
+
+Suggestions.propTypes = {
+  history: PropTypes.object, // eslint-disable-line
+  searchBarSuggestions: PropTypes.arrayOf(propTypesHelper.Book)
+};
 
 export default connect(mapStateToProps)(withRouter(Suggestions));

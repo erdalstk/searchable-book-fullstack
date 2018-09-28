@@ -1,4 +1,5 @@
-export const userConstants = {
+const userConstants = {
+  // action & reducers
   REGISTER_REQUEST: 'USERS_REGISTER_REQUEST',
   REGISTER_SUCCESS: 'USERS_REGISTER_SUCCESS',
   REGISTER_FAILURE: 'USERS_REGISTER_FAILURE',
@@ -10,5 +11,16 @@ export const userConstants = {
   PROFILE_SUCCESS: 'USER_PROFILE_SUCCESS',
   PROFILE_FAILURE: 'USER_PROFILE_FAILURE',
 
-  LOGOUT: 'USER_LOGOUT'
+  LOGOUT: 'USER_LOGOUT',
+
+  // user levels
+  USER_LEVEL: {
+    4: 'Basic',
+    3: 'Advance',
+    2: 'Mod',
+    1: 'Admin',
+    0: 'Super Admin'
+  }
 };
+
+export default userConstants;

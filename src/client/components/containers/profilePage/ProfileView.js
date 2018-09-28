@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { userService } from 'src/client/services';
 import { userActions } from 'src/client/actions';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
-import AccountSettings from './AccountSettings.Profile';
-import Overview from './Overview.Profile';
 import './ProfileView.css';
-import Activities from './Activities.Profile';
 import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
-import { STATIC_IMAGE_URL } from 'src/client/config';
-import { noProfilePictureAddDefaultSrc } from 'src/client/helpers';
+import { imageConstants, toastOptions } from 'src/client/config';
+import { noPictureUtil } from 'src/client/helpers';
+import Activities from './Activities.Profile';
+import Overview from './Overview.Profile';
+import AccountSettings from './AccountSettings.Profile';
 
 class ProfileView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profilePictureFile: []
+      profilePictureFile: [],
+      me: true,
+      userLocalStorage: {}
     };
     this.fetchProfile = this.fetchProfile.bind(this);
     this.onCoverDrop = this.onCoverDrop.bind(this);
@@ -25,34 +27,20 @@ class ProfileView extends Component {
     this.onClearProfilePictureClick = this.onClearProfilePictureClick.bind(this);
   }
 
-  fetchProfile() {
-    if (!this.props.match.params.email || this.props.match.params.email === '') {
-      return;
-    }
-    userService.profile(this.props.match.params.email).then(
-      res => {
-        this.props.dispatch(userActions.profileSuccess(res.data));
-      },
-      error => {
-        toast('❌ ' + error, errorToastOptions);
-        this.props.dispatch(userActions.profileFailure());
-      }
-    );
-  }
-
   componentDidMount() {
     this.fetchProfile();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.email !== prevProps.match.params.email) {
+    const mainProps = this.props;
+    if (mainProps.match.params.email !== prevProps.match.params.email) {
       this.fetchProfile();
     }
   }
 
   onCoverDrop(files) {
     if (files.slice(0, 1)[0].size > this.maxFileSize) {
-      toast('❌ File size must below 5MB', errorToastOptions);
+      toast('❌ File size must below 5MB', toastOptions.ERROR);
       return;
     }
     this.setState({
@@ -61,20 +49,18 @@ class ProfileView extends Component {
   }
 
   onSaveProfilePictureClick() {
-    var data = new FormData();
-    data.append('name', 'WTF');
-    if (this.state.profilePictureFile.length) {
-      data.append('profile_picture', this.state.profilePictureFile[0]);
+    const mainState = this.state;
+    const data = new FormData();
+    if (mainState.profilePictureFile.length) {
+      data.append('profile_picture', mainState.profilePictureFile[0]);
       userService.updateProfile(data).then(
-        res => {
-          toast('✅ Success!', infoToastOptions);
+        () => {
+          toast('✅ Success!', toastOptions.INFO);
           this.setState({ profilePictureFile: [] });
           this.fetchProfile();
-          return;
         },
-        error => {
-          toast('❌ ' + error, errorToastOptions);
-          return;
+        (error) => {
+          toast(`❌ ${error}`, toastOptions.ERROR);
         }
       );
     }
@@ -86,22 +72,46 @@ class ProfileView extends Component {
     });
   }
 
+  fetchProfile() {
+    const mainProps = this.props;
+    if (!mainProps.match.params.email || mainProps.match.params.email === '') {
+      return;
+    }
+    if (!localStorage.getItem('user')) {
+      toast('❌ Do not have permission');
+      mainProps.dispatch(userActions.profileFailure());
+    }
+    const userLocalStorage = JSON.parse(localStorage.getItem('user'));
+    this.setState({ userLocalStorage });
+    userService.profile(mainProps.match.params.email).then(
+      (res) => {
+        mainProps.dispatch(userActions.profileSuccess(res.data));
+        if (userLocalStorage.email === res.data.email) {
+          this.setState({ me: true });
+          localStorage.setItem('user', JSON.stringify(res.data));
+        } else {
+          this.setState({ me: false });
+        }
+      },
+      (error) => {
+        toast(`❌ ${error}`, toastOptions.ERROR);
+        mainProps.dispatch(userActions.profileFailure());
+      }
+    );
+  }
+
   render() {
     const { user } = this.props;
-    var me = false;
-    if (localStorage.getItem('user')) {
-      if (!user || !user.email) return <h3>No user found</h3>;
-      var userLocalStorage = JSON.parse(localStorage.getItem('user'));
-      if (userLocalStorage.email === user.email) {
-        me = true;
-      }
-    } else {
-      return <h3>You have to login to view user profile</h3>;
+    const mainState = this.state;
+    if (!mainState.userLocalStorage || !mainState.userLocalStorage.email) {
+      return <h3>You have to login to view this page</h3>;
     }
-
-    var imagePreview = user.profile_picture ? (
+    if (!user || !user.email) {
+      return <h3>No user found</h3>;
+    }
+    let imagePreview = user.profile_picture ? (
       <div className="upload-image-preview">
-        <img src={STATIC_IMAGE_URL + user.profile_picture} alt={user.name} />
+        <img src={imageConstants.STATIC_IMAGE_URL + user.profile_picture} alt={user.name} />
         <div className="overlay">
           <div className="text">Click or drop here to change</div>
         </div>
@@ -115,10 +125,13 @@ class ProfileView extends Component {
       </p>
     );
 
-    if (this.state.profilePictureFile.length) {
+    if (mainState.profilePictureFile.length) {
       imagePreview = (
         <div className="upload-image-preview">
-          <img alt={this.state.profilePictureFile[0].name} src={this.state.profilePictureFile[0].preview} />
+          <img
+            alt={mainState.profilePictureFile[0].name}
+            src={mainState.profilePictureFile[0].preview}
+          />
         </div>
       );
     }
@@ -129,24 +142,31 @@ class ProfileView extends Component {
           <div className="profile-sidebar">
             <div className="profile-userpic">
               {/* <img src="/static/upload/panda.jpg" className="img-responsive" alt="" /> */}
-              {me ? (
+              {mainState.me ? (
                 <div>
                   <Dropzone
                     className="profile-picture-dropzone"
                     accept="image/jpeg, image/png"
-                    onDrop={this.onCoverDrop.bind(this)}>
+                    onDrop={this.onCoverDrop}
+                  >
                     {imagePreview}
                   </Dropzone>
-                  {this.state.profilePictureFile.length ? (
+                  {mainState.profilePictureFile.length ? (
                     <div>
                       <button
+                        type="button"
                         onClick={this.onSaveProfilePictureClick}
-                        className="update-profile-picture-btn btn btn-xs">
+                        className="update-profile-picture-btn btn btn-xs "
+                      >
+                        <i className="fa fa-save fa-fw" />
                         Save
                       </button>
                       <button
+                        type="button"
                         onClick={this.onClearProfilePictureClick}
-                        className="clear-profile-picture-btn btn btn-xs">
+                        className="clear-profile-picture-btn btn btn-xs "
+                      >
+                        <i className="fa fa-arrow-left fa-fw" />
                         Clear
                       </button>
                     </div>
@@ -158,8 +178,8 @@ class ProfileView extends Component {
                 <div className="profile-picture-static">
                   <div className="upload-image-preview">
                     <img
-                      onError={noProfilePictureAddDefaultSrc}
-                      src={STATIC_IMAGE_URL + user.profile_picture}
+                      onError={noPictureUtil.noProfilePictureAddDefaultSrc}
+                      src={imageConstants.STATIC_IMAGE_URL + user.profile_picture}
                       alt={user.name}
                     />
                   </div>
@@ -170,7 +190,7 @@ class ProfileView extends Component {
               <div className="profile-usertitle-name">{user.name}</div>
               <div className="profile-usertitle-job">{user.email}</div>
             </div>
-            {!me && (
+            {!mainState.me && (
               <div className="profile-userbuttons">
                 <button type="button" className="btn btn-success btn-sm">
                   Follow
@@ -182,29 +202,31 @@ class ProfileView extends Component {
             )}
             <div className="profile-usermenu">
               <div
-                id="sidebar"
+                id="sidebar v-pills-tab"
                 className="nav flex-column nav-pills"
-                id="v-pills-tab"
                 role="tablist"
-                aria-orientation="vertical">
+                aria-orientation="vertical"
+              >
                 <a
                   id="v-pills-overview-tab"
                   data-toggle="pill"
                   href="#v-pills-overview"
                   role="tab"
                   aria-controls="v-pills-overview"
-                  aria-selected="true">
+                  aria-selected="true"
+                >
                   <i className="fa fa-home fa-fw" />
                   Overview
                 </a>
-                {me && (
+                {mainState.me && (
                   <a
                     id="v-pills-settings-tab"
                     data-toggle="pill"
                     href="#v-pills-settings"
                     role="tab"
                     aria-controls="v-pills-settings"
-                    aria-selected="false">
+                    aria-selected="false"
+                  >
                     <i className="fa fa-user fa-fw" />
                     Account Settings
                   </a>
@@ -215,7 +237,8 @@ class ProfileView extends Component {
                   href="#v-pills-tasks"
                   role="tab"
                   aria-controls="v-pills-tasks"
-                  aria-selected="false">
+                  aria-selected="false"
+                >
                   <i className="fa fa-tasks fa-fw" />
                   Activities
                 </a>
@@ -225,7 +248,8 @@ class ProfileView extends Component {
                   href="#v-pills-help"
                   role="tab"
                   aria-controls="v-pills-help"
-                  aria-selected="false">
+                  aria-selected="false"
+                >
                   <i className="fa fa-question-circle fa-fw" />
                   Help
                 </a>
@@ -240,32 +264,46 @@ class ProfileView extends Component {
                 className="tab-pane fade show active"
                 id="v-pills-overview"
                 role="tabpanel"
-                aria-labelledby="v-pills-overview-tab">
+                aria-labelledby="v-pills-overview-tab"
+              >
                 <Overview />
               </div>
-              {me && (
+              {mainState.me && (
                 <div
                   className="tab-pane fade"
                   id="v-pills-settings"
                   role="tabpanel"
-                  aria-labelledby="v-pills-settings-tab">
+                  aria-labelledby="v-pills-settings-tab"
+                >
                   <AccountSettings />
                 </div>
               )}
-              <div className="tab-pane fade" id="v-pills-tasks" role="tabpanel" aria-labelledby="v-pills-tasks-tab">
+              <div
+                className="tab-pane fade"
+                id="v-pills-tasks"
+                role="tabpanel"
+                aria-labelledby="v-pills-tasks-tab"
+              >
                 <Activities />
               </div>
-              <div className="tab-pane fade" id="v-pills-help" role="tabpanel" aria-labelledby="v-pills-help-tab">
-                {userLocalStorage.level <= 1 && (
-                  <Link className="btn btn-link" to="/admin/users">
-                    Users Manager
-                  </Link>
+              <div
+                className="tab-pane fade"
+                id="v-pills-help"
+                role="tabpanel"
+                aria-labelledby="v-pills-help-tab"
+              >
+                {mainState.me
+                  && mainState.userLocalStorage.level <= 1 && (
+                    <Link className="btn btn-link" to="/admin/users">
+                      Users Manager
+                    </Link>
                 )}
                 <br />
-                {userLocalStorage.level <= 2 && (
-                  <Link className="btn btn-link" to="/admin/books">
-                    Books Manager
-                  </Link>
+                {mainState.me
+                  && mainState.userLocalStorage.level <= 2 && (
+                    <Link className="btn btn-link" to="/admin/books">
+                      Books Manager
+                    </Link>
                 )}
               </div>
             </div>
@@ -279,5 +317,13 @@ class ProfileView extends Component {
 const mapStateToProps = state => ({
   user: state.user
 });
+
+ProfileView.propTypes = {
+  user: PropTypes.shape({
+    email: PropTypes.string,
+    level: PropTypes.number,
+    create_time: PropTypes.string
+  }).isRequired
+};
 
 export default connect(mapStateToProps)(ProfileView);

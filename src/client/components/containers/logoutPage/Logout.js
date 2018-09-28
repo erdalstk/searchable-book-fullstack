@@ -1,26 +1,23 @@
+/* global FB */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { userService } from 'src/client/services';
 import { userActions } from 'src/client/actions';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
+import { toastOptions } from 'src/client/config';
 
 class Logout extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     const mainProps = this.props;
     userService.logout();
     // log out of facebook
-    FB.getLoginStatus(function(response) {
+    FB.getLoginStatus((response) => {
       if (response && response.status === 'connected') {
-        FB.logout(function(response) {});
+        FB.logout(() => {});
       }
     });
-    toast('✅ Logout Success', infoToastOptions);
+    toast('✅ Logout Success', toastOptions.INFO);
     mainProps.dispatch(userActions.logout());
     mainProps.history.push('/');
   }

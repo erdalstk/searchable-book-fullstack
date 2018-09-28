@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { imageConstants } from 'src/client/config';
+import { noPictureUtil, propTypesHelper } from 'src/client/helpers';
+import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 import './BooksTable.css';
 import 'src/../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from 'src/client/config';
-import { noPictureAddDefaultSrc } from 'src/client/helpers';
-import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
 const BooksTable = ({ books }) => {
   const options = {
@@ -14,43 +15,43 @@ const BooksTable = ({ books }) => {
   };
 
   const descriptionFormatter = (cell, row) => {
+    let des = '';
     if (row.description) {
-      if (row.description.length > 500) {
-        row.description = row.description.slice(0, 500) + '...';
+      des = row.description;
+      if (des.length > 500) {
+        des = `${des.slice(0, 500)}...`;
       }
-      return (
-        <div className="books-table-description">
-          <FroalaEditorView model={row.description} />
-        </div>
-      );
     }
-  };
-
-  const basicInfoFormatter = (cell, row) => {
     return (
-      <div>
-        <div className="row">
-          <div className="col-sm-5 col-md-3 col-lg-3 bookcover">
-            <Link to={'/books/' + row._id}>
-              <img
-                className="books-table-image"
-                onError={noPictureAddDefaultSrc}
-                alt={row.name}
-                src={STATIC_IMAGE_URL + row.cover}
-              />
-            </Link>
-          </div>
-          <div className="col-sm-7 col-md-9 col-lg-9 bookmeta">
-            <div className="bookmeta-title">
-              <Link to={'/books/' + row._id}>{row.name}</Link>
-            </div>
-            <p className="bookmeta-author">{row.author}</p>
-            <p className="bookmeta-category">{row.category}</p>
-          </div>
-        </div>
+      <div className="books-table-description">
+        <FroalaEditorView model={des} />
       </div>
     );
   };
+
+  const basicInfoFormatter = (cell, row) => (
+    <div>
+      <div className="row">
+        <div className="col-sm-5 col-md-3 col-lg-3 bookcover">
+          <Link to={`/books/${row._id}`}>
+            <img
+              className="books-table-image"
+              onError={noPictureUtil.noPictureAddDefaultSrc}
+              alt={row.name}
+              src={imageConstants.STATIC_IMAGE_URL + row.cover}
+            />
+          </Link>
+        </div>
+        <div className="col-sm-7 col-md-9 col-lg-9 bookmeta">
+          <div className="bookmeta-title">
+            <Link to={`/books/${row._id}`}>{row.name}</Link>
+          </div>
+          <p className="bookmeta-author">{row.author}</p>
+          <p className="bookmeta-category">{row.category}</p>
+        </div>
+      </div>
+    </div>
+  );
 
   if (!books || !books.length) {
     return (
@@ -61,7 +62,14 @@ const BooksTable = ({ books }) => {
   }
 
   return (
-    <BootstrapTable version="4" data={books} options={options} hover pagination className="books-table">
+    <BootstrapTable
+      version="4"
+      data={books}
+      options={options}
+      hover
+      pagination
+      className="books-table"
+    >
       <TableHeaderColumn dataField="_id" isKey width="50%" hidden>
         Id
       </TableHeaderColumn>
@@ -73,6 +81,14 @@ const BooksTable = ({ books }) => {
       </TableHeaderColumn>
     </BootstrapTable>
   );
+};
+
+BooksTable.defaultProps = {
+  books: []
+};
+
+BooksTable.propTypes = {
+  books: PropTypes.arrayOf(propTypesHelper.Book)
 };
 
 export default BooksTable;

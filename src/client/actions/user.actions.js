@@ -1,17 +1,5 @@
 import { userConstants } from '../config';
 
-export const userActions = {
-  loginRequesting,
-  loginSuccess,
-  loginFailure,
-  registerRequesting,
-  registerSuccess,
-  registerFailure,
-  profileSuccess,
-  profileFailure,
-  logout
-};
-
 function loginRequesting() {
   return { type: userConstants.LOGIN_REQUEST };
 }
@@ -43,3 +31,17 @@ function profileFailure() {
 function logout() {
   return { type: userConstants.LOGOUT };
 }
+
+const userActions = {
+  loginRequesting,
+  loginSuccess,
+  loginFailure,
+  registerRequesting,
+  registerSuccess,
+  registerFailure,
+  profileSuccess,
+  profileFailure,
+  logout
+};
+
+export default userActions;

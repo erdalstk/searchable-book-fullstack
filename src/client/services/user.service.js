@@ -1,18 +1,24 @@
-import { authHeader, authHeaderJson, apiAccessTokenHeader, apiAccessTokenHeaderJson } from '../helpers';
+import { authHeader, authHeaderJson, apiAccessTokenHeaderJson } from '../helpers';
 
-export const userService = {
-  login,
-  logout,
-  register,
-  me,
-  loginWithFacebook,
-  changePassword,
-  checkEmail,
-  profile,
-  updateProfile,
-  admin_getAllUsers,
-  admin_updateUsers
-};
+function logout() {
+  // remove user from local storage to log user out
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+}
+
+function handleResponse(res) {
+  if (res.status === 401) {
+    // auto logout if 401 response returned from api
+    logout();
+  }
+  return res.json().then((resJson) => {
+    if (!resJson.result) {
+      const error = resJson.message;
+      return Promise.reject(error);
+    }
+    return resJson;
+  });
+}
 
 function register(user) {
   const requestOptions = {
@@ -39,10 +45,9 @@ function login(user) {
   };
   return fetch('api/auth/login', requestOptions)
     .then(handleResponse)
-    .then(res => {
+    .then((res) => {
       // login successful if there's a jwt token in the response
       if (res.result && res.token) {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem('token', res.token);
       }
       return res;
@@ -57,10 +62,9 @@ function changePassword(user) {
   };
   return fetch('api/auth/changepassword', requestOptions)
     .then(handleResponse)
-    .then(res => {
+    .then((res) => {
       // login successful if there's a jwt token in the response
       if (res.result && res.token) {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem('token', res.token);
       }
       return res;
@@ -75,20 +79,13 @@ function loginWithFacebook(user) {
   };
   return fetch('api/auth/facebook', requestOptions)
     .then(handleResponse)
-    .then(res => {
+    .then((res) => {
       // login successful if there's a jwt token in the response
       if (res.result && res.token) {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem('token', res.token);
       }
       return res;
     });
-}
-
-function logout() {
-  // remove user from local storage to log user out
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
 }
 
 function me() {
@@ -98,7 +95,7 @@ function me() {
   };
   return fetch('api/auth/me', requestOptions)
     .then(handleResponse)
-    .then(res => {
+    .then((res) => {
       if (res.result && res.data) {
         localStorage.setItem('user', JSON.stringify(res.data));
       }
@@ -120,36 +117,38 @@ function updateProfile(data) {
     headers: authHeader(),
     body: data
   };
-  return fetch(`api/profile/me`, requestOptions).then(handleResponse);
+  return fetch('api/profile/me', requestOptions).then(handleResponse);
 }
 
-function admin_getAllUsers() {
+function adminGetAllUsers() {
   const requestOptions = {
     method: 'GET',
     headers: authHeader()
   };
-  return fetch(`api/admin/users/`, requestOptions).then(handleResponse);
+  return fetch('api/admin/users/', requestOptions).then(handleResponse);
 }
 
-function admin_updateUsers(users) {
+function adminUpdateUsers(users) {
   const requestOptions = {
     method: 'POST',
     headers: authHeaderJson(),
     body: JSON.stringify({ data: users })
   };
-  return fetch(`api/admin/users/update`, requestOptions).then(handleResponse);
+  return fetch('api/admin/users/update', requestOptions).then(handleResponse);
 }
 
-function handleResponse(res) {
-  if (res.status === 401) {
-    // auto logout if 401 response returned from api
-    logout();
-  }
-  return res.json().then(res => {
-    if (!res.result) {
-      const error = res.message;
-      return Promise.reject(error);
-    }
-    return res;
-  });
-}
+const userService = {
+  login,
+  logout,
+  register,
+  me,
+  loginWithFacebook,
+  changePassword,
+  checkEmail,
+  profile,
+  updateProfile,
+  adminGetAllUsers,
+  adminUpdateUsers
+};
+
+export default userService;

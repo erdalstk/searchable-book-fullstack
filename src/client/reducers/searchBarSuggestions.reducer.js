@@ -3,7 +3,7 @@ const searchBarSuggestions = (state = [], action) => {
     case 'FETCH_SEARCHBAR_SUGGESTIONS_COMPLETED':
       return action.searchBarSuggestions;
     default:
-      return action;
+      return state;
   }
 };
 

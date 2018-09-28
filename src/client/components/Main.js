@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Async from 'react-code-splitting';
 import HomePage from './containers/homePage/HomePage';
+
 const SearchPage = () => <Async load={import('./containers/searchPage/SearchPage.router')} />;
 const Books = () => <Async load={import('./containers/bookDetailPage/Books.router')} />;
 const LoginRegister = () => <Async load={import('./containers/loginRegisterPage/LoginRegister')} />;

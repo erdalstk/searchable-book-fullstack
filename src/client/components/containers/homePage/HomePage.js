@@ -16,41 +16,27 @@ class HomePage extends Component {
   }
 
   componentDidMount() {
-    bookService.getMostDownload(6).then(
-      res => {
-        this.setState({ mostDownloadData: res.data });
-      },
-      error => {
-        return;
-      }
-    );
+    bookService.getMostDownload(6).then((res) => {
+      this.setState({ mostDownloadData: res.data });
+    });
 
-    bookService.getMostView(10).then(
-      res => {
-        this.setState({ mostViewData: res.data });
-      },
-      error => {
-        return;
-      }
-    );
+    bookService.getMostView(10).then((res) => {
+      this.setState({ mostViewData: res.data });
+    });
 
-    bookService.getRecentlyAdded(10).then(
-      res => {
-        this.setState({ recentlyAddedData: res.data });
-      },
-      error => {
-        return;
-      }
-    );
+    bookService.getRecentlyAdded(10).then((res) => {
+      this.setState({ recentlyAddedData: res.data });
+    });
   }
 
   render() {
+    const mainState = this.state;
     return (
       <div className="home-page-container">
-        <FixedGridLayoutView mostDownloadData={this.state.mostDownloadData} />
+        <FixedGridLayoutView mostDownloadData={mainState.mostDownloadData} />
         <DynamicGridLayoutView
-          mostViewData={this.state.mostViewData}
-          recentlyAddedData={this.state.recentlyAddedData}
+          mostViewData={mainState.mostViewData}
+          recentlyAddedData={mainState.recentlyAddedData}
         />
       </div>
     );

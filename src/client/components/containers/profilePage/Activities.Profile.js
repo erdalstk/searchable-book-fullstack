@@ -13,43 +13,36 @@ class Activities extends Component {
   }
 
   componentDidMount() {
-    bookService.getUploadedBy(this.props.user.email).then(
-      res => {
-        this.setState({ uploadedBooks: res.data });
-      },
-      error => {
-        return;
-      }
-    );
+    const mainProps = this.props;
+    bookService.getUploadedBy(mainProps.user.email).then((res) => {
+      this.setState({ uploadedBooks: res.data });
+    });
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.user.email != prevProps.user.email)
-      bookService.getUploadedBy(this.props.user.email).then(
-        res => {
-          this.setState({ uploadedBooks: res.data });
-        },
-        error => {
-          return;
-        }
-      );
+    const mainProps = this.props;
+    if (mainProps.user.email !== prevProps.user.email) {
+      bookService.getUploadedBy(mainProps.user.email).then((res) => {
+        this.setState({ uploadedBooks: res.data });
+      });
+    }
   }
 
   render() {
-    var uploadedBooksList = [];
-    this.state.uploadedBooks.forEach(book => {
+    const mainState = this.state;
+    const uploadedBooksList = [];
+    mainState.uploadedBooks.forEach((book) => {
       uploadedBooksList.push(
         <div key={book._id}>
-          <Link to={'/books/' + book._id}>{book.name}</Link>
+          <Link to={`/books/${book._id}`}>{book.name}</Link>
         </div>
       );
     });
 
-    const { user } = this.props;
     return (
       <div>
         <h3>Uploaded books</h3>
-        <BooksTable books={this.state.uploadedBooks} />
+        <BooksTable books={mainState.uploadedBooks} />
       </div>
     );
   }

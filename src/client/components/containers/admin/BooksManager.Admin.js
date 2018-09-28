@@ -5,7 +5,7 @@ import './BooksManager.Admin.css';
 import 'src/../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { bookService } from 'src/client/services';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
+import { toastOptions } from 'src/client/config';
 
 class BooksManager extends Component {
   constructor(props) {
@@ -29,13 +29,13 @@ class BooksManager extends Component {
   }
 
   componentDidMount() {
-    bookService.admin_getAllBooks().then(
-      res => {
+    bookService.adminGetAllBooks().then(
+      (res) => {
         this.setState({ books: res.data });
         this.originalApiBooks = JSON.parse(JSON.stringify(res.data.slice()));
       },
-      error => {
-        return;
+      (error) => {
+        toast(error, toastOptions.ERROR);
       }
     );
   }
@@ -44,41 +44,45 @@ class BooksManager extends Component {
     if (row._id) {
       return (
         <div>
-          <Link to={'/books/' + row._id}>{row._id}</Link>
+          <Link to={`/books/${row._id}`}>{row._id}</Link>
         </div>
       );
     }
+    return '';
   };
 
   uploadbyFormatter = (cell, row) => {
     if (row.create_by) {
       return (
         <div>
-          <Link to={'/profile/' + cell}>{cell}</Link>
+          <Link to={`/profile/${cell}`}>{cell}</Link>
         </div>
       );
     }
+    return '';
   };
 
-  enableFormatter = (cell, row) => {
-    return <input type="checkbox" onChange={(e, data) => this.checkEnableOnChange(row._id)} checked={row.enable} />;
-  };
+  enableFormatter = (cell, row) => (
+    <input
+      type="checkbox"
+      onChange={() => this.checkEnableOnChange(row._id)}
+      checked={row.enable}
+    />
+  );
 
-  checkEnableOnChange = data => {
-    const prevBooks = this.state.books.slice();
-    for (var book of prevBooks) {
-      if (book._id === data) {
-        book.enable = !book.enable;
-        this.setState({ books: prevBooks });
-      }
-    }
+  checkEnableOnChange = (data) => {
+    const mainState = this.state;
+    const prevBooks = mainState.books.slice();
+    const selectedBook = prevBooks.find(b => b._id === data);
+    selectedBook.enable = !selectedBook.enable;
+    this.setState({ ...prevBooks });
   };
 
   onEnableButtonClick = () => {
     const { books } = this.state;
-    var postDataBooks = [];
-    for (var i = 0; i < books.length; i++) {
-      var book = {};
+    const postDataBooks = [];
+    for (let i = 0; i < books.length; i += 1) {
+      const book = {};
       book._id = books[i]._id;
       if (books[i].enable !== this.originalApiBooks[i].enable) {
         book.enable = books[i].enable;
@@ -93,26 +97,23 @@ class BooksManager extends Component {
         book.update_by = books[i].update_by;
       }
       if (
-        book.name !== undefined ||
-        book.create_by !== undefined ||
-        book.update_by !== undefined ||
-        book.enable !== undefined
-      )
-        postDataBooks.push(book);
+        book.name !== undefined
+        || book.create_by !== undefined
+        || book.update_by !== undefined
+        || book.enable !== undefined
+      ) postDataBooks.push(book);
     }
     if (!postDataBooks.length) {
-      alert('No update');
+      toast('Nothing to update!', toastOptions.ERROR);
       return;
     }
-    bookService.admin_updateBooks(postDataBooks).then(
-      res => {
-        toast('✅ Success!', infoToastOptions);
+    bookService.adminUpdateBooks(postDataBooks).then(
+      () => {
+        toast('✅ Success!', toastOptions.INFO);
         this.originalApiBooks = JSON.parse(JSON.stringify(books));
-        return;
       },
-      error => {
-        toast('❌ Error! ' + error, errorToastOptions);
-        return;
+      (error) => {
+        toast(`❌ Error! ${error}`, toastOptions.ERROR);
       }
     );
   };
@@ -125,7 +126,7 @@ class BooksManager extends Component {
 
     return (
       <div>
-        <button className="btn btn-primary" onClick={this.onEnableButtonClick}>
+        <button type="button" className="btn btn-primary" onClick={this.onEnableButtonClick}>
           Update
         </button>
         <br />
@@ -138,26 +139,49 @@ class BooksManager extends Component {
           options={this.options}
           hover
           cellEdit={this.cellEditProp}
-          className="books-table">
+          className="books-table"
+        >
           <TableHeaderColumn
             dataSort
             dataField="_id"
             filter={{ type: 'TextFilter', delay: 500 }}
             dataFormat={this.idFormatter}
             isKey
-            width="10%">
+            width="10%"
+          >
             Id
           </TableHeaderColumn>
-          <TableHeaderColumn dataSort dataField="name" filter={{ type: 'TextFilter', delay: 500 }} width="30%">
+          <TableHeaderColumn
+            dataSort
+            dataField="name"
+            filter={{ type: 'TextFilter', delay: 500 }}
+            width="30%"
+          >
             Name
           </TableHeaderColumn>
-          <TableHeaderColumn dataSort dataField="create_by" filter={{ type: 'TextFilter', delay: 500 }} width="15%">
+          <TableHeaderColumn
+            dataSort
+            dataField="create_by"
+            filter={{ type: 'TextFilter', delay: 500 }}
+            width="15%"
+          >
             Create By
           </TableHeaderColumn>
-          <TableHeaderColumn dataSort dataField="update_by" filter={{ type: 'TextFilter', delay: 500 }} width="15%">
+          <TableHeaderColumn
+            dataSort
+            dataField="update_by"
+            filter={{ type: 'TextFilter', delay: 500 }}
+            width="15%"
+          >
             Update By
           </TableHeaderColumn>
-          <TableHeaderColumn dataSort dataField="enable" editable={false} dataFormat={this.enableFormatter} width="10%">
+          <TableHeaderColumn
+            dataSort
+            dataField="enable"
+            editable={false}
+            dataFormat={this.enableFormatter}
+            width="10%"
+          >
             Enable
           </TableHeaderColumn>
         </BootstrapTable>

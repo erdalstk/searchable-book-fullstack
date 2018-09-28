@@ -1,15 +1,14 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var constants = require('../config/constants');
+const mongoose = require('mongoose');
+const constants = require('../config/constants');
 
-var UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
   name: String,
   email: {
     type: String,
     required: true,
     trim: true,
     unique: true,
-    match: /^\w+([\.\-\+]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    match: /^\w+([\.\-\+]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ // eslint-disable-line
   },
   password: String,
   facebook: {

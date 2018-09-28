@@ -1,14 +1,22 @@
-export const changeSearchBarFilterText = searchBarFilterText => ({
+const changeSearchBarFilterText = searchBarFilterText => ({
   type: 'CHANGE_SEARCHBAR_FILTERTEXT',
   searchBarFilterText
 });
 
-export const fetchSearchBarSuggestionCompleted = searchBarSuggestions => ({
+const fetchSearchBarSuggestionCompleted = searchBarSuggestions => ({
   type: 'FETCH_SEARCHBAR_SUGGESTIONS_COMPLETED',
   searchBarSuggestions
 });
 
-export const fetchSearchBarResultsCompleted = searchBarResults => ({
+const fetchSearchBarResultsCompleted = searchBarResults => ({
   type: 'FETCH_SEARCHBAR_RESUTLS_COMPLETED',
   searchBarResults
 });
+
+const searchBarActions = {
+  changeSearchBarFilterText,
+  fetchSearchBarSuggestionCompleted,
+  fetchSearchBarResultsCompleted
+};
+
+export default searchBarActions;

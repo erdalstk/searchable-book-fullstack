@@ -1,21 +1,23 @@
 module.exports = {
-  stringToSlug: function(str) {
+  stringToSlug(str) {
     // remove accents
-    var from = 'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñç',
-      to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouunc';
-    for (var i = 0, l = from.length; i < l; i++) {
-      str = str.replace(RegExp(from[i], 'gi'), to[i]);
+    const from = 'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñç';
+    const to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouunc';
+    let re = '';
+    for (let i = 0, l = from.length; i < l; i += 1) {
+      re = str.replace(RegExp(from[i], 'gi'), to[i]);
     }
-    return str;
+    return re;
   },
 
-  starndardUploadName: function(str) {
+  starndardUploadName(str) {
     // remove accents
-    var from = 'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñç',
-      to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouunc';
-    for (var i = 0, l = from.length; i < l; i++) {
-      str = str.replace(RegExp(from[i], 'gi'), to[i]);
+    const from = 'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñç';
+    const to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouunc';
+    let re = '';
+    for (let i = 0, l = from.length; i < l; i += 1) {
+      re = str.replace(RegExp(from[i], 'gi'), to[i]);
     }
-    return str.replace(/\s/g, '-');
+    return re.replace(/\s/g, '-');
   }
 };

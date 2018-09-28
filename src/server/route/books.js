@@ -1,22 +1,23 @@
-var express = require('express');
-var router = express.Router();
-var logger = require('../helpers/logging.helper');
-var Books = require('../models/Books');
-var multer = require('multer');
-var sharp = require('sharp');
-var vietnameseUtil = require('../helpers/vietnameseSlug');
-var constants = require('../config/constants');
-var verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
-var verifyAuthToken = require('../helpers/verifyAuthToken');
+const express = require('express');
+
+const router = express.Router();
+const multer = require('multer');
+const sharp = require('sharp');
+const logger = require('../helpers/logging.helper');
+const Books = require('../models/Books');
+const vietnameseUtil = require('../helpers/vietnameseSlug');
+const constants = require('../config/constants');
+const verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
+const verifyAuthToken = require('../helpers/verifyAuthToken');
 
 module.exports = router;
 
 /**
  * GET /api/books/_id
- **/
-router.get('/:id', verifyApiAccessToken, function(req, res) {
+ * */
+router.get('/:id', verifyApiAccessToken, (req, res) => {
   if (!req.params || !req.params.id) return res.send({ result: false, message: 'Can not find book' });
-  Books.findOne({ _id: req.params.id, enable: true }, function(err, book) {
+  return Books.findOne({ _id: req.params.id, enable: true }, (err, book) => {
     if (err) {
       logger.log('info', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Can not find book' });
@@ -24,26 +25,24 @@ router.get('/:id', verifyApiAccessToken, function(req, res) {
     if (!book) {
       return res.send({ result: false, message: 'Can not find book' });
     }
-    var viewCount = book.view_count;
+    let viewCount = book.view_count;
     if (!viewCount) {
       viewCount = 0;
     }
-    book.view_count = viewCount + 1;
-    let resBook = JSON.parse(JSON.stringify(book));
-    book
-      .save()
-      .then(result => {})
-      .catch(function() {
-        logger.log('error', '[%s] Can not update view_count for: %s', req.originalUrl, book);
-      });
-    if (resBook.epub_link) {
-      resBook.epub_link = true;
+    const updateBook = book;
+    updateBook.view_count = viewCount + 1;
+    const resBook = JSON.parse(JSON.stringify(updateBook));
+    updateBook.save().catch(() => {
+      logger.log('error', '[%s] Can not update view_count for: %s', req.originalUrl, updateBook);
+    });
+    if (resBook.epubLink) {
+      resBook.epubLink = true;
     }
-    if (resBook.mobi_link) {
-      resBook.mobi_link = true;
+    if (resBook.mobiLink) {
+      resBook.mobiLink = true;
     }
-    if (resBook.pdf_link) {
-      resBook.pdf_link = true;
+    if (resBook.pdfLink) {
+      resBook.pdfLink = true;
     }
     return res.send({ result: true, data: resBook });
   });
@@ -51,11 +50,14 @@ router.get('/:id', verifyApiAccessToken, function(req, res) {
 
 /**
  * POST /api/books
- **/
-var storage = multer.diskStorage({
+ * */
+const storage = multer.diskStorage({
   destination: constants.STATIC_UPLOAD_PATH,
-  filename: function(req, file, cb) {
-    cb(null, Date.now() + '-' + vietnameseUtil.starndardUploadName(file.originalname.trim().toLowerCase()));
+  filename(req, file, cb) {
+    cb(
+      null,
+      `${Date.now()}-${vietnameseUtil.starndardUploadName(file.originalname.trim().toLowerCase())}`
+    );
   }
 });
 const fileLimit = {
@@ -63,33 +65,33 @@ const fileLimit = {
 };
 function fileFilter(req, file, cb) {
   if (
-    file.mimetype !== 'image/png' &&
-    file.mimetype !== 'image/jpg' &&
-    file.mimetype !== 'image/jpeg' &&
-    file.mimetype !== 'application/epub+zip' &&
-    file.mimetype !== 'application/x-mobipocket-ebook' && // mobi?
-    file.mimetype !== 'pocketMobi*' && // mobi?
-    file.mimetype !== 'application/octet-stream' && // mobi?
-    file.mimetype !== 'application/pdf'
+    file.mimetype !== 'image/png'
+    && file.mimetype !== 'image/jpg'
+    && file.mimetype !== 'image/jpeg'
+    && file.mimetype !== 'application/epub+zip'
+    && file.mimetype !== 'application/x-mobipocket-ebook' // mobi?
+    && file.mimetype !== 'pocketMobi*' // mobi?
+    && file.mimetype !== 'application/octet-stream' // mobi?
+    && file.mimetype !== 'application/pdf'
   ) {
-    req.fileValidationError = 'wrong file format:' + file.mimetype;
+    req.fileValidationError = `wrong file format:${file.mimetype}`;
     logger.log('info', '[%s] Upload Error, wrong file type: %s', req.originalUrl, file.mimetype);
     cb(new Error(req.fileValidationError));
   }
   cb(null, true);
 }
-var upload = multer({ storage: storage, fileFilter: fileFilter, limits: fileLimit }).fields([
+const upload = multer({ storage, fileFilter, limits: fileLimit }).fields([
   { name: 'cover', maxCount: 1 },
   { name: 'epub', maxCount: 1 },
   { name: 'mobi', maxCount: 1 },
   { name: 'pdf', maxCount: 1 }
 ]);
-router.post('/', verifyAuthToken, function(req, res) {
+router.post('/', verifyAuthToken, (req, res) => {
   // req.file is the `cover` file
-  upload(req, res, async function(err) {
+  upload(req, res, async (err) => {
     if (err) {
       logger.log('error', '[%s] Upload Error: %s', req.originalUrl, err.message);
-      return res.status(500).send({ result: false, message: 'Server error: ' + err.message });
+      return res.status(500).send({ result: false, message: `Server error: ${err.message}` });
     }
     if (!req.body) {
       logger.log('error', '[%s] Request has no body', req.originalUrl);
@@ -98,32 +100,32 @@ router.post('/', verifyAuthToken, function(req, res) {
     if (!req.body.name || !req.body.author || req.body.name === '' || req.body.author === '') {
       return res.send({ result: false, message: 'Name and author must not empty' });
     }
-    var cover = '';
-    var epub_link = '';
-    var mobi_link = '';
-    var pdf_link = '';
+    let cover = '';
+    let epubLink = '';
+    let mobiLink = '';
+    let pdfLink = '';
     // begin: resize and compress cover image
-    if (req.files['cover']) {
+    if (req.files.cover) {
       try {
-        let img_dest = 'optimized-' + req.files['cover'][0].filename;
-        await sharp(req.files['cover'][0].path)
+        const imgDest = `optimized-${req.files.cover[0].filename}`;
+        await sharp(req.files.cover[0].path)
           .resize(250)
           .jpeg({ quality: 80, force: false })
           .png({ compressionLevel: 9, force: false })
-          .toFile(constants.STATIC_UPLOAD_PATH + img_dest);
-        cover = img_dest;
-      } catch (err) {
-        logger.log('error', '[%s] Compress image error: %s', req.originalUrl, err.message);
-        cover = req.files['cover'][0].filename;
+          .toFile(constants.STATIC_UPLOAD_PATH + imgDest);
+        cover = imgDest;
+      } catch (err1) {
+        logger.log('error', '[%s] Compress image error: %s', req.originalUrl, err1.message);
+        cover = req.files.cover[0].filename;
       }
     }
     // end: resize and compress cover image
-    if (req.files['epub']) epub_link = req.files['epub'][0].filename;
-    if (req.files['mobi']) mobi_link = req.files['mobi'][0].filename;
-    if (req.files['pdf']) pdf_link = req.files['pdf'][0].filename;
+    if (req.files.epub) epubLink = req.files.epub[0].filename;
+    if (req.files.mobi) mobiLink = req.files.mobi[0].filename;
+    if (req.files.pdf) pdfLink = req.files.pdf[0].filename;
 
     if (req.body._id) {
-      var updateBook = {
+      const updateBook = {
         name: req.body.name,
         author: req.body.author,
         category: req.body.category,
@@ -134,60 +136,58 @@ router.post('/', verifyAuthToken, function(req, res) {
       if (cover !== '') {
         updateBook.cover = cover;
       }
-      if (epub_link !== '') {
-        updateBook.epub_link = epub_link;
+      if (epubLink !== '') {
+        updateBook.epubLink = epubLink;
       }
-      if (mobi_link !== '') {
-        updateBook.mobi_link = mobi_link;
+      if (mobiLink !== '') {
+        updateBook.mobiLink = mobiLink;
       }
-      if (pdf_link !== '') {
-        updateBook.pdf_link = pdf_link;
+      if (pdfLink !== '') {
+        updateBook.pdfLink = pdfLink;
       }
       try {
-        book = await Books.findOneAndUpdate({ _id: req.body._id, enable: true }, updateBook);
+        const book = await Books.findOneAndUpdate({ _id: req.body._id, enable: true }, updateBook);
         return res.send({ result: true, data: book });
-      } catch (err) {
-        logger.log('info', '[%s] DB Error: %s', req.originalUrl, err.message);
+      } catch (err1) {
+        logger.log('info', '[%s] DB Error: %s', req.originalUrl, err1.message);
         return res.status(500).send({ result: false, message: 'Can not find book' });
       }
     } else {
-      book = new Books({
+      const book = new Books({
         name: req.body.name,
         author: req.body.author,
         category: req.body.category || '',
         description: req.body.description || '',
-        cover: cover,
+        cover,
         normalized_name: vietnameseUtil.stringToSlug(req.body.name.trim().toLowerCase()),
-        epub_link: epub_link,
-        mobi_link: mobi_link,
-        pdf_link: pdf_link,
+        epubLink,
+        mobiLink,
+        pdfLink,
         enable: true,
         create_by: req.userEmail,
         update_by: req.userEmail,
         create_time: new Date(),
         update_time: new Date()
       });
-      book
+      return book
         .save()
-        .then(result => {
-          return res.send({ result: true, data: book });
-        })
-        .catch(function(err) {
-          logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+        .then(() => res.send({ result: true, data: book }))
+        .catch((err1) => {
+          logger.log('error', '[%s] DB Error: %s', req.originalUrl, err1.message);
           return res.send({ result: false, message: 'Server Error' });
         });
     }
   });
 });
 
-router.get('/:email/uploaded', verifyAuthToken, function(req, res) {
+router.get('/:email/uploaded', verifyAuthToken, (req, res) => {
   if (!req.params || !req.params.email) {
     return res.send({ result: false, message: 'Empty param' });
   }
   if (req.params.email === 'me') {
     req.params.email = req.userEmail;
   }
-  Books.find({ create_by: req.params.email, enable: true }, function(err, books) {
+  return Books.find({ create_by: req.params.email, enable: true }, (err, books) => {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });

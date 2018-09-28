@@ -1,10 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var logger = require('../../helpers/logging.helper');
-var User = require('../../models/User');
-var bodyParser = require('body-parser');
-var constants = require('../../config/constants');
-var verifyAuthToken = require('../../helpers/verifyAuthToken');
+const express = require('express');
+
+const router = express.Router();
+const bodyParser = require('body-parser');
+const logger = require('../../helpers/logging.helper');
+const User = require('../../models/User');
+const constants = require('../../config/constants');
+const verifyAuthToken = require('../../helpers/verifyAuthToken');
 
 module.exports = router;
 
@@ -13,9 +14,9 @@ router.use(bodyParser.json());
 
 /**
  * GET /api/admin/users
- **/
-router.get('/', verifyAuthToken, function(req, res) {
-  User.findOne({ email: req.userEmail }, { password: 0, faceuser: 0 }, function(err, user) {
+ * */
+router.get('/', verifyAuthToken, (req, res) => {
+  User.findOne({ email: req.userEmail }, { password: 0, faceuser: 0 }, (err, user) => {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });
@@ -28,13 +29,13 @@ router.get('/', verifyAuthToken, function(req, res) {
       logger.log('info', '[%s] Not enough authority: %s', req.originalUrl, user.email);
       return res.status(403).send({ result: false, message: 'Not enough authority' });
     }
-    var options = {
+    const options = {
       password: 0,
       faceuser: 0
     };
-    User.find({}, options, function(err, users) {
+    return User.find({}, options, (err1, users) => {
       if (err) {
-        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err1.message);
         return res.status(500).send({ result: false, message: 'Server error' });
       }
       return res.send({ result: true, data: users });
@@ -44,9 +45,9 @@ router.get('/', verifyAuthToken, function(req, res) {
 
 /**
  * POST /api/admin/users/update
- **/
-router.post('/update', verifyAuthToken, function(req, res) {
-  User.findOne({ email: req.userEmail }, { password: 0, facebook: 0 }, async function(err, user) {
+ * */
+router.post('/update', verifyAuthToken, (req, res) => {
+  User.findOne({ email: req.userEmail }, { password: 0, facebook: 0 }, async (err, user) => {
     if (err) {
       logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
       return res.status(500).send({ result: false, message: 'Server error' });
@@ -61,12 +62,12 @@ router.post('/update', verifyAuthToken, function(req, res) {
     }
 
     try {
-      for (var i of req.body.data) {
-        await User.findByIdAndUpdate(i._id, i);
+      for (const i of req.body.data) { //eslint-disable-line
+        await User.findByIdAndUpdate(i._id, i); //eslint-disable-line
       }
-    } catch (err) {
+    } catch (err1) {
       if (err) {
-        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+        logger.log('error', '[%s] DB Error: %s', req.originalUrl, err1.message);
         return res.status(500).send({ result: false, message: 'Server error' });
       }
     }

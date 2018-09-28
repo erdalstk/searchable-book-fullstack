@@ -1,32 +1,25 @@
 import React, { Component } from 'react';
-import CategoryList from '../../presentational/CategoryList';
 import keyIndex from 'react-key-index';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { categoryService } from 'src/client/services';
-import { fetchCategoriesCompleted } from 'src/client/actions';
+import { categoryActions } from 'src/client/actions';
+import CategoryList from '../../presentational/CategoryList';
 
 class AllCategories extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
-    categoryService.getAllCategories().then(
-      res => {
-        this.props.dispatch(fetchCategoriesCompleted(res.data));
-      },
-      error => {
-        return;
-      }
-    );
+    const mainProps = this.props;
+    categoryService.getAllCategories().then((res) => {
+      mainProps.dispatch(categoryActions.fetchCategoriesCompleted(res.data));
+    });
   }
 
   render() {
+    const mainProps = this.props;
     return (
       <div>
         <h3>All categories</h3>
-        <CategoryList categories={this.props.categories} />
+        <CategoryList categories={mainProps.categories} />
       </div>
     );
   }

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Category from './Category';
 import NotFoundRoute from 'src/client/components/presentational/NotFoundRoute';
+import Category from './Category';
 import AllCategories from './AllCategories';
 
 const Categories = () => (

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bookService } from 'src/client/services';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
+import { toastOptions } from 'src/client/config';
 import Countdown from 'react-countdown-now';
 import './DownloadEbook.css';
 
@@ -9,59 +9,61 @@ class DownloadEbook extends Component {
   constructor(props) {
     super(props);
     this.renderer = this.renderer.bind(this);
-    this.type = this.props.match.params.type;
-    this.id = this.props.match.params.id;
+    const mainProps = props;
+    this.type = mainProps.match.params.type;
+    this.id = mainProps.match.params.id;
     this.state = {
       link: ''
     };
   }
 
+  componentDidMount() {
+    bookService.getDownloadLink(this.id, this.type).then(
+      (res) => {
+        this.setState({ link: res.data });
+      },
+      (error) => {
+        toast(`❌  ${error}`, toastOptions.ERROR);
+      }
+    );
+  }
+
   // Renderer callback with condition
   renderer = ({ seconds, milliseconds, completed }) => {
+    const mainState = this.state;
     if (completed) {
       // Render a complete state
-      window.location = this.state.link;
+      window.location = mainState.link;
       return (
         <div className="download-ebook-countdown-container">
-          If your browser doesn't automatically download:
+          If your browser does not automatically download:
           <br />
-          <a href={this.state.link} download>
+          <a href={mainState.link} download>
             click here
           </a>
         </div>
       );
-    } else {
-      // Render a countdown
-      return (
-        <div className="download-ebook-countdown--container">
-          Your download will start shortly:
-          <br />
-          <div id="countdown">
-            <div id="countdown-number">
-              <span>
-                {seconds}.{milliseconds / 10}
-              </span>
-            </div>
-            <svg>
-              <circle r="18" cx="20" cy="20" />
-            </svg>
-          </div>
-        </div>
-      );
     }
-  };
-
-  componentDidMount() {
-    bookService.getDownloadLink(this.id, this.type).then(
-      res => {
-        this.setState({ link: res.data });
-      },
-      error => {
-        toast('❌  ' + error, errorToastOptions);
-        return;
-      }
+    // Render a countdown
+    return (
+      <div className="download-ebook-countdown--container">
+        Your download will start shortly:
+        <br />
+        <div id="countdown">
+          <div id="countdown-number">
+            <span>
+              {seconds}
+.
+              {milliseconds / 10}
+            </span>
+          </div>
+          <svg>
+            <circle r="18" cx="20" cy="20" />
+          </svg>
+        </div>
+      </div>
     );
-  }
+  };
 
   render() {
     return (

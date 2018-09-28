@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import './CategoryList.css';
 
@@ -7,16 +7,20 @@ const CategoryList = ({ col, total, categories }) => {
     return '';
   }
   const cats = [];
-  var start = 0;
-  var end = categories.length;
+  let start = 0;
+  let end = categories.length;
   if (col && total) {
-    start = Math.ceil((categories.length * parseInt(col)) / parseInt(total));
-    end = Math.ceil((categories.length * (parseInt(col) + 1)) / parseInt(total));
+    start = Math.ceil((categories.length * parseInt(col, 10)) / parseInt(total, 10));
+    end = Math.ceil((categories.length * (parseInt(col, 10) + 1)) / parseInt(total, 10));
   }
-  categories.slice(start, end).map(c => {
+  categories.slice(start, end).map((c) => {
     if (c.value === '') return '';
-    cats.push(
-      <Link className="nav-link-toggle dropdown-item category" to={'/categories/' + c.value} key={c.id}>
+    return cats.push(
+      <Link
+        className="nav-link-toggle dropdown-item category"
+        to={`/categories/${c.value}`}
+        key={c.id}
+      >
         <i className="fa fa-tag fa-fw" />
         {c.value}
       </Link>

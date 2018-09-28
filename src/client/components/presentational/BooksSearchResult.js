@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import BooksTable from './BooksTable';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { propTypesHelper } from 'src/client/helpers';
+import BooksTable from './BooksTable';
 import './BooksSearchResult.css';
-import 'whatwg-fetch';
 
 const BooksSearchResult = ({ searchBarResults }) => {
   let mainView = (
@@ -23,5 +24,13 @@ const BooksSearchResult = ({ searchBarResults }) => {
 const mapStateToProps = state => ({
   searchBarResults: state.searchBarResults
 });
+
+BooksSearchResult.defaultProps = {
+  searchBarResults: []
+};
+
+BooksSearchResult.propTypes = {
+  searchBarResults: PropTypes.arrayOf(propTypesHelper.Book)
+};
 
 export default connect(mapStateToProps)(BooksSearchResult);

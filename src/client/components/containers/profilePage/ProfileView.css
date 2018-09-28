@@ -59,6 +59,15 @@
   margin-right: 5px;
 }
 
+.profile-view-container .btn-xs {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.875rem;
+  line-height: 0.8;
+  border-radius: 0.2rem;
+  border-color: gray;
+  color: gray;
+}
+
 .profile-view-container .profile-userbuttons .btn:last-child {
   margin-right: 0px;
 }

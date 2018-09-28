@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from 'src/client/actions';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
+import { toastOptions } from 'src/client/config';
 import { userService } from 'src/client/services';
 import './Register.css';
 
@@ -39,7 +40,8 @@ class Register extends Component {
 
     //
     if (name === 'email') {
-      var regexEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      // eslint-disable-next-line no-useless-escape
+      const regexEmail = /^\w+([\.\-\+]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i;
       if (regexEmail.test(value.toLowerCase())) {
         this.setState({ validEmail: true });
       } else {
@@ -47,24 +49,12 @@ class Register extends Component {
         this.setState({ emailExists: true });
         return;
       }
-      // if (value === '') {
-      //   this.setState({ emailExists: true });
-      //   return;
-      // }
       clearTimeout(this.delayTimer);
-      this.delayTimer = setTimeout(
-        function() {
-          userService.checkEmail(value).then(
-            res => {
-              this.setState({ emailExists: res.emailExists });
-            },
-            error => {
-              return;
-            }
-          );
-        }.bind(this),
-        500
-      );
+      this.delayTimer = setTimeout(() => {
+        userService.checkEmail(value).then((res) => {
+          this.setState({ emailExists: res.emailExists });
+        });
+      }, 500);
     }
 
     if (name === 'password') {
@@ -82,17 +72,19 @@ class Register extends Component {
     this.setState({
       submitted: true
     });
-    const { user, emailExists, validEmail, validPassword } = this.state;
+    const {
+      user, emailExists, validEmail, validPassword
+    } = this.state;
     if (user.name && user.email && user.password && !emailExists && validEmail && validPassword) {
       mainProps.dispatch(userActions.registerRequesting());
       userService.register(user).then(
-        res => {
-          toast('✅ Register Success!', infoToastOptions);
+        () => {
+          toast('✅ Register Success!', toastOptions.INFO);
           mainProps.dispatch(userActions.registerSuccess());
-          this.props.changeTab();
+          mainProps.changeTab();
         },
-        error => {
-          toast('❌ ' + error, errorToastOptions);
+        (error) => {
+          toast(`❌ ${error}`, toastOptions.ERROR);
           mainProps.dispatch(userActions.registerFailure(error));
         }
       );
@@ -100,17 +92,20 @@ class Register extends Component {
   }
 
   render() {
+    const mainProps = this.props;
     const { status, message } = this.props;
-    const { user, submitted, emailExists, validEmail, validPassword } = this.state;
+    const {
+      user, submitted, emailExists, validEmail, validPassword
+    } = this.state;
     return (
       <div className="register-container">
-        {status === 'failed' && <div className={'alert alert-danger'}>{message}</div>}
+        {status === 'failed' && <div className="alert alert-danger">{message}</div>}
         <div className="">
-          <button onClick={this.props.changeTab} className="btn btn-link">
+          <button type="button" onClick={mainProps.changeTab} className="btn btn-link">
             Already have account? Login!
           </button>
           <form name="form" onSubmit={this.handleSubmit}>
-            <div className={'form-group' + (submitted && !user.name ? ' has-error' : '')}>
+            <div className={`form-group${submitted && !user.name ? ' has-error' : ''}`}>
               <label htmlFor="name">Name</label>
               <input
                 type="text"
@@ -124,7 +119,7 @@ class Register extends Component {
               {submitted && !user.name && <div className="help-block">Name is required</div>}
             </div>
 
-            <div className={'form-group' + (submitted && !this.email ? ' has-error' : '')}>
+            <div className={`form-group${submitted && !this.email ? ' has-error' : ''}`}>
               <label htmlFor="email">Email</label>
               <div className="email-check-form">
                 <input
@@ -136,17 +131,22 @@ class Register extends Component {
                   onBlur={this.handleChange}
                   required
                 />
-                <div className={'check-icon ' + emailExists}>
+                <div className={`check-icon ${emailExists}`}>
                   {emailExists ? <i className="fa fa-close" /> : <i className="fa fa-check" />}
                 </div>
               </div>
-              {submitted && !validEmail && <div className="requirements">Your email must follow correct format</div>}
-              {submitted &&
-                validEmail &&
-                emailExists && <div className="requirements">This email has been already taken</div>}
+              {submitted
+                && !validEmail && (
+                  <div className="requirements">Your email must follow correct format</div>
+              )}
+              {submitted
+                && validEmail
+                && emailExists && (
+                  <div className="requirements">This email has been already taken</div>
+              )}
             </div>
 
-            <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
+            <div className={`form-group${submitted && !user.password ? ' has-error' : ''}`}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -157,15 +157,21 @@ class Register extends Component {
                 onBlur={this.handleChange}
                 required
               />
-              {/* {submitted && !user.password && <div className="help-block">Password is required</div>} */}
-              {submitted &&
-                !validPassword && <div className="requirements">Your password must be at least 6 characters</div>}
+              {submitted
+                && !validPassword && (
+                  <div className="requirements">Your password must be at least 6 characters</div>
+              )}
             </div>
 
             <div className="form-group">
-              <button className="btn btn-primary">Register</button>
+              <button type="submit" className="btn btn-primary">
+                Register
+              </button>
               {status === 'registering' && (
-                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                <img
+                  alt="processing"
+                  src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                />
               )}
             </div>
           </form>
@@ -179,5 +185,10 @@ const mapStateToProps = state => ({
   status: state.registration.status,
   message: state.registration.message
 });
+
+Register.propTypes = {
+  status: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired
+};
 
 export default connect(mapStateToProps)(withRouter(Register));

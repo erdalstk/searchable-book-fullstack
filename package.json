@@ -61,6 +61,8 @@
     "concurrently": "^4.0.0",
     "css-loader": "^1.0.0",
     "eslint": "^5.4.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-import-resolver-webpack": "^0.10.1",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.11.1",

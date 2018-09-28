@@ -2,48 +2,37 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import BooksTable from 'src/client/components/presentational/BooksTable';
-import { fetchSearchBarResultsCompleted } from 'src/client/actions';
+import { searchBarActions } from 'src/client/actions';
 import { categoryService } from 'src/client/services';
 import 'whatwg-fetch';
-import { isStringEmptyOrSpaces } from 'src/client/helpers';
+import { stringUtils } from 'src/client/helpers';
 
 class Category extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
-    if (isStringEmptyOrSpaces(this.props.match.params.id)) {
+    const mainProps = this.props;
+    if (stringUtils.isStringEmptyOrSpaces(mainProps.match.params.id)) {
       return;
     }
-    categoryService.getBooksInCategory(this.props.match.params.id).then(
-      res => {
-        this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
-      },
-      error => {
-        return;
-      }
-    );
+    categoryService.getBooksInCategory(mainProps.match.params.id).then((res) => {
+      mainProps.dispatch(searchBarActions.fetchSearchBarResultsCompleted(res.data));
+    });
   }
 
   componentDidUpdate(prevProps) {
-    if (isStringEmptyOrSpaces(this.props.match.params.id)) {
+    const mainProps = this.props;
+    if (stringUtils.isStringEmptyOrSpaces(mainProps.match.params.id)) {
       return;
     }
-    if (this.props.match.params.id !== prevProps.match.params.id) {
-      categoryService.getBooksInCategory(this.props.match.params.id).then(
-        res => {
-          this.props.dispatch(fetchSearchBarResultsCompleted(res.data));
-        },
-        error => {
-          return;
-        }
-      );
+    if (mainProps.match.params.id !== prevProps.match.params.id) {
+      categoryService.getBooksInCategory(mainProps.match.params.id).then((res) => {
+        mainProps.dispatch(searchBarActions.fetchSearchBarResultsCompleted(res.data));
+      });
     }
   }
 
   render() {
-    return <BooksTable books={this.props.searchBarResults} />;
+    const mainProps = this.props;
+    return <BooksTable books={mainProps.searchBarResults} />;
   }
 }
 

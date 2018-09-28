@@ -5,7 +5,7 @@ import './UsersManager.Admin.css';
 import 'src/../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { userService } from 'src/client/services';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
+import { toastOptions } from 'src/client/config';
 
 class UsersManager extends Component {
   constructor(props) {
@@ -29,46 +29,44 @@ class UsersManager extends Component {
   }
 
   componentDidMount() {
-    userService.admin_getAllUsers().then(
-      res => {
-        this.setState({ users: res.data });
-        this.originalApiUsers = JSON.parse(JSON.stringify(res.data.slice()));
-      },
-      error => {
-        return;
-      }
-    );
+    userService.adminGetAllUsers().then((res) => {
+      this.setState({ users: res.data });
+      this.originalApiUsers = JSON.parse(JSON.stringify(res.data.slice()));
+    });
   }
 
   emailFormatter = (cell, row) => {
     if (row.email) {
       return (
         <div>
-          <Link to={'/profile/' + row.email}>{row.email}</Link>
+          <Link to={`/profile/${row.email}`}>{row.email}</Link>
         </div>
       );
     }
+    return '';
   };
 
-  enableFormatter = (cell, row) => {
-    return <input type="checkbox" onChange={(e, data) => this.checkEnableOnChange(row._id)} checked={row.enable} />;
-  };
+  enableFormatter = (cell, row) => (
+    <input
+      type="checkbox"
+      onChange={() => this.checkEnableOnChange(row._id)}
+      checked={row.enable}
+    />
+  );
 
-  checkEnableOnChange = data => {
-    const prevUsers = this.state.users.slice();
-    for (var user of prevUsers) {
-      if (user._id === data) {
-        user.enable = !user.enable;
-        this.setState({ users: prevUsers });
-      }
-    }
+  checkEnableOnChange = (data) => {
+    const mainState = this.state;
+    const prevUsers = mainState.users.slice();
+    const selectedUser = prevUsers.find(u => u._id === data);
+    selectedUser.enable = !selectedUser.enable;
+    this.setState({ ...prevUsers });
   };
 
   onUpdateButtonClick = () => {
     const { users } = this.state;
-    var postDataUsers = [];
-    for (var i = 0; i < users.length; i++) {
-      var u = {};
+    const postDataUsers = [];
+    for (let i = 0; i < users.length; i += 1) {
+      const u = {};
       u._id = users[i]._id;
       if (users[i].level !== this.originalApiUsers[i].level) {
         u.level = users[i].level;
@@ -79,18 +77,16 @@ class UsersManager extends Component {
       if (u.level !== undefined || u.enable !== undefined) postDataUsers.push(u);
     }
     if (!postDataUsers.length) {
-      alert('No update');
+      toast('Nothing to update!', toastOptions.ERROR);
       return;
     }
-    userService.admin_updateUsers(postDataUsers).then(
-      res => {
-        toast('✅ Success!', infoToastOptions);
+    userService.adminUpdateUsers(postDataUsers).then(
+      () => {
+        toast('✅ Success!', toastOptions.INFO);
         this.originalApiUsers = JSON.parse(JSON.stringify(users));
-        return;
       },
-      error => {
-        toast('❌ Error! ' + error, errorToastOptions);
-        return;
+      (error) => {
+        toast(`❌ Error! ${error}`, toastOptions.ERROR);
       }
     );
   };
@@ -103,7 +99,7 @@ class UsersManager extends Component {
 
     return (
       <div>
-        <button className="btn btn-primary" onClick={this.onUpdateButtonClick}>
+        <button type="button" className="btn btn-primary" onClick={this.onUpdateButtonClick}>
           Update
         </button>
         <br />
@@ -116,14 +112,16 @@ class UsersManager extends Component {
           options={this.options}
           hover
           cellEdit={this.cellEditProp}
-          className="users-table">
+          className="users-table"
+        >
           <TableHeaderColumn
             dataField="_id"
             dataSort
             filter={{ type: 'TextFilter', delay: 500 }}
             editable={false}
             isKey
-            width="20%">
+            width="20%"
+          >
             Id
           </TableHeaderColumn>
           <TableHeaderColumn
@@ -132,7 +130,8 @@ class UsersManager extends Component {
             filter={{ type: 'TextFilter', delay: 500 }}
             dataFormat={this.emailFormatter}
             editable={false}
-            width="20%">
+            width="20%"
+          >
             Email
           </TableHeaderColumn>
           <TableHeaderColumn
@@ -140,7 +139,8 @@ class UsersManager extends Component {
             dataSort
             filter={{ type: 'TextFilter', delay: 500 }}
             editable={false}
-            width="20%">
+            width="20%"
+          >
             Name
           </TableHeaderColumn>
           <TableHeaderColumn
@@ -148,10 +148,17 @@ class UsersManager extends Component {
             dataSort
             filter={{ type: 'TextFilter', delay: 500 }}
             editable={{ type: 'select', options: { values: [0, 1, 2, 3, 4] } }}
-            width="10%">
+            width="10%"
+          >
             Level
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="enable" dataSort dataFormat={this.enableFormatter} editable={false} width="10%">
+          <TableHeaderColumn
+            dataField="enable"
+            dataSort
+            dataFormat={this.enableFormatter}
+            editable={false}
+            width="10%"
+          >
             Enable
           </TableHeaderColumn>
         </BootstrapTable>

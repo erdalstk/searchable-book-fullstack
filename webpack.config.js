@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 const outputDirectory = 'dist';
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      src: path.resolve('src/')
+      src: path.resolve(__dirname, 'src/')
     }
   },
   module: {

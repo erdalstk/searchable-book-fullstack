@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import ProfileView from './ProfileView';
 import NotFoundRoute from 'src/client/components/presentational/NotFoundRoute';
+import ProfileView from './ProfileView';
 
 const Profile = () => (
   <Switch>

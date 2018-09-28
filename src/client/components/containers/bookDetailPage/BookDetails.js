@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { STATIC_IMAGE_URL, NO_COVER_IMAGE } from 'src/client/config';
-import { noPictureAddDefaultSrc } from 'src/client/helpers';
+import { imageConstants } from 'src/client/config';
+import { noPictureUtil } from 'src/client/helpers';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchBookDetailsCompleted, userActions } from 'src/client/actions';
+import { bookActions } from 'src/client/actions';
 import { bookService } from 'src/client/services';
 import Moment from 'react-moment';
 import './BookDetails.css';
@@ -18,47 +18,50 @@ class BookDetails extends Component {
     };
   }
 
-  fetchBookDetail() {
-    bookService.getBookDetails(this.props.match.params.id).then(
-      res => {
-        this.props.dispatch(fetchBookDetailsCompleted(res.data));
-        if (localStorage.getItem('user')) {
-          var localStorageUser = JSON.parse(localStorage.getItem('user'));
-          if (
-            localStorageUser.email === res.data.update_by ||
-            localStorageUser.email === res.data.create_by ||
-            localStorageUser.level <= 2
-          ) {
-            this.setState({ canEdit: true });
-          }
-        }
-      },
-      error => {
-        this.props.dispatch(fetchBookDetailsCompleted({}));
-        return;
-      }
-    );
-  }
-
   componentDidMount() {
     this.fetchBookDetail();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.id !== prevProps.match.params.id) {
+    const mainProps = this.props;
+    if (mainProps.match.params.id !== prevProps.match.params.id) {
       this.fetchBookDetail();
     }
   }
 
+  fetchBookDetail() {
+    const mainProps = this.props;
+    bookService.getBookDetails(mainProps.match.params.id).then(
+      (res) => {
+        mainProps.dispatch(bookActions.fetchBookDetailsCompleted(res.data));
+        if (localStorage.getItem('user')) {
+          const localStorageUser = JSON.parse(localStorage.getItem('user'));
+          if (
+            localStorageUser.email === res.data.update_by
+            || localStorageUser.email === res.data.create_by
+            || localStorageUser.level <= 2
+          ) {
+            this.setState({ canEdit: true });
+          }
+        }
+      },
+      () => {
+        mainProps.dispatch(bookActions.fetchBookDetailsCompleted({}));
+      }
+    );
+  }
+
   render() {
-    const book = this.props.book;
+    const mainProps = this.props;
+    const { book } = mainProps;
+    const { canEdit } = this.state;
     if (!book || !book.name) return 'No book found';
-    var download_epub_link = '';
-    var download_mobi_link = '';
-    var download_pdf_link = '';
+    let downloadEpubLink = '';
+    let downloadMobiLink = '';
+    let downloadPdfLink = '';
     if (book.epub_link) {
-      download_epub_link = (
-        <Link className="btn btn-info btn-sm" to={'/download/' + this.props.match.params.id + '/epub'}>
+      downloadEpubLink = (
+        <Link className="btn btn-info btn-sm" to={`/download/${mainProps.match.params.id}/epub`}>
           <i className="fa fa-download fa-fw" />
           EPUB
           <br />
@@ -66,8 +69,8 @@ class BookDetails extends Component {
       );
     }
     if (book.mobi_link) {
-      download_mobi_link = (
-        <Link className="btn btn-info btn-sm" to={'/download/' + this.props.match.params.id + '/mobi'}>
+      downloadMobiLink = (
+        <Link className="btn btn-info btn-sm" to={`/download/${mainProps.match.params.id}/mobi`}>
           <i className="fa fa-download fa-fw" />
           MOBI
           <br />
@@ -75,8 +78,8 @@ class BookDetails extends Component {
       );
     }
     if (book.pdf_link) {
-      download_pdf_link = (
-        <Link className="btn btn-info btn-sm" to={'/download/' + this.props.match.params.id + '/pdf'}>
+      downloadPdfLink = (
+        <Link className="btn btn-info btn-sm" to={`/download/${mainProps.match.params.id}/pdf`}>
           <i className="fa fa-download fa-fw" />
           PDF
           <br />
@@ -88,24 +91,24 @@ class BookDetails extends Component {
         <div className="row">
           <div className="col-8 col-sm-4 col-md-3 col-lg-3 book-cover">
             <img
-              onError={noPictureAddDefaultSrc}
-              src={STATIC_IMAGE_URL + book.cover}
+              onError={noPictureUtil.noPictureAddDefaultSrc}
+              src={imageConstants.STATIC_IMAGE_URL + book.cover}
               alt={book.name}
               className="img-thumbnail"
             />
           </div>
           <div className="col-12 col-sm-8 col-md-9 col-lg-9 book-meta">
             <div className="row">
-              <div >
+              <div>
                 <h3>{book.name}</h3>
               </div>
-              <div >
-                {this.state.canEdit && (
+              <div>
+                {canEdit && (
                   <div className="can-edit">
-                      <Link to={'/books/' + book._id + '/edit'}>
-                        <i className="fa fa-edit fa-fw" />
-                        Edit
-                      </Link>
+                    <Link to={`/books/${book._id}/edit`}>
+                      <i className="fa fa-edit fa-fw" />
+                      Edit
+                    </Link>
                   </div>
                 )}
               </div>
@@ -115,13 +118,13 @@ class BookDetails extends Component {
                 <p>
                   Tác giả:&nbsp;
                   <button type="button" className="btn btn-light btn-xs">
-                    #{book.author}
+                    {book.author}
                   </button>
                 </p>
                 <p>
                   Thể loại:&nbsp;
                   <button type="button" className="btn btn-light btn-xs">
-                    <Link to={'/categories/' + book.category}>#{book.category}</Link>
+                    <Link to={`/categories/${book.category}`}>{book.category}</Link>
                   </button>
                 </p>
               </div>
@@ -150,7 +153,11 @@ class BookDetails extends Component {
                   <div className="upload-by col-12 col-sm-12 col-lg-12">
                     <i className="fa fa-user fa-fw" aria-hidden="true" />
                     &nbsp;
-                    {book.update_by ? <Link to={'/profile/' + book.update_by}>{book.update_by}</Link> : 'anonymous'}
+                    {book.update_by ? (
+                      <Link to={`/profile/${book.update_by}`}>{book.update_by}</Link>
+                    ) : (
+                      'anonymous'
+                    )}
                   </div>
                 </div>
               </div>
@@ -162,9 +169,9 @@ class BookDetails extends Component {
             <div className="download-section">
               <h5>Download: </h5>
               <div className="btn-group" role="group">
-                {download_epub_link}
-                {download_mobi_link}
-                {download_pdf_link}
+                {downloadEpubLink}
+                {downloadMobiLink}
+                {downloadPdfLink}
               </div>
             </div>
           </div>

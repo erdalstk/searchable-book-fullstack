@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userService } from 'src/client/services/user.service';
+import { userService } from 'src/client/services';
 import { toast } from 'react-toastify';
-import { infoToastOptions, errorToastOptions } from 'src/client/config';
+import { toastOptions } from 'src/client/config';
 
 class AccountSettings extends Component {
   constructor(props) {
@@ -33,10 +33,11 @@ class AccountSettings extends Component {
   handleuserSubmit(event) {
     event.preventDefault();
     const { user } = this.state;
+    const mainProps = this.props;
     this.setState({
       submitted: true
     });
-    user.email = this.props.user.email;
+    user.email = mainProps.user.email;
     if (!user.email) {
       return;
     }
@@ -46,15 +47,15 @@ class AccountSettings extends Component {
     if (user.newPassword !== user.newPasswordConfirm) {
       return;
     }
-    if (this.props.user.hasPassword && user.currentPassword === '') {
+    if (mainProps.user.hasPassword && user.currentPassword === '') {
       return;
     }
     this.setState({
       processing: true
     });
     userService.changePassword(user).then(
-      res => {
-        toast('✅ Change password success!', infoToastOptions);
+      () => {
+        toast('✅ Change password success!', toastOptions.INFO);
         this.setState({
           user: {
             currentPassword: '',
@@ -66,21 +67,21 @@ class AccountSettings extends Component {
           processing: false
         });
       },
-      error => {
-        toast('❌ ' + error, errorToastOptions);
-        return;
+      (error) => {
+        toast(`❌ ${error}`, toastOptions.ERROR);
       }
     );
   }
 
   render() {
     const { user, submitted, processing } = this.state;
+    const mainProps = this.props;
     return (
       <div>
         <h3>Change password</h3>
         <form name="form" onSubmit={this.handleuserSubmit}>
-          {(this.props.user.hasPassword || user.hasPassword) && (
-            <div className={'form-group'}>
+          {(mainProps.user.hasPassword || user.hasPassword) && (
+            <div className="form-group">
               <label htmlFor="password">Current Password</label>
               <input
                 type="password"
@@ -88,13 +89,16 @@ class AccountSettings extends Component {
                 name="currentPassword"
                 onChange={this.handleChange}
                 onBlur={this.handleChange}
-                value={this.state.user.currentPassword}
+                value={user.currentPassword}
               />
-              {submitted && !user.currentPassword && <div className="help-block">Current password is required</div>}
+              {submitted
+                && !user.currentPassword && (
+                  <div className="help-block">Current password is required</div>
+              )}
             </div>
           )}
 
-          <div className={'form-group'}>
+          <div className="form-group">
             <label htmlFor="password">New Password</label>
             <input
               type="password"
@@ -102,12 +106,13 @@ class AccountSettings extends Component {
               name="newPassword"
               onChange={this.handleChange}
               onBlur={this.handleChange}
-              value={this.state.user.newPassword}
+              value={user.newPassword}
             />
-            {submitted && !user.newPassword && <div className="help-block">Password is required</div>}
+            {submitted
+              && !user.newPassword && <div className="help-block">Password is required</div>}
           </div>
 
-          <div className={'form-group'}>
+          <div className="form-group">
             <label htmlFor="password">New Password Confirm</label>
             <input
               type="password"
@@ -115,18 +120,23 @@ class AccountSettings extends Component {
               name="newPasswordConfirm"
               onChange={this.handleChange}
               onBlur={this.handleChange}
-              value={this.state.user.newPasswordConfirm}
+              value={user.newPasswordConfirm}
             />
-            {submitted &&
-              user.newPasswordConfirm !== user.newPassword && (
+            {submitted
+              && user.newPasswordConfirm !== user.newPassword && (
                 <div className="help-block">Confirm new password must match</div>
-              )}
+            )}
           </div>
 
           <div className="form-group">
-            <button className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
             {processing && (
-              <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+              <img
+                alt="processing"
+                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+              />
             )}
           </div>
         </form>
