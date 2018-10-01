@@ -211,7 +211,7 @@ class UploadBook extends Component {
                   className="form-control"
                   placeholder="Book name"
                   id="bookNameInput"
-                  ref={node => (this.name = node)}
+                  ref={node => (this.name = node)} // eslint-disable-line
                 />
               </div>
               <div className="form-group">
@@ -223,7 +223,7 @@ class UploadBook extends Component {
                   className="form-control"
                   placeholder="Author"
                   id="authorInput"
-                  ref={node => (this.author = node)}
+                  ref={node => (this.author = node)} // eslint-disable-line
                 />
               </div>
               <div className="form-group">
@@ -235,7 +235,7 @@ class UploadBook extends Component {
                   className="form-control"
                   placeholder="Category"
                   id="categoryInput"
-                  ref={node => (this.category = node)}
+                  ref={node => (this.category = node)} // eslint-disable-line
                 />
               </div>
             </div>

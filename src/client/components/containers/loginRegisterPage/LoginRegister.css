@@ -1,5 +1,6 @@
 .login-register-container {
   margin: auto;
+  max-width: 350px;
 }
 
 /* .nav-tabs > li {

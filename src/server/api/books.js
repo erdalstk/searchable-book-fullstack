@@ -5,7 +5,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 const logger = require('../helpers/logging.helper');
 const Books = require('../models/Books');
-const vietnameseUtil = require('../helpers/vietnameseSlug');
+const vietnameseUtil = require('../helpers/vietnameseUtil.helper');
 const constants = require('../config/constants');
 const verifyApiAccessToken = require('../helpers/verifyApiAccessToken');
 const verifyAuthToken = require('../helpers/verifyAuthToken');
@@ -56,7 +56,7 @@ const storage = multer.diskStorage({
   filename(req, file, cb) {
     cb(
       null,
-      `${Date.now()}-${vietnameseUtil.starndardUploadName(file.originalname.trim().toLowerCase())}`
+      `${Date.now()}-${vietnameseUtil.removeUnicodeDash(file.originalname.trim().toLowerCase())}`
     );
   }
 });
@@ -127,6 +127,7 @@ router.post('/', verifyAuthToken, (req, res) => {
     if (req.body._id) {
       const updateBook = {
         name: req.body.name,
+        normalized_name: vietnameseUtil.removeUnicode(req.body.name.trim().toLowerCase()),
         author: req.body.author,
         category: req.body.category,
         description: req.body.description,
@@ -137,13 +138,13 @@ router.post('/', verifyAuthToken, (req, res) => {
         updateBook.cover = cover;
       }
       if (epubLink !== '') {
-        updateBook.epubLink = epubLink;
+        updateBook.epub_link = epubLink;
       }
       if (mobiLink !== '') {
-        updateBook.mobiLink = mobiLink;
+        updateBook.mobi_link = mobiLink;
       }
       if (pdfLink !== '') {
-        updateBook.pdfLink = pdfLink;
+        updateBook.pdf_link = pdfLink;
       }
       try {
         const book = await Books.findOneAndUpdate({ _id: req.body._id, enable: true }, updateBook);
@@ -159,10 +160,10 @@ router.post('/', verifyAuthToken, (req, res) => {
         category: req.body.category || '',
         description: req.body.description || '',
         cover,
-        normalized_name: vietnameseUtil.stringToSlug(req.body.name.trim().toLowerCase()),
-        epubLink,
-        mobiLink,
-        pdfLink,
+        normalized_name: vietnameseUtil.removeUnicode(req.body.name.trim().toLowerCase()),
+        epub_link: epubLink,
+        mobi_link: mobiLink,
+        pdf_link: pdfLink,
         enable: true,
         create_by: req.userEmail,
         update_by: req.userEmail,

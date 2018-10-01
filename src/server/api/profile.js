@@ -5,7 +5,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 const logger = require('../helpers/logging.helper');
 const User = require('../models/User');
-const vietnameseUtil = require('../helpers/vietnameseSlug');
+const vietnameseUtil = require('../helpers/vietnameseUtil.helper');
 const verifyAuthToken = require('../helpers/verifyAuthToken');
 const constants = require('../config/constants');
 
@@ -49,7 +49,7 @@ const storage = multer.diskStorage({
   filename(req, file, cb) {
     cb(
       null,
-      `${Date.now()}-${vietnameseUtil.starndardUploadName(file.originalname.trim().toLowerCase())}`
+      `${Date.now()}-${vietnameseUtil.removeUnicodeDash(file.originalname.trim().toLowerCase())}`
     );
   }
 });

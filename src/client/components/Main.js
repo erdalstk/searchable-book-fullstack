@@ -15,6 +15,12 @@ const PrivacyPolicy = () => <Async load={import('./presentational/PrivacyPolicy'
 const Term = () => <Async load={import('./presentational/Term')} />;
 const Download = () => <Async load={import('./containers/downloadPage/Download.router')} />;
 const Admin = () => <Async load={import('./containers/admin/Admin.router')} />;
+const ForgotPassword = () => (
+  <Async load={import('./containers/forgotPasswordPage/ForgotPassword')} />
+);
+const ResetPasswordRouter = () => (
+  <Async load={import('./containers/forgotPasswordPage/ResetPassword.router')} />
+);
 const NotFoundRoute = () => <Async load={import('./presentational/NotFoundRoute')} />;
 
 const Main = () => (
@@ -33,6 +39,8 @@ const Main = () => (
       <Route exact path="/term" component={Term} />
       <Route path="/download" component={Download} />
       <Route path="/admin" component={Admin} />
+      <Route path="/forgot_password" component={ForgotPassword} />
+      <Route path="/reset_password" component={ResetPasswordRouter} />
       <Route component={NotFoundRoute} />
     </Switch>
   </main>

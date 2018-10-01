@@ -9,8 +9,17 @@ const Book = PropTypes.shape({
   cover: PropTypes.string
 });
 
+const User = PropTypes.shape({
+  email: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  level: PropTypes.number.isRequired,
+  enable: PropTypes.boolean,
+  create_time: PropTypes.string
+});
+
 const propTypesHelper = {
-  Book
+  Book,
+  User
 };
 
 export default propTypesHelper;

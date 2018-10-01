@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const request = require('request');
+const nodeMailer = require('../helpers/nodemailer.helper');
 const logger = require('../helpers/logging.helper');
 const config = require('../config/main');
 const User = require('../models/User');
@@ -156,6 +157,107 @@ router.post('/changepassword', verifyAuthToken, (req, res) => {
         logger.log('error', '[%s] DB Error: %s', req.originalUrl, err1.message);
         return res.send({ result: false, message: 'Server Error' });
       });
+  });
+});
+
+router.post('/resetpasswordrequest', verifyApiAccessToken, (req, res) => {
+  if (!req.body || !req.body.email) {
+    return res.status(400).send({ result: false, message: 'No email provided' });
+  }
+  return User.findOne({ email: req.body.email, enable: true }, (err, user) => {
+    if (err) {
+      logger.log('error', '[%s] DB Error: %s', req.originalUrl, err.message);
+      return res.status(500).send({ result: false, message: constants.STR_SERVER_ERROR });
+    }
+    if (!user) {
+      logger.log('info', '[%s] User not found: %s', req.originalUrl, req.body.email);
+      return res.status(500).send({ result: false, message: 'User not found' });
+    }
+    const resetToken = jwt.sign({ email: user.email }, config.app.secret, {
+      expiresIn: config.app.jwtResetPasswordExpireTime
+    });
+    // send email
+    return nodeMailer
+      .sendResetPasswordEmail(user.email, req.headers.host, resetToken)
+      .then(() => {
+        // update reset_password_token to user db
+        const updateUser = user;
+        updateUser.reset_password_token = resetToken;
+        return updateUser
+          .save()
+          .then(() => res.status(200).send({ result: true }))
+          .catch((err2) => {
+            logger.log(
+              'error',
+              '[%s] DB Error, can not save reset_password_token: %s',
+              req.originalUrl,
+              err2.message
+            );
+            return res.send({ result: false, message: 'Server Error' });
+          });
+      })
+      .catch((mailErr) => {
+        logger.log('error', '[%s] Send Email Error: %s', req.originalUrl, mailErr.message);
+        return res.status(500).send({ result: false, message: 'Send email error' });
+      });
+  });
+});
+
+router.post('/reset/:token', verifyApiAccessToken, (req, res) => {
+  User.findOne({ reset_password_token: req.params.token, enable: true }, (err, user) => {
+    if (!user) {
+      logger.log('info', '[%s] Password reset token is invalid', req.originalUrl);
+      return res.status(401).send({ result: false, message: 'Password reset token is invalid' });
+    }
+    return jwt.verify(req.params.token, config.app.secret, (verifyErr, decoded) => {
+      if (verifyErr) {
+        if (verifyErr.name === 'TokenExpiredError') {
+          return res.status(401).send({
+            result: false,
+            message: 'Password reset token has expired'
+          });
+        }
+        logger.log(
+          'info',
+          '[%s] Failed to verify password reset token: %s',
+          req.originalUrl,
+          verifyErr.message
+        );
+        return res.status(401).send({
+          result: false,
+          message: `[%s] Failed to verify password reset token: ${err.message}`
+        });
+      }
+      // if everything good, proceed to reset pass
+      const userEmail = decoded.email;
+      if (!req.body || !req.body.newPassword) {
+        return res.status(400).send({ result: false, message: 'New password must not empty' });
+      }
+      if (req.body.newPassword.length < 6) {
+        return res
+          .status(400)
+          .send({ result: false, message: 'New password does not follow password policy' });
+      }
+      const hashedPassword = bcrypt.hashSync(req.body.newPassword, 8);
+      const updateUser = user;
+      updateUser.password = hashedPassword;
+      updateUser.reset_password_token = '';
+      return updateUser
+        .save()
+        .then(() => {
+          nodeMailer.sendResetPasswordDoneEmail(userEmail);
+          res.status(200).send({ result: true, data: userEmail });
+        })
+        .catch((err1) => {
+          logger.log(
+            'error',
+            '[%s] DB Error, can not save new password: %s',
+            req.originalUrl,
+            err1.message
+          );
+          return res.send({ result: false, message: 'Server Error' });
+        });
+    });
   });
 });
 
