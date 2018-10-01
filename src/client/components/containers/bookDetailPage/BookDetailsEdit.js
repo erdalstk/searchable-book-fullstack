@@ -52,6 +52,9 @@ class BookDetails extends Component {
     this.handleDescriptionEditorChange = this.handleDescriptionEditorChange.bind(this);
     this.onTextInputChange = this.onTextInputChange.bind(this);
     this.onCoverDrop = this.onCoverDrop.bind(this);
+    this.onEpubDrop = this.onEpubDrop.bind(this);
+    this.onMobiDrop = this.onMobiDrop.bind(this);
+    this.onPdfDrop = this.onPdfDrop.bind(this);
     this.formSubmit = this.formSubmit.bind(this);
   }
 
@@ -226,7 +229,7 @@ class BookDetails extends Component {
         <i className="fa fa-upload fa-3x" />
         <br />
         <br />
-        Drop EPUB here
+        Drop MOBI here
       </p>
     );
     let pdfPreview = mainProps.book.pdf_link ? (
@@ -240,7 +243,7 @@ class BookDetails extends Component {
         <i className="fa fa-upload fa-3x" />
         <br />
         <br />
-        Drop EPUB here
+        Drop PDF here
       </p>
     );
     if (mainState.coverFile.length) {

@@ -13,22 +13,21 @@ const BookGridChildView = ({ book }) => {
     name = `${book.name.slice(0, maxNameLen)}...`;
   }
   return (
-    <div className="book-grid-view-content-child">
+    <div className="col-lg-2 col-sm-4 col-6">
       <Link to={`/books/${book._id}`}>
-        <div className="cover">
+        <center>
           <img
+            className="img-fluid d-block"
+            src={imageConstants.STATIC_IMAGE_URL + book.cover}
             alt={book.name}
             onError={noPictureUtil.noPictureAddDefaultSrc}
-            src={imageConstants.STATIC_IMAGE_URL + book.cover}
           />
-        </div>
+          <Link to={`/books/${book._id}`}>
+            <h6 className="m-1 text-primary">{name}</h6>
+          </Link>
+          <h7 className="py-0">{book.author}</h7>
+        </center>
       </Link>
-      <div className="meta">
-        <div className="title">
-          <Link to={`/books/${book._id}`}>{name}</Link>
-        </div>
-        <div className="author">{book.author}</div>
-      </div>
     </div>
   );
 };
@@ -41,9 +40,13 @@ const BookGridView = ({ title, books }) => {
   });
 
   return (
-    <div className="book-grid-view">
-      <h3>{title}</h3>
-      <div className="book-grid-view-content">{view}</div>
+    <div className="container">
+      <div className="row">
+        <h2>{title}</h2>
+      </div>
+      <div className="row">
+        {view}
+      </div>
     </div>
   );
 };

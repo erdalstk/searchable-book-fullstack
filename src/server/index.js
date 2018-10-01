@@ -12,18 +12,18 @@ app.use('/static', express.static('static'));
 // connect to mongo
 connectMongoWithRetry();
 
-// routes
-const auth = require('./route/auth');
-const profile = require('./route/profile.js');
-const books = require('./route/books.js');
-const instantsearch = require('./route/instantsearch.js');
-const categories = require('./route/categories.js');
-const recentlyadded = require('./route/recentlyadded');
-const mostview = require('./route/mostview');
-const mostdownload = require('./route/mostdownload');
-const downloadebook = require('./route/downloadebook');
-const booksAdmin = require('./route/admin/books.admin.js');
-const usersAdmin = require('./route/admin/users.admin.js');
+// api
+const auth = require('./api/auth');
+const profile = require('./api/profile.js');
+const books = require('./api/books.js');
+const instantsearch = require('./api/instantsearch.js');
+const categories = require('./api/categories.js');
+const recentlyadded = require('./api/recentlyadded');
+const mostview = require('./api/mostview');
+const mostdownload = require('./api/mostdownload');
+const downloadebook = require('./api/downloadebook');
+const booksAdmin = require('./api/admin/books.admin.js');
+const usersAdmin = require('./api/admin/users.admin.js');
 
 app.use('/api/auth', auth);
 app.use('/api/profile', profile);
@@ -36,6 +36,9 @@ app.use('/api/mostdownload', mostdownload);
 app.use('/api/downloadebook', downloadebook);
 app.use('/api/admin/books', booksAdmin);
 app.use('/api/admin/users', usersAdmin);
+
+// router
+
 
 // handle 404
 app.get('*', (req, res) => {

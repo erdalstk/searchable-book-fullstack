@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { userService } from 'src/client/services';
 import { toast } from 'react-toastify';
 import { toastOptions } from 'src/client/config';
-import './AccountSettings.Profile.css';
+import './ResetPassword.css';
 
-class AccountSettings extends Component {
+class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
       user: {
-        email: '',
-        currentPassword: '',
         newPassword: '',
-        newPasswordConfirm: '',
-        hasPassword: false
+        newPasswordConfirm: ''
       },
       submitted: false,
       processing: false
@@ -34,71 +31,54 @@ class AccountSettings extends Component {
   handleuserSubmit(event) {
     event.preventDefault();
     const { user } = this.state;
-    const mainProps = this.props;
     this.setState({
       submitted: true
     });
-    user.email = mainProps.user.email;
-    if (!user.email) {
+
+    if (user.newPassword === '') {
       return;
     }
-    if (user.newPassword === '') {
+    if (user.newPassword.length < 6) {
+      toast('❌ Password length must be greater or equal 6 characters', toastOptions.ERROR);
       return;
     }
     if (user.newPassword !== user.newPasswordConfirm) {
       return;
     }
-    if (mainProps.user.hasPassword && user.currentPassword === '') {
-      return;
-    }
+
     this.setState({
       processing: true
     });
-    userService.changePassword(user).then(
+    const mainProps = this.props;
+    const token = mainProps.match.params.token; // eslint-disable-line
+    userService.resetPassword(user, token).then(
       () => {
-        toast('✅ Change password success!', toastOptions.INFO);
+        toast('✅ Reset password success!', toastOptions.INFO);
         this.setState({
           user: {
-            currentPassword: '',
             newPassword: '',
-            newPasswordConfirm: '',
-            hasPassword: true
+            newPasswordConfirm: ''
           },
           submitted: false,
           processing: false
         });
+        mainProps.history.push('/loginregister');
       },
       (error) => {
         toast(`❌ ${error}`, toastOptions.ERROR);
+        this.setState({
+          processing: false
+        });
       }
     );
   }
 
   render() {
     const { user, submitted, processing } = this.state;
-    const mainProps = this.props;
     return (
-      <div className="profile-account-settings-container">
-        <h3>Change password</h3>
+      <div className="reset-password-container">
+        <h3>Reset password</h3>
         <form name="form" onSubmit={this.handleuserSubmit}>
-          {(mainProps.user.hasPassword || user.hasPassword) && (
-            <div className="form-group">
-              <label htmlFor="password">Current Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="currentPassword"
-                onChange={this.handleChange}
-                onBlur={this.handleChange}
-                value={user.currentPassword}
-              />
-              {submitted
-                && !user.currentPassword && (
-                  <div className="help-block">Current password is required</div>
-              )}
-            </div>
-          )}
-
           <div className="form-group">
             <label htmlFor="password">New Password</label>
             <input
@@ -110,7 +90,7 @@ class AccountSettings extends Component {
               value={user.newPassword}
             />
             {submitted
-              && !user.newPassword && <div className="help-block">Password is required</div>}
+              && !user.newPassword && <div className="requirements">Password is required</div>}
           </div>
 
           <div className="form-group">
@@ -125,7 +105,7 @@ class AccountSettings extends Component {
             />
             {submitted
               && user.newPasswordConfirm !== user.newPassword && (
-                <div className="help-block">Confirm new password must match</div>
+                <div className="requirements">Confirm new password must match</div>
             )}
           </div>
 
@@ -146,8 +126,4 @@ class AccountSettings extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user
-});
-
-export default connect(mapStateToProps)(AccountSettings);
+export default withRouter(ResetPassword);

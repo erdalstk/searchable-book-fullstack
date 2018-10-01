@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema({
   profile_picture: String,
   enable: { type: Boolean, default: true },
   active: { type: Boolean, default: true },
+  reset_password_token: String,
   create_time: Date,
   update_time: Date
 });

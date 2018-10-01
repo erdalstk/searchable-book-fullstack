@@ -71,6 +71,24 @@ function changePassword(user) {
     });
 }
 
+function forgotPassword(email) {
+  const requestOptions = {
+    method: 'POST',
+    headers: apiAccessTokenHeaderJson(),
+    body: JSON.stringify({ email })
+  };
+  return fetch('api/auth/resetpasswordrequest', requestOptions).then(handleResponse);
+}
+
+function resetPassword(user, token) {
+  const requestOptions = {
+    method: 'POST',
+    headers: apiAccessTokenHeaderJson(),
+    body: JSON.stringify(user)
+  };
+  return fetch(`api/auth/reset/${token}`, requestOptions).then(handleResponse);
+}
+
 function loginWithFacebook(user) {
   const requestOptions = {
     method: 'POST',
@@ -144,6 +162,8 @@ const userService = {
   me,
   loginWithFacebook,
   changePassword,
+  forgotPassword,
+  resetPassword,
   checkEmail,
   profile,
   updateProfile,

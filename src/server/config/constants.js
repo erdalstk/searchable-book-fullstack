@@ -21,5 +21,11 @@ module.exports = Object.freeze({
   API_ACCESS_TOKEN: {
     WEB_APP: 'mdstbooks-react-app-123456',
     BOT_APP: 'mdstbooks-bot-app-123456'
+  },
+
+  SEND_EMAIL: {
+    FROM: 'no-reply@haoict.com',
+    SUBJECT_RESET_PASSWORD: '[MDSTBooks] Password Reset',
+    SUBJECT_RESET_PASSWORD_DONE: '[MDSTBooks] Your password has been changed'
   }
 });

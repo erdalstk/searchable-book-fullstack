@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import FixedGridLayoutView from 'src/client/components/presentational/FixedGridLayoutView';
-import DynamicGridLayoutView from 'src/client/components/presentational/DynamicGridLayoutView';
+// import DynamicGridLayoutView from 'src/client/components/presentational/DynamicGridLayoutView';
 import { bookService } from 'src/client/services';
 import { connect } from 'react-redux';
 import './HomePage.css';
@@ -33,11 +33,13 @@ class HomePage extends Component {
     const mainState = this.state;
     return (
       <div className="home-page-container">
-        <FixedGridLayoutView mostDownloadData={mainState.mostDownloadData} />
-        <DynamicGridLayoutView
+        <FixedGridLayoutView title="Most Download" data={mainState.mostDownloadData} />
+        <FixedGridLayoutView title="Most View" data={mainState.mostViewData} />
+        <FixedGridLayoutView title="Recently Added" data={mainState.recentlyAddedData} />
+        {/* <DynamicGridLayoutView
           mostViewData={mainState.mostViewData}
           recentlyAddedData={mainState.recentlyAddedData}
-        />
+        /> */}
       </div>
     );
   }

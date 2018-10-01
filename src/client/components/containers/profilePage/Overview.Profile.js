@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { userConstants } from 'src/client/config';
+import { propTypesHelper } from 'src/client/helpers';
 
 class Overview extends Component {
   componentDidMount() {}
@@ -33,11 +33,7 @@ const mapStateToProps = state => ({
 });
 
 Overview.propTypes = {
-  user: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    level: PropTypes.number.isRequired,
-    create_time: PropTypes.string
-  }).isRequired
+  user: propTypesHelper.User.isRequired
 };
 
 export default connect(mapStateToProps)(Overview);
