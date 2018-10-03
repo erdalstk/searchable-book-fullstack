@@ -38,7 +38,11 @@ app.use('/api/admin/books', booksAdmin);
 app.use('/api/admin/users', usersAdmin);
 
 // router
+const testssr = require('./router/testssr.js');
+const homepage = require('./router/homepage.js');
 
+app.use('/testssr', testssr);
+app.use('/', homepage);
 
 // handle 404
 app.get('*', (req, res) => {

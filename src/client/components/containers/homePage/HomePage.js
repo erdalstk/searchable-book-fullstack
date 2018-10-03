@@ -34,8 +34,8 @@ class HomePage extends Component {
     return (
       <div className="home-page-container">
         <FixedGridLayoutView title="Most Download" data={mainState.mostDownloadData} />
-        <FixedGridLayoutView title="Most View" data={mainState.mostViewData} />
-        <FixedGridLayoutView title="Recently Added" data={mainState.recentlyAddedData} />
+        {/* <FixedGridLayoutView title="Most View" data={mainState.mostViewData} /> */}
+        {/* <FixedGridLayoutView title="Recently Added" data={mainState.recentlyAddedData} /> */}
         {/* <DynamicGridLayoutView
           mostViewData={mainState.mostViewData}
           recentlyAddedData={mainState.recentlyAddedData}

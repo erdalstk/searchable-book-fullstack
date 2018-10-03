@@ -14,20 +14,20 @@ const BookGridChildView = ({ book }) => {
   }
   return (
     <div className="col-lg-2 col-sm-4 col-6">
-      <Link to={`/books/${book._id}`}>
-        <center>
+      <center>
+        <Link to={`/books/${book._id}`}>
           <img
             className="img-fluid d-block"
             src={imageConstants.STATIC_IMAGE_URL + book.cover}
             alt={book.name}
             onError={noPictureUtil.noPictureAddDefaultSrc}
           />
-          <Link to={`/books/${book._id}`}>
-            <h6 className="m-1 text-primary">{name}</h6>
-          </Link>
-          <h7 className="py-0">{book.author}</h7>
-        </center>
-      </Link>
+        </Link>
+        <Link to={`/books/${book._id}`}>
+          <h6 className="m-1 text-primary">{name}</h6>
+        </Link>
+        <p className="py-0">{book.author}</p>
+      </center>
     </div>
   );
 };
@@ -44,9 +44,7 @@ const BookGridView = ({ title, books }) => {
       <div className="row">
         <h2>{title}</h2>
       </div>
-      <div className="row">
-        {view}
-      </div>
+      <div className="row">{view}</div>
     </div>
   );
 };

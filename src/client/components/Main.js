@@ -22,6 +22,7 @@ const ResetPasswordRouter = () => (
   <Async load={import('./containers/forgotPasswordPage/ResetPassword.router')} />
 );
 const NotFoundRoute = () => <Async load={import('./presentational/NotFoundRoute')} />;
+const TestSSR = () => <Async load={import('src/common/testSSR/TestSSR')} />;
 
 const Main = () => (
   <main className="container">
@@ -41,6 +42,7 @@ const Main = () => (
       <Route path="/admin" component={Admin} />
       <Route path="/forgot_password" component={ForgotPassword} />
       <Route path="/reset_password" component={ResetPasswordRouter} />
+      <Route exact path="/testssr" component={TestSSR} />
       <Route component={NotFoundRoute} />
     </Switch>
   </main>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => (
@@ -10,12 +10,15 @@ const Footer = () => (
           <h5 className="text-uppercase">About us</h5>
           <p>MDSTBooks! v0.51b</p>
           <ul className="list-unstyled">
-            <li>
+            {/* <li>
               <Link to="/privacy">Privacy Policy</Link>
             </li>
             <li>
               <Link to="/term">Term of Service</Link>
             </li>
+            <li>
+              <Link to="/testssr">TestSSR</Link>
+            </li> */}
           </ul>
         </div>
         <hr className="clearfix w-100 d-md-none pb-3" />
